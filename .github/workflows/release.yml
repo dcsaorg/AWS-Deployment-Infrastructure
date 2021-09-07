@@ -1,0 +1,41 @@
+name: Publish
+
+on:
+  push:
+    branches: [ release ]
+
+jobs:
+  aws_cdk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the infrastructure code
+        uses: actions/checkout@v2
+      - name: CDK Bootstrapping AWS Account
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'bootstrap'
+          cdk_args: '--cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess'
+          cdk_stack: 'aws://133515735418/eu-west-1'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'eu-west-1'
+      - name: Deploying the CDK Code
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_stack: 'st'
+          cdk_args: '--require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'eu-west-1'
+      - name: Updating load balancer dns
+        run: |
+          sleep 3m
+          alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
+          echo $alburl
+          sed -i "s#mydns#$alburl#g" ./route53/route53.json
+          cat ./route53/route53.json
+          aws route53 change-resource-record-sets --hosted-zone-id Z040818834AD3CMGVA9MB --change-batch file://./route53/route53.json
