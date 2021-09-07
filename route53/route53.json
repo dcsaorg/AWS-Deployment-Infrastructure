@@ -3,7 +3,23 @@
   "Changes": [{
     "Action": "UPSERT",
     "ResourceRecordSet": {
-      "Name": "hamburg1.dev.dcsa.org",
+      "Name": "ovs.hamburg.dev.dcsa.org",
+      "Type": "CNAME",
+      "TTL": 300,
+      "ResourceRecords": [{ "Value": "mydns"}]
+    }}, 
+	{
+    "Action": "UPSERT",
+    "ResourceRecordSet": {
+      "Name": "ui-support.hamburg.dev.dcsa.org",
+      "Type": "CNAME",
+      "TTL": 300,
+      "ResourceRecords": [{ "Value": "mydns"}]
+    }},
+	{
+    "Action": "UPSERT",
+    "ResourceRecordSet": {
+      "Name": "ovs-notification.hamburg.dev.dcsa.org",
       "Type": "CNAME",
       "TTL": 300,
       "ResourceRecords": [{ "Value": "mydns"}]

@@ -54,7 +54,7 @@ export class DCSAEKSCluster extends Construct {
     })
 
     cluster.addHelmChart('helm', {
-      chart: 'dcsasandboxhamburg-cluster',
+      chart: 'dcsasandboxhamburg',
       repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
       namespace: 'default',
       values: {
