@@ -25,7 +25,7 @@ export class DCSARoute53 extends Construct {
       'dcsaCertificate',
       {
         domainName: 'ovs.hamburg.dev.dcsa.org',
-          subjectAlternativeNames: ['ovs-notification.dev.dcsa.org', 'ui-support.hamburg.dev.dcsa.org'],		  
+          subjectAlternativeNames: ['ovs-notification.hamburg.dev.dcsa.org', 'ui-support.hamburg.dev.dcsa.org'],		  
         validation: acm.CertificateValidation.fromDns(this.hostedZone)
       }
     )
