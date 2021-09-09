@@ -23,5 +23,13 @@
       "Type": "CNAME",
       "TTL": 300,
       "ResourceRecords": [{ "Value": "mydns"}]
+    }},
+	{
+    "Action": "UPSERT",
+    "ResourceRecordSet": {
+      "Name": "p6.hamburg.dev.dcsa.org",
+      "Type": "CNAME",
+      "TTL": 300,
+      "ResourceRecords": [{ "Value": "mydns"}]
     }}]
 }
