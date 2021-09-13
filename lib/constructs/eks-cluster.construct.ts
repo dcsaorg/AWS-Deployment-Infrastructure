@@ -61,9 +61,9 @@ export class DCSAEKSCluster extends Construct {
         certificateArn: props.hostedZoneCertificate.certificateArn,
         envType: {
           aws: true
-        }
-		env: {
-		  baseurl: 'hamburg.dev.dcsa.org'
+        },
+	env: {
+	  baseurl: 'hamburg.dev.dcsa.org'
         }
       }
     })
