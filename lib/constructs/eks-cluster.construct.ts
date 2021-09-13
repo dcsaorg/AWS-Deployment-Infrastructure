@@ -62,6 +62,9 @@ export class DCSAEKSCluster extends Construct {
         envType: {
           aws: true
         }
+		env: {
+		  baseurl: 'hamburg.dev.dcsa.org'
+        }
       }
     })
 
