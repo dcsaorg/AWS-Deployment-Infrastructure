@@ -19,7 +19,7 @@
 	{
     "Action": "UPSERT",
     "ResourceRecordSet": {
-      "Name": "ovs-notification.hamburg.dev.dcsa.org",
+      "Name": "ovs-notification._BASEURL_",
       "Type": "CNAME",
       "TTL": 300,
       "ResourceRecords": [{ "Value": "mydns"}]
@@ -27,7 +27,7 @@
 	{
     "Action": "UPSERT",
     "ResourceRecordSet": {
-      "Name": "p6.hamburg.dev.dcsa.org",
+      "Name": "p6._BASEURL_",
       "Type": "CNAME",
       "TTL": 300,
       "ResourceRecords": [{ "Value": "mydns"}]
