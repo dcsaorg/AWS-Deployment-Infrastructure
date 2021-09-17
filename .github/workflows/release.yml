@@ -35,6 +35,7 @@ jobs:
         run: |
           sleep 3m
           aws elbv2 describe-load-balancers
+          
           counter=0
           alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
           echo $alburl
