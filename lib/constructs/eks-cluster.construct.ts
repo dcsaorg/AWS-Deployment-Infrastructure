@@ -63,7 +63,7 @@ export class DCSAEKSCluster extends Construct {
           aws: true
         },
 		env: {
-		  baseurl: process.env("BASEURL")
+		  baseurl: process.env.BASEURL
 		  participant: 'carrier'
         }
 		p6config:
@@ -85,7 +85,7 @@ export class DCSAEKSCluster extends Construct {
           aws: true
         },
 		env: {
-	      baseurl: process.env("BASEURL")
+	      baseurl: process.env.BASEURL
 		  participant: 'terminal'
         }
 		p6config:
