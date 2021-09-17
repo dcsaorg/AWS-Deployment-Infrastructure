@@ -15,8 +15,8 @@ export class DCSARoute53 extends Construct {
       this,
       'dcsaHostedZone',
       {
-        hostedZoneId: process.env("HOSTEDZONEID"),
-        zoneName: process.env("BASEURL")
+        hostedZoneId: process.env.HOSTEDZONEID,
+        zoneName: process.env.BASEURL
       }
     )
 
@@ -24,8 +24,8 @@ export class DCSARoute53 extends Construct {
       this,
       'dcsaCertificate',
       {
-        domainName: "terminal" + process.env("BASEURL"),
-          subjectAlternativeNames: ["carrier" + process.env("BASEURL")],
+        domainName: "terminal" + process.env.BASEURL,
+          subjectAlternativeNames: ["carrier" + process.env.BASEURL],
         validation: acm.CertificateValidation.fromDns(this.hostedZone)
       }
     )
