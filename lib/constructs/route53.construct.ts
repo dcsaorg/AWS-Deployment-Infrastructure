@@ -23,8 +23,8 @@ export class DCSARoute53 extends Construct {
       this,
       'dcsaCertificate',
       {
-        domainName: "terminal" + process.env.BASEURL,
-          subjectAlternativeNames: ["carrier" + process.env.BASEURL],
+        domainName: "terminal." + process.env.BASEURL,
+          subjectAlternativeNames: ["carrier." + process.env.BASEURL],
         validation: acm.CertificateValidation.fromDns(this.hostedZone)
       }
     )
