@@ -20,6 +20,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWSACCESSKEYID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWSSECRETACCESSKEY }}
           AWS_DEFAULT_REGION: 'eu-west-1'
+          BASEURL: 'hamburg.dev.dcsa.org'
+          HOSTEDZONEID: 'Z03079632C8D5IGT89TPK'
       - name: Deploying the CDK Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
