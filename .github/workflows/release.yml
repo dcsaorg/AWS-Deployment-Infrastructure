@@ -37,7 +37,6 @@ jobs:
           aws elbv2 describe-load-balancers
           counter=0
           alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
-          while [ -z "$alburl" || $counter -le 10 ] do sleep 1m; alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1); counter=$(( $counter + 1 )); done
           echo $alburl
           sed -i "s#mydns#$alburl#g" ./route53/route53.json
           cat ./route53/route53.json
