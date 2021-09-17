@@ -53,7 +53,7 @@ export class DCSAEKSCluster extends Construct {
       }
     })
 
-    cluster.addHelmChart('helm', {
+    cluster.addHelmChart('helmCarrier', {
       chart: 'dcsasandboxhamburg',
       repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
       namespace: 'default',
@@ -62,11 +62,42 @@ export class DCSAEKSCluster extends Construct {
         envType: {
           aws: true
         },
-	env: {
-	  baseurl: 'hamburg.dev.dcsa.org'
+		env: {
+		  baseurl: process.env.BASEURL
+		  participant: 'carrier'
         }
+		p6config:
+          company: "DCSA"
+          publisherRole: "CA"
+          cognitoUserPoolId: "eu-west-1_q9s1DipXz"
+          cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki"
+          publisherCodeType: "SMDG_LINER_CODE"
+		  partyName: "Carrier"
       }
     })
+    cluster.addHelmChart('helmTerminal', {
+      chart: 'dcsasandboxhamburg',
+      repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
+      namespace: 'default',
+      values: {
+        certificateArn: props.hostedZoneCertificate.certificateArn,
+        envType: {
+          aws: true
+        },
+		env: {
+	      baseurl: process.env.BASEURL
+		  participant: 'terminal'
+        }
+		p6config:
+          company: "DCSA"
+          publisherRole: "TR"
+          cognitoUserPoolId: "eu-west-1_q9s1DipXz"
+          cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki"
+          publisherCodeType: "SMDG_LINER_CODE"
+		  partyName: "Terminal"
+      }
+    }	
+	)
 
   }
 }

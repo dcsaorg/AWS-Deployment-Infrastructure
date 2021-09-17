@@ -15,8 +15,8 @@ export class DCSARoute53 extends Construct {
       this,
       'dcsaHostedZone',
       {
-        hostedZoneId: 'Z03079632C8D5IGT89TPK',
-        zoneName: 'hamburg.dev.dcsa.org'
+        hostedZoneId: process.env.HOSTEDZONEID,
+        zoneName: process.env.BASEURL
       }
     )
 
@@ -24,8 +24,8 @@ export class DCSARoute53 extends Construct {
       this,
       'dcsaCertificate',
       {
-        domainName: 'ovs.hamburg.dev.dcsa.org',
-          subjectAlternativeNames: ['ovs-notification.hamburg.dev.dcsa.org', 'ui-support.hamburg.dev.dcsa.org', 'p6.hamburg.dev.dcsa.org'],
+        domainName: "terminal" + process.env.BASEURL,
+          subjectAlternativeNames: ["carrier" + process.env.BASEURL],
         validation: acm.CertificateValidation.fromDns(this.hostedZone)
       }
     )
