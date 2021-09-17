@@ -33,7 +33,7 @@ jobs:
           AWS_DEFAULT_REGION: 'eu-west-1'
       - name: Updating load balancer dns
         run: |
-          sleep 3m
+          sleep 7m
           counter=0
           alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
           while [ -z "$alburl" || $counter -le 10 ] do sleep 1m; alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1); counter=$(( $counter + 1 )) done
