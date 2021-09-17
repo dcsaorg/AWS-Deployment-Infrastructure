@@ -10,7 +10,6 @@ export class DCSARoute53 extends Construct {
 
   constructor (scope: Construct, id: string, props: DCSARoute53Props = {}) {
     super(scope, id)
-    console.log("hest " + process.env);
     this.hostedZone = route53.HostedZone.fromHostedZoneAttributes(
       this,
       'dcsaHostedZone',
