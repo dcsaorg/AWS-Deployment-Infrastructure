@@ -56,7 +56,7 @@ export class DCSAEKSCluster extends Construct {
     cluster.addHelmChart('CR', {
       chart: 'dcsasandboxhamburg',
       repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-      version: "0.1.31",
+      version: "0.1.32",
       namespace: 'default',
       values: {
         certificateArn: props.hostedZoneCertificate.certificateArn,
@@ -80,7 +80,7 @@ export class DCSAEKSCluster extends Construct {
     cluster.addHelmChart('TR', {
       chart: 'dcsasandboxhamburg',
       repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-      version: "0.1.31",
+      version: "0.1.32",
       namespace: 'default',
       values: {
         certificateArn: props.hostedZoneCertificate.certificateArn,
