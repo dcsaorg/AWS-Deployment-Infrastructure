@@ -14,7 +14,7 @@ export class DCSARoute53 extends Construct {
       this,
       'dcsaHostedZone',
       {
-        hostedZoneId: process.env.HOSTEDZONEID.toString(),
+        hostedZoneId: "Z0356896WKOUB3ZK0XRN",
         zoneName: "hamburg.dev.dcsa.org"
       }
     )
