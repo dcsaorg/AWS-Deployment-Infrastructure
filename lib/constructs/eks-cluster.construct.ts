@@ -53,7 +53,7 @@ export class DCSAEKSCluster extends Construct {
       }
     })
 
-    cluster.addHelmChart('CR', {
+    cluster.addHelmChart('EVE', {
       chart: 'dcsasandboxhamburg',
       repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
       version: "0.1.32",
@@ -65,10 +65,10 @@ export class DCSAEKSCluster extends Construct {
         },
 		env: {
 		  baseurl: process.env.BASEURL,
-		  participant: 'carrier'
+		  participant: 'evergreen-marine'
         },
 		p6config: {
-          company: "DCSA",
+          company: "evergreen-marine",
           publisherRole: "CA",
           cognitoUserPoolId: "eu-west-1_q9s1DipXz",
           cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki",
@@ -77,7 +77,7 @@ export class DCSAEKSCluster extends Construct {
         }
       }
     })
-    cluster.addHelmChart('TR', {
+    cluster.addHelmChart('CMA', {
       chart: 'dcsasandboxhamburg',
       repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
       version: "0.1.32",
@@ -89,18 +89,118 @@ export class DCSAEKSCluster extends Construct {
         },
         env: {
           baseurl: process.env.BASEURL,
-          participant: 'terminal'
+          participant: 'cma-cgm'
         },
         p6config: {
-          company: "DCSA",
-          publisherRole: "TR",
+          company: "cma-cgm",
+          publisherRole: "CA",
           cognitoUserPoolId: "eu-west-1_q9s1DipXz",
           cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki",
           publisherCodeType: "SMDG_LINER_CODE",
-          partyName: "Terminal"
+          partyName: "cma-cgm"
         }
       }
     }	
 	)
+    cluster.addHelmChart('HAP', {
+          chart: 'dcsasandboxhamburg',
+          repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
+          version: "0.1.32",
+          namespace: 'default',
+          values: {
+            certificateArn: props.hostedZoneCertificate.certificateArn,
+            envType: {
+              aws: true
+            },
+            env: {
+              baseurl: process.env.BASEURL,
+              participant: 'hapag-lloyd'
+            },
+            p6config: {
+              company: "hapag-lloyd",
+              publisherRole: "CA",
+              cognitoUserPoolId: "eu-west-1_q9s1DipXz",
+              cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki",
+              publisherCodeType: "SMDG_LINER_CODE",
+              partyName: "hapag-lloyd"
+            }
+          }
+        }
+    )
+    cluster.addHelmChart('DCS', {
+          chart: 'dcsasandboxhamburg',
+          repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
+          version: "0.1.32",
+          namespace: 'default',
+          values: {
+            certificateArn: props.hostedZoneCertificate.certificateArn,
+            envType: {
+              aws: true
+            },
+            env: {
+              baseurl: process.env.BASEURL,
+              participant: 'dcsa'
+            },
+            p6config: {
+              company: "dcsa",
+              publisherRole: "CA",
+              cognitoUserPoolId: "eu-west-1_q9s1DipXz",
+              cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki",
+              publisherCodeType: "SMDG_LINER_CODE",
+              partyName: "dcsa"
+            }
+          }
+        }
+    )
+    cluster.addHelmChart('HPA', {
+          chart: 'dcsasandboxhamburg',
+          repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
+          version: "0.1.32",
+          namespace: 'default',
+          values: {
+            certificateArn: props.hostedZoneCertificate.certificateArn,
+            envType: {
+              aws: true
+            },
+            env: {
+              baseurl: process.env.BASEURL,
+              participant: 'hamburg-port-authority'
+            },
+            p6config: {
+              company: "hamburg-port-authority",
+              publisherRole: "ATH",
+              cognitoUserPoolId: "eu-west-1_q9s1DipXz",
+              cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki",
+              publisherCodeType: "SMDG_LINER_CODE",
+              partyName: "hamburg-port-authority"
+            }
+          }
+        }
+    )
+    cluster.addHelmChart('HVC', {
+          chart: 'dcsasandboxhamburg',
+          repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
+          version: "0.1.32",
+          namespace: 'default',
+          values: {
+            certificateArn: props.hostedZoneCertificate.certificateArn,
+            envType: {
+              aws: true
+            },
+            env: {
+              baseurl: process.env.BASEURL,
+              participant: 'hvcc-hamburg'
+            },
+            p6config: {
+              company: "hvcc-hamburg",
+              publisherRole: "TR",
+              cognitoUserPoolId: "eu-west-1_q9s1DipXz",
+              cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki",
+              publisherCodeType: "SMDG_LINER_CODE",
+              partyName: "hvcc-hamburg"
+            }
+          }
+        }
+    )
   }
 }

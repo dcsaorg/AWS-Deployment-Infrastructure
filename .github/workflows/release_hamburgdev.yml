@@ -2,7 +2,7 @@ name: Publish
 
 on:
   push:
-    branches: [ release ]
+    branches: [ hamburgdev ]
 
 jobs:
   aws_cdk:
@@ -15,13 +15,13 @@ jobs:
         with:
           cdk_subcommand: 'bootstrap'
           cdk_args: '--cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess'
-          cdk_stack: 'aws://853169102957/eu-west-1'
+          cdk_stack: 'aws://775190501834/eu-west-1'
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWSACCESSKEYID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWSSECRETACCESSKEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGDEVAWSACCESSKEYID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGDEVAWSSECRETACCESSKEY }}
           AWS_DEFAULT_REGION: 'eu-west-1'
-          BASEURL: 'p6-hamburg-test.dcsa.org'
-          HOSTEDZONEID: 'Z0356896WKOUB3ZK0XRN'
+          BASEURL: 'hamburg.dev.dcsa.org'
+          HOSTEDZONEID: 'Z03079632C8D5IGT89TPK'
       - name: Deploying the CDK Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -30,17 +30,19 @@ jobs:
           cdk_args: '--require-approval never'
           actions_comment: false
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWSACCESSKEYID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWSSECRETACCESSKEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGDEVAWSACCESSKEYID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGDEVAWSSECRETACCESSKEY }}
           AWS_DEFAULT_REGION: 'eu-west-1'
-          BASEURL: 'p6-hamburg-test.dcsa.org'
-          HOSTEDZONEID: 'Z0356896WKOUB3ZK0XRN'
+          BASEURL: 'p6-hamburg-development.dcsa.org'
+          HOSTEDZONEID: 'Z059078111NG4D2HJ3FYI'
       - name: Updating load balancer dns
         run: |
           sleep 3m
-          aws elbv2 describe-load-balancers 
+          aws elbv2 describe-load-balancers
           alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
           echo $alburl
           sed -i "s#mydns#$alburl#g" ./route53/route53.json
           cat ./route53/route53.json
-          aws route53 change-resource-record-sets --hosted-zone-id Z0356896WKOUB3ZK0XRN --change-batch file://./route53/route53.json
+          aws route53 change-resource-record-sets --hosted-zone-id Z03079632C8D5IGT89TPK --change-batch file://./route53/route53.json
+
+                 
