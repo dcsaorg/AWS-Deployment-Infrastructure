@@ -60,4 +60,4 @@ Do I have to been an AWS expert, skilled in Kubernetes or master of Typescript?.
 
 
 # TODO 
-DNS Handling
+DNS Handling  d
