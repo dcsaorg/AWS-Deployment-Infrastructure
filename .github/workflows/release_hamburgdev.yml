@@ -35,7 +35,7 @@ jobs:
           AWS_DEFAULT_REGION: 'eu-west-1'
           BASEURL: 'p6-hamburg-development.dcsa.org'
           HOSTEDZONEID: 'Z059078111NG4D2HJ3FYI'
-          PARTICIPANTS: "cma-cgm, hvcc-hamburg, hapag-lloyd, dcsa, hamburg-port-authority, evergreen-marine"
+          PARTICIPANTS: "cma-cgm,hvcc-hamburg,hapag-lloyd,dcsa,hamburg-port-authority,evergreen-marine"
       - name: Updating load balancer dns
         run: |
           sleep 3m
