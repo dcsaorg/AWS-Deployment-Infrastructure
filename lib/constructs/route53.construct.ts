@@ -11,14 +11,12 @@ export class DCSARoute53 extends Construct {
 
   constructor (scope: Construct, id: string, props: DCSARoute53Props = { "hostedZoneId": "", baseUrl: "", "participants": []}) {
     super(scope, id)
-    let subjectAlternativeNamesString = '';
+
+    let subjectAlternativeNames: string[] = [];
 
     props.participants.forEach( ((participant, i, arr) => {
         if (i === 0) return;
-        subjectAlternativeNamesString += participant + "." + props.baseUrl;
-        if (i < arr.length -1) {
-            subjectAlternativeNamesString+= ","
-        }
+        subjectAlternativeNames.push(participant + "." + props.baseUrl);
     }));
 
     this.hostedZone = route53.HostedZone.fromHostedZoneAttributes(
@@ -30,12 +28,13 @@ export class DCSARoute53 extends Construct {
       }
     )
 
-    this.hostedZoneCertificate = new acm.Certificate(
+      // @ts-ignore
+      this.hostedZoneCertificate = new acm.Certificate(
       this,
       'dcsaCertificate',
       {
         domainName: props.participants[0] + props.baseUrl,
-          subjectAlternativeNames: subjectAlternativeNamesString,
+          subjectAlternativeNames: subjectAlternativeNames,
         validation: acm.CertificateValidation.fromDns(this.hostedZone)
       }
     )
