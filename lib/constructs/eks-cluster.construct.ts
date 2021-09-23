@@ -4,12 +4,11 @@ import * as iam from '@aws-cdk/aws-iam'
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import policyStatementActions from '../constants/policyStatementActions.constant'
 
-export interface DCSAEKSClusterProps {
-  hostedZoneCertificate: acm.ICertificate
-}
+export interface DCSAEKSClusterProps {  hostedZoneCertificate: acm.ICertificate} //, cognitoUserPoolId: string }
+
 
 export class DCSAEKSCluster extends Construct {
-  constructor (scope: Construct, id: string, props: DCSAEKSClusterProps) {
+  constructor (scope: Construct, id: string, props: DCSAEKSClusterProps ) {
     super(scope, id)
 
     const cluster = new eks.FargateCluster(this, 'cl', {
@@ -70,8 +69,8 @@ export class DCSAEKSCluster extends Construct {
 		p6config: {
           company: "evergreen-marine",
           publisherRole: "CA",
-          cognitoUserPoolId: "eu-west-1_q9s1DipXz",
-          cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki",
+          cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
+          cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
           publisherCodeType: "SMDG_LINER_CODE",
           partyName: "Carrier"
         }
@@ -94,8 +93,8 @@ export class DCSAEKSCluster extends Construct {
         p6config: {
           company: "cma-cgm",
           publisherRole: "CA",
-          cognitoUserPoolId: "eu-west-1_q9s1DipXz",
-          cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki",
+          cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
+          cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
           publisherCodeType: "SMDG_LINER_CODE",
           partyName: "cma-cgm"
         }
@@ -119,8 +118,8 @@ export class DCSAEKSCluster extends Construct {
             p6config: {
               company: "hapag-lloyd",
               publisherRole: "CA",
-              cognitoUserPoolId: "eu-west-1_q9s1DipXz",
-              cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki",
+              cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
+              cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
               publisherCodeType: "SMDG_LINER_CODE",
               partyName: "hapag-lloyd"
             }
@@ -144,8 +143,8 @@ export class DCSAEKSCluster extends Construct {
             p6config: {
               company: "dcsa",
               publisherRole: "CA",
-              cognitoUserPoolId: "eu-west-1_q9s1DipXz",
-              cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki",
+              cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
+              cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
               publisherCodeType: "SMDG_LINER_CODE",
               partyName: "dcsa"
             }
@@ -169,8 +168,8 @@ export class DCSAEKSCluster extends Construct {
             p6config: {
               company: "hamburg-port-authority",
               publisherRole: "ATH",
-              cognitoUserPoolId: "eu-west-1_q9s1DipXz",
-              cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki",
+              cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
+              cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
               publisherCodeType: "SMDG_LINER_CODE",
               partyName: "hamburg-port-authority"
             }
@@ -194,8 +193,8 @@ export class DCSAEKSCluster extends Construct {
             p6config: {
               company: "hvcc-hamburg",
               publisherRole: "TR",
-              cognitoUserPoolId: "eu-west-1_q9s1DipXz",
-              cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki",
+              cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
+              cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
               publisherCodeType: "SMDG_LINER_CODE",
               partyName: "hvcc-hamburg"
             }

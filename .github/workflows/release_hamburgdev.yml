@@ -36,6 +36,8 @@ jobs:
           BASEURL: 'p6-hamburg-development.dcsa.org'
           HOSTEDZONEID: 'Z059078111NG4D2HJ3FYI'
           PARTICIPANTS: "cma-cgm,hvcc-hamburg,hapag-lloyd,dcsa,hamburg-port-authority,evergreen-marine"
+          COGNITOAPPCLIENTID: "4u49pjh38su1ccea0l4dras9if"
+          COGNITOUSERPOOLID: "eu-west-1_LsLTYEjn5"
       - name: Updating load balancer dns
         run: |
           sleep 3m

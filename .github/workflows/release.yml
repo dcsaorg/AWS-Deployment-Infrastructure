@@ -36,6 +36,8 @@ jobs:
           AWS_DEFAULT_REGION: 'eu-west-1'
           BASEURL: 'p6-hamburg-test.dcsa.org'
           HOSTEDZONEID: 'Z0356896WKOUB3ZK0XRN'
+          COGNITOAPPCLIENTID: "5bfutou7tg621i6h1fbgs4vlki"
+          COGNITOUSERPOOLID: "eu-west-1_q9s1DipXz"
           PARTICIPANTS: "['cma-cgm', 'hvcc-hamburg', 'hapag-lloyd', 'dcsa', 'hamburg-port-authority', 'evergreen-marine']"
       - name: Updating load balancer dns
         run: |
