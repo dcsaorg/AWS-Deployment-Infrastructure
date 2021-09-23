@@ -56,7 +56,7 @@ export class DCSAEKSCluster extends Construct {
     cluster.addHelmChart('EVE', {
       chart: 'dcsasandboxhamburg',
       repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-      version: "0.1.35",
+      version: "0.1.34",
       namespace: 'default',
       values: {
         certificateArn: props.hostedZoneCertificate.certificateArn,
@@ -80,7 +80,7 @@ export class DCSAEKSCluster extends Construct {
     cluster.addHelmChart('CMA', {
       chart: 'dcsasandboxhamburg',
       repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-      version: "0.1.35",
+      version: "0.1.34",
       namespace: 'default',
       values: {
         certificateArn: props.hostedZoneCertificate.certificateArn,
@@ -105,7 +105,7 @@ export class DCSAEKSCluster extends Construct {
     cluster.addHelmChart('HAP', {
           chart: 'dcsasandboxhamburg',
           repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-          version: "0.1.35",
+          version: "0.1.34",
           namespace: 'default',
           values: {
             certificateArn: props.hostedZoneCertificate.certificateArn,
@@ -130,7 +130,7 @@ export class DCSAEKSCluster extends Construct {
     cluster.addHelmChart('DCS', {
           chart: 'dcsasandboxhamburg',
           repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-          version: "0.1.35",
+          version: "0.1.34",
           namespace: 'default',
           values: {
             certificateArn: props.hostedZoneCertificate.certificateArn,
@@ -155,7 +155,7 @@ export class DCSAEKSCluster extends Construct {
     cluster.addHelmChart('HPA', {
           chart: 'dcsasandboxhamburg',
           repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-          version: "0.1.35",
+          version: "0.1.34",
           namespace: 'default',
           values: {
             certificateArn: props.hostedZoneCertificate.certificateArn,
@@ -180,7 +180,7 @@ export class DCSAEKSCluster extends Construct {
     cluster.addHelmChart('HVC', {
           chart: 'dcsasandboxhamburg',
           repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-          version: "0.1.35",
+          version: "0.1.34",
           namespace: 'default',
           values: {
             certificateArn: props.hostedZoneCertificate.certificateArn,

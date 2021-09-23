@@ -20,8 +20,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGDEVAWSACCESSKEYID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGDEVAWSSECRETACCESSKEY }}
           AWS_DEFAULT_REGION: 'eu-west-1'
-          BASEURL: 'hamburg.dev.dcsa.org'
-          HOSTEDZONEID: 'Z03079632C8D5IGT89TPK'
+          BASEURL: 'p6-hamburg-development.dcsa.org'
+          HOSTEDZONEID: 'Z059078111NG4D2HJ3FYI'
       - name: Deploying the CDK Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -43,6 +43,6 @@ jobs:
           echo $alburl
           sed -i "s#mydns#$alburl#g" ./route53/route53.json
           cat ./route53/route53.json
-          aws route53 change-resource-record-sets --hosted-zone-id Z03079632C8D5IGT89TPK --change-batch file://./route53/route53.json
+          aws route53 change-resource-record-sets --hosted-zone-id Z059078111NG4D2HJ3FYI --change-batch file://./route53/route53.json
 
                  
