@@ -35,7 +35,7 @@ export class DCSARoute53 extends Construct {
       'dcsaCertificate',
       {
         domainName: props.participants[0] + props.baseUrl,
-          subjectAlternativeNames: [subjectAlternativeNamesString],
+          subjectAlternativeNames: subjectAlternativeNamesString,
         validation: acm.CertificateValidation.fromDns(this.hostedZone)
       }
     )
