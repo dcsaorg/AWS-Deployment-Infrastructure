@@ -73,7 +73,7 @@ export class DCSAEKSCluster extends Construct {
           cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
           publisherCodeType: "SMDG_LINER_CODE",
           partyName: "Carrier",
-          smtpPassword: process.env.HAMBURGDEVSMTPPASSWORD
+          springMailPassword: process.env.HAMBURGDEVspringMailPassword
         }
       }
     })
@@ -98,7 +98,7 @@ export class DCSAEKSCluster extends Construct {
           cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
           publisherCodeType: "SMDG_LINER_CODE",
           partyName: "cma-cgm",
-          smtpPassword: process.env.HAMBURGDEVSMTPPASSWORD
+          springMailPassword: process.env.HAMBURGDEVspringMailPassword
         }
       }
     }	
@@ -124,7 +124,7 @@ export class DCSAEKSCluster extends Construct {
               cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
               publisherCodeType: "SMDG_LINER_CODE",
               partyName: "hapag-lloyd",
-              smtpPassword: process.env.HAMBURGDEVSMTPPASSWORD
+              springMailPassword: process.env.HAMBURGDEVspringMailPassword
             }
           }
         }
@@ -150,7 +150,7 @@ export class DCSAEKSCluster extends Construct {
               cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
               publisherCodeType: "SMDG_LINER_CODE",
               partyName: "dcsa",
-              smtpPassword: process.env.HAMBURGDEVSMTPPASSWORD
+              springMailPassword: process.env.HAMBURGDEVspringMailPassword
             }
           }
         }
@@ -176,7 +176,7 @@ export class DCSAEKSCluster extends Construct {
               cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
               publisherCodeType: "SMDG_LINER_CODE",
               partyName: "hamburg-port-authority",
-              smtpPassword: process.env.HAMBURGDEVSMTPPASSWORD
+              springMailPassword: process.env.HAMBURGDEVspringMailPassword
             }
           }
         }
@@ -202,7 +202,7 @@ export class DCSAEKSCluster extends Construct {
               cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
               publisherCodeType: "SMDG_LINER_CODE",
               partyName: "hvcc-hamburg",
-              smtpPassword: process.env.HAMBURGDEVSMTPPASSWORD
+              springMailPassword: process.env.HAMBURGDEVspringMailPassword
             }
           }
         }
