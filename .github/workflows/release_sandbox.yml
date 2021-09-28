@@ -2,7 +2,7 @@ name: Publish
 
 on:
   push:
-    branches: [ hamburgdev ]
+    branches: [ sandbox ]
 
 jobs:
   aws_cdk:
@@ -17,11 +17,11 @@ jobs:
           cdk_args: '--cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess'
           cdk_stack: 'aws://775190501834/eu-west-1'
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGDEVAWSACCESSKEYID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGDEVAWSSECRETACCESSKEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.SANDBOXAWSACCESSKEYID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SANDBOXAWSSECRETACCESSKEY }}
           AWS_DEFAULT_REGION: 'eu-west-1'
-          BASEURL: 'p6-hamburg-development.dcsa.org'
-          HOSTEDZONEID: 'Z059078111NG4D2HJ3FYI'
+          BASEURL: 'dev.dcsa.org'
+          HOSTEDZONEID: 'Z040818834AD3CMGVA9MB'
       - name: Deploying the CDK Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -33,14 +33,11 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGDEVAWSACCESSKEYID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGDEVAWSSECRETACCESSKEY }}
           AWS_DEFAULT_REGION: 'eu-west-1'
-          BASEURL: 'p6-hamburg-development.dcsa.org'
-          HOSTEDZONEID: 'Z059078111NG4D2HJ3FYI'
-          PARTICIPANTS: "cma-cgm,hvcc-hamburg,hapag-lloyd,dcsa,hamburg-port-authority,evergreen-marine"
+          BASEURL: 'Z040818834AD3CMGVA9MB'
+          HOSTEDZONEID: 'Z040818834AD3CMGVA9MB'
+          PARTICIPANTS: "cma-cgm,dcsa"
           COGNITOAPPCLIENTID: "4u49pjh38su1ccea0l4dras9if"
-          COGNITOUSERPOOLID: "eu-west-1_LsLTYEjn5"
-          HELMVERSION: "0.1.38"
-          SMTPUSERNAME: "AKIA3I7HULHFFSNUVVB4"
-          SMTPPASSWORD: ${{ secrets.HAMBURGDEVSMTPPASSWORD }}
+          COGNITOUSERPOOLID: "eu-west-1_rJGpA7BVH"
       - name: Updating load balancer dns
         run: |
           sleep 3m

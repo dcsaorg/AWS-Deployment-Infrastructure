@@ -39,6 +39,7 @@ jobs:
           COGNITOAPPCLIENTID: "5bfutou7tg621i6h1fbgs4vlki"
           COGNITOUSERPOOLID: "eu-west-1_q9s1DipXz"
           PARTICIPANTS: "['cma-cgm', 'hvcc-hamburg', 'hapag-lloyd', 'dcsa', 'hamburg-port-authority', 'evergreen-marine']"
+          HELMVERSION: "0.1.38"
       - name: Updating load balancer dns
         run: |
           sleep 3m

@@ -4,11 +4,11 @@ import * as iam from '@aws-cdk/aws-iam'
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import policyStatementActions from '../constants/policyStatementActions.constant'
 
-export interface DCSAEKSClusterProps {  hostedZoneCertificate: acm.ICertificate} //, cognitoUserPoolId: string }
+export interface DCSAEKSClusterProps {  hostedZoneCertificate: acm.ICertificate, cognitoUserPoolId: string, helmversion: string }
 
 
 export class DCSAEKSCluster extends Construct {
-  constructor (scope: Construct, id: string, props: DCSAEKSClusterProps ) {
+  constructor (scope: Construct, id: string, props: DCSAEKSClusterProps) {
     super(scope, id)
 
     const cluster = new eks.FargateCluster(this, 'cl', {
@@ -55,7 +55,7 @@ export class DCSAEKSCluster extends Construct {
     cluster.addHelmChart('EVE', {
       chart: 'dcsasandboxhamburg',
       repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-      version: "0.1.38",
+      version: props.helmversion,
       namespace: 'default',
       values: {
         certificateArn: props.hostedZoneCertificate.certificateArn,
@@ -69,17 +69,18 @@ export class DCSAEKSCluster extends Construct {
 		p6config: {
           company: "evergreen-marine",
           publisherRole: "CA",
-          cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
+          cognitoUserPoolId: props.cognitoUserPoolId,
           cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
           publisherCodeType: "SMDG_LINER_CODE",
-          partyName: "Carrier"
+          partyName: "Carrier",
+          smtpPassword: process.env.HAMBURGDEVSMTPPASSWORD
         }
       }
     })
     cluster.addHelmChart('CMA', {
       chart: 'dcsasandboxhamburg',
       repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-      version: "0.1.38",
+      version: props.helmversion,
       namespace: 'default',
       values: {
         certificateArn: props.hostedZoneCertificate.certificateArn,
@@ -96,7 +97,8 @@ export class DCSAEKSCluster extends Construct {
           cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
           cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
           publisherCodeType: "SMDG_LINER_CODE",
-          partyName: "cma-cgm"
+          partyName: "cma-cgm",
+          smtpPassword: process.env.HAMBURGDEVSMTPPASSWORD
         }
       }
     }	
@@ -104,7 +106,7 @@ export class DCSAEKSCluster extends Construct {
     cluster.addHelmChart('HAP', {
           chart: 'dcsasandboxhamburg',
           repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-          version: "0.1.38",
+          version: props.helmversion,
           namespace: 'default',
           values: {
             certificateArn: props.hostedZoneCertificate.certificateArn,
@@ -121,7 +123,8 @@ export class DCSAEKSCluster extends Construct {
               cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
               cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
               publisherCodeType: "SMDG_LINER_CODE",
-              partyName: "hapag-lloyd"
+              partyName: "hapag-lloyd",
+              smtpPassword: process.env.HAMBURGDEVSMTPPASSWORD
             }
           }
         }
@@ -129,7 +132,7 @@ export class DCSAEKSCluster extends Construct {
     cluster.addHelmChart('DCS', {
           chart: 'dcsasandboxhamburg',
           repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-          version: "0.1.38",
+          version: props.helmversion,
           namespace: 'default',
           values: {
             certificateArn: props.hostedZoneCertificate.certificateArn,
@@ -146,7 +149,8 @@ export class DCSAEKSCluster extends Construct {
               cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
               cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
               publisherCodeType: "SMDG_LINER_CODE",
-              partyName: "dcsa"
+              partyName: "dcsa",
+              smtpPassword: process.env.HAMBURGDEVSMTPPASSWORD
             }
           }
         }
@@ -154,7 +158,7 @@ export class DCSAEKSCluster extends Construct {
     cluster.addHelmChart('HPA', {
           chart: 'dcsasandboxhamburg',
           repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-          version: "0.1.38",
+          version: props.helmversion,
           namespace: 'default',
           values: {
             certificateArn: props.hostedZoneCertificate.certificateArn,
@@ -171,7 +175,8 @@ export class DCSAEKSCluster extends Construct {
               cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
               cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
               publisherCodeType: "SMDG_LINER_CODE",
-              partyName: "hamburg-port-authority"
+              partyName: "hamburg-port-authority",
+              smtpPassword: process.env.HAMBURGDEVSMTPPASSWORD
             }
           }
         }
@@ -179,7 +184,7 @@ export class DCSAEKSCluster extends Construct {
     cluster.addHelmChart('HVC', {
           chart: 'dcsasandboxhamburg',
           repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-          version: "0.1.38",
+          version: props.helmversion,
           namespace: 'default',
           values: {
             certificateArn: props.hostedZoneCertificate.certificateArn,
@@ -196,7 +201,8 @@ export class DCSAEKSCluster extends Construct {
               cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
               cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
               publisherCodeType: "SMDG_LINER_CODE",
-              partyName: "hvcc-hamburg"
+              partyName: "hvcc-hamburg",
+              smtpPassword: process.env.HAMBURGDEVSMTPPASSWORD
             }
           }
         }
