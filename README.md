@@ -4,7 +4,7 @@ This repository contains the infrastructure code for deploying the DCSA Sandbox 
 
 The infrastructure is defined using [AWS CDK](https://aws.amazon.com/cdk/) . AWS CDK is infrastructure as code, basically we are describing the infrastructure using typescript.
 
-The preferred way of deploying the DCSA Sandbox is using deploying it in a Kubernetes cluster. The CDK code in this repository deploys an EKS Fargate Cluster on AWS and installs the DCSA Sandbox using Helm Charts found in the XXXXX repository
+The preferred way of deploying the DCSA Sandbox is using deploying  it in a Kubernetes cluster. The CDK code in this repository deploys an EKS Fargate Cluster on AWS and installs the DCSA Sandbox using Helm Charts found in the XXXXX repository
 
 ## How to get started
 
