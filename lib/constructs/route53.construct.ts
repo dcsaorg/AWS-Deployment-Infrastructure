@@ -2,22 +2,36 @@ import { Construct } from '@aws-cdk/core'
 import * as route53 from '@aws-cdk/aws-route53'
 import * as acm from '@aws-cdk/aws-certificatemanager'
 
-export interface DCSARoute53Props { hostedZoneId: string, baseUrl: string, participants: string[]}
+export interface DCSARoute53Props { hostedZoneId: string, baseUrl: string, participants: string}
 
 export class DCSARoute53 extends Construct {
   hostedZone: route53.IHostedZone
   hostedZoneCertificate: acm.ICertificate
 
 
-  constructor (scope: Construct, id: string, props: DCSARoute53Props = { "hostedZoneId": "", baseUrl: "", "participants": []}) {
+  constructor (scope: Construct, id: string, props: DCSARoute53Props = { "hostedZoneId": "", baseUrl: "", "participants": ""}) {
     super(scope, id)
 
     let subjectAlternativeNames: string[] = [];
 
-    props.participants.forEach( ((participant, i, arr) => {
-        if (i === 0) return;
-        subjectAlternativeNames.push(participant + "." + props.baseUrl);
-    }));
+    let participantsMap = new Map(Object.entries(props.participants));
+    let firstPArticipant = "";
+    let i = 0;
+    participantsMap.forEach((value: string, key: string) => {
+      if (i === 0 ) {
+        firstPArticipant= value;
+      }
+      else {
+      subjectAlternativeNames.push(key + "." + props.baseUrl);
+      }
+      i++;
+    });
+
+    // props.participants.forEach( ((participant, i, arr) => {
+    //     if (i === 0) return;
+    //     subjectAlternativeNames.push(participant + "." + props.baseUrl);
+    // }));
+
 
     this.hostedZone = route53.HostedZone.fromHostedZoneAttributes(
       this,

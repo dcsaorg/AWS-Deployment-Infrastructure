@@ -1,211 +1,90 @@
-import { Construct } from '@aws-cdk/core'
+import {Construct} from '@aws-cdk/core'
 import * as eks from '@aws-cdk/aws-eks'
 import * as iam from '@aws-cdk/aws-iam'
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import policyStatementActions from '../constants/policyStatementActions.constant'
 
-export interface DCSAEKSClusterProps {  hostedZoneCertificate: acm.ICertificate, cognitoUserPoolId: string, helmversion: string }
+export interface DCSAEKSClusterProps {
+    hostedZoneCertificate: acm.ICertificate,
+    cognitoUserPoolId: string,
+    helmVersion: string,
+    participants: string
+}
 
 
 export class DCSAEKSCluster extends Construct {
-  constructor (scope: Construct, id: string, props: DCSAEKSClusterProps) {
-    super(scope, id)
+    constructor(scope: Construct, id: string, props: DCSAEKSClusterProps) {
+        super(scope, id)
 
-    const cluster = new eks.FargateCluster(this, 'cl', {
-      version: eks.KubernetesVersion.V1_18,
-      clusterName: 'cl'
-    })
+        const cluster = new eks.FargateCluster(this, 'cl', {
+            version: eks.KubernetesVersion.V1_18,
+            clusterName: 'cl'
+        })
 
+        let participantsMap = new Map(Object.entries(props.participants));
 
+        const policyStatement = new iam.PolicyStatement({
+            resources: ['*'],
+            actions: policyStatementActions
+        })
 
-    const policyStatement = new iam.PolicyStatement({
-      resources: ['*'],
-      actions: policyStatementActions
-    })
+        const adminStatement = new iam.PolicyStatement({
+            resources: ['*'],
+            actions: ['*']
+        })
 
-    const adminStatement = new iam.PolicyStatement({
-      resources: ['*'],
-      actions: ['*']
-    })
+        const account = cluster.addServiceAccount('ALBController', {
+            name: 'aws-load-balancer-controller',
+            namespace: 'kube-system'
+        })
 
-    const account = cluster.addServiceAccount('ALBController', {
-      name: 'aws-load-balancer-controller',
-      namespace: 'kube-system'
-    })
+        account.addToPrincipalPolicy(policyStatement)
+        account.addToPrincipalPolicy(adminStatement)
 
-    account.addToPrincipalPolicy(policyStatement)
-    account.addToPrincipalPolicy(adminStatement)
-
-    cluster.addHelmChart('ALBController', {
-      chart: 'aws-load-balancer-controller',
-      repository: 'https://aws.github.io/eks-charts',
-      namespace: 'kube-system',
-      release: 'aws-load-balancer-controller',
-      values: {
-        region: 'eu-west-1',
-        vpcId: cluster.vpc.vpcId,
-        clusterName: cluster.clusterName,
-        serviceAccount: {
-          create: false,
-          name: account.serviceAccountName
-        }
-      }
-    })
-
-    cluster.addHelmChart('EVE', {
-      chart: 'dcsasandboxhamburg',
-      repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-      version: props.helmversion,
-      namespace: 'default',
-      values: {
-        certificateArn: props.hostedZoneCertificate.certificateArn,
-        envType: {
-          aws: true
-        },
-		env: {
-		  baseurl: process.env.BASEURL,
-		  participant: 'evergreen-marine'
-        },
-		p6config: {
-          company: "evergreen-marine",
-          publisherRole: "CA",
-          cognitoUserPoolId: props.cognitoUserPoolId,
-          cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
-          publisherCodeType: "SMDG_LINER_CODE",
-          partyName: "Carrier",
-          springMailPassword: process.env.HAMBURGDEVspringMailPassword
-        }
-      }
-    })
-    cluster.addHelmChart('CMA', {
-      chart: 'dcsasandboxhamburg',
-      repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-      version: props.helmversion,
-      namespace: 'default',
-      values: {
-        certificateArn: props.hostedZoneCertificate.certificateArn,
-        envType: {
-          aws: true
-        },
-        env: {
-          baseurl: process.env.BASEURL,
-          participant: 'cma-cgm'
-        },
-        p6config: {
-          company: "cma-cgm",
-          publisherRole: "CA",
-          cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
-          cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
-          publisherCodeType: "SMDG_LINER_CODE",
-          partyName: "cma-cgm",
-          springMailPassword: process.env.SMTPPASSWORD
-        }
-      }
-    }	
-	)
-    cluster.addHelmChart('HAP', {
-          chart: 'dcsasandboxhamburg',
-          repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-          version: props.helmversion,
-          namespace: 'default',
-          values: {
-            certificateArn: props.hostedZoneCertificate.certificateArn,
-            envType: {
-              aws: true
-            },
-            env: {
-              baseurl: process.env.BASEURL,
-              participant: 'hapag-lloyd'
-            },
-            p6config: {
-              company: "hapag-lloyd",
-              publisherRole: "CA",
-              cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
-              cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
-              publisherCodeType: "SMDG_LINER_CODE",
-              partyName: "hapag-lloyd",
-              springMailPassword: process.env.SMTPPASSWORD
+        cluster.addHelmChart('ALBController', {
+            chart: 'aws-load-balancer-controller',
+            repository: 'https://aws.github.io/eks-charts',
+            namespace: 'kube-system',
+            release: 'aws-load-balancer-controller',
+            values: {
+                region: 'eu-west-1',
+                vpcId: cluster.vpc.vpcId,
+                clusterName: cluster.clusterName,
+                serviceAccount: {
+                    create: false,
+                    name: account.serviceAccountName
+                }
             }
-          }
-        }
-    )
-    cluster.addHelmChart('DCS', {
-          chart: 'dcsasandboxhamburg',
-          repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-          version: props.helmversion,
-          namespace: 'default',
-          values: {
-            certificateArn: props.hostedZoneCertificate.certificateArn,
-            envType: {
-              aws: true
-            },
-            env: {
-              baseurl: process.env.BASEURL,
-              participant: 'dcsa'
-            },
-            p6config: {
-              company: "dcsa",
-              publisherRole: "CA",
-              cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
-              cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
-              publisherCodeType: "SMDG_LINER_CODE",
-              partyName: "dcsa",
-              springMailPassword: process.env.SMTPPASSWORD
+        })
+
+        participantsMap.forEach((value: string, key: string) => {
+                cluster.addHelmChart(key.substring(0, 2), {
+                    chart: 'dcsasandboxhamburg',
+                    repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
+                    version: props.helmVersion,
+                    namespace: 'default',
+                    values: {
+                        certificateArn: props.hostedZoneCertificate.certificateArn,
+                        envType: {
+                            aws: true
+                        },
+                        env: {
+                            baseurl: process.env.BASEURL,
+                            participant: key
+                        },
+                        p6config: {
+                            company: key,
+                            publisherRole: "CA",
+                            cognitoUserPoolId: props.cognitoUserPoolId,
+                            cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
+                            publisherCodeType: "SMDG_LINER_CODE",
+                            partyName: key,
+                            springMailPassword: process.env.HAMBURGDEVspringMailPassword,
+                            notificationEmail: value
+                        }
+                    }
+                })
             }
-          }
-        }
-    )
-    cluster.addHelmChart('HPA', {
-          chart: 'dcsasandboxhamburg',
-          repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-          version: props.helmversion,
-          namespace: 'default',
-          values: {
-            certificateArn: props.hostedZoneCertificate.certificateArn,
-            envType: {
-              aws: true
-            },
-            env: {
-              baseurl: process.env.BASEURL,
-              participant: 'hamburg-port-authority'
-            },
-            p6config: {
-              company: "hamburg-port-authority",
-              publisherRole: "ATH",
-              cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
-              cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
-              publisherCodeType: "SMDG_LINER_CODE",
-              partyName: "hamburg-port-authority",
-              springMailPassword: process.env.SMTPPASSWORD
-            }
-          }
-        }
-    )
-    cluster.addHelmChart('HVC', {
-          chart: 'dcsasandboxhamburg',
-          repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-          version: props.helmversion,
-          namespace: 'default',
-          values: {
-            certificateArn: props.hostedZoneCertificate.certificateArn,
-            envType: {
-              aws: true
-            },
-            env: {
-              baseurl: process.env.BASEURL,
-              participant: 'hvcc-hamburg'
-            },
-            p6config: {
-              company: "hvcc-hamburg",
-              publisherRole: "TR",
-              cognitoUserPoolId: process.env.COGNITOUSERPOOLID,
-              cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
-              publisherCodeType: "SMDG_LINER_CODE",
-              partyName: "hvcc-hamburg",
-              springMailPassword: process.env.SMTPPASSWORD
-            }
-          }
-        }
-    )
-  }
+        )
+    }
 }
