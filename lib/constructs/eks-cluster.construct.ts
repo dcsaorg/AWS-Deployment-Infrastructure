@@ -58,7 +58,7 @@ export class DCSAEKSCluster extends Construct {
         })
 
         participantsMap.forEach((value: string, key: string) => {
-                cluster.addHelmChart(key.substring(0, 2), {
+                cluster.addHelmChart(key.substring(0, 3), {
                     chart: 'dcsasandboxhamburg',
                     repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
                     version: props.helmVersion,
