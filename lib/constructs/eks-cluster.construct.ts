@@ -81,7 +81,7 @@ export class DCSAEKSCluster extends Construct {
                             cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
                             publisherCodeType: "SMDG_LINER_CODE",
                             partyName: key,
-                            springMailPassword: process.env.HAMBURGDEVspringMailPassword,
+                            springMailPassword: process.env.SMTPPASSWORD,
                             notificationEmail: value
                         }
                     }
