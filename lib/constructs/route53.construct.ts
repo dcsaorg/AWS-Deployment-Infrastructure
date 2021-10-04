@@ -14,24 +14,20 @@ export class DCSARoute53 extends Construct {
 
     let subjectAlternativeNames: string[] = [];
 
-    let participantsMap = new Map(Object.entries(props.participants));
-    let firstPArticipant = "";
+    let jsonStr = props.participants;
+    let jsonObj = JSON.parse(jsonStr);
+    let participantsMap = new Map<string, string>(Object.entries(jsonObj));
+    let firstParticipant = "";
     let i = 0;
     participantsMap.forEach((value: string, key: string) => {
       if (i === 0 ) {
-        firstPArticipant= value;
+        firstParticipant= value;
       }
       else {
       subjectAlternativeNames.push(key + "." + props.baseUrl);
       }
       i++;
     });
-
-    // props.participants.forEach( ((participant, i, arr) => {
-    //     if (i === 0) return;
-    //     subjectAlternativeNames.push(participant + "." + props.baseUrl);
-    // }));
-
 
     this.hostedZone = route53.HostedZone.fromHostedZoneAttributes(
       this,
