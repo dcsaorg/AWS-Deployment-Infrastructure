@@ -21,7 +21,9 @@ export class DCSAEKSCluster extends Construct {
             clusterName: 'cl'
         })
 
-        let participantsMap = new Map(Object.entries(props.participants));
+        let jsonStr = props.participants;
+        let jsonObj = JSON.parse(jsonStr);
+        let participantsMap = new Map<string, string>(Object.entries(jsonObj));
 
         const policyStatement = new iam.PolicyStatement({
             resources: ['*'],
