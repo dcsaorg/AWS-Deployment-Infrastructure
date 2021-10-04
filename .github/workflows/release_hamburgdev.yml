@@ -19,6 +19,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGDEVAWSACCESSKEYID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGDEVAWSSECRETACCESSKEY }}
+          PARTICIPANTS:  ${{ secrets.HAMBURGDEVPARTICIPANTS }}
           AWS_DEFAULT_REGION: 'eu-west-1'
           BASEURL: 'p6-hamburg-development.dcsa.org'
           HOSTEDZONEID: 'Z059078111NG4D2HJ3FYI'
