@@ -23,6 +23,8 @@ jobs:
           AWS_DEFAULT_REGION: 'eu-west-1'
           BASEURL: 'p6-hamburg-development.dcsa.org'
           HOSTEDZONEID: 'Z059078111NG4D2HJ3FYI'
+          SMTPUSERNAME: "AKIA3I7HULHFFSNUVVB4"
+          SMTPPASSWORD: ${{ secrets.HAMBURGDEVSMTPPASSWORD }}
       - name: Deploying the CDK Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
