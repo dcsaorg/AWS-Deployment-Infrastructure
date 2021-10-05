@@ -8,7 +8,8 @@ export interface DCSAEKSClusterProps {
     hostedZoneCertificate: acm.ICertificate,
     cognitoUserPoolId: string,
     helmVersion: string,
-    participants: string
+    participants: string,
+    springMailUsername: string
 }
 
 
@@ -81,6 +82,7 @@ export class DCSAEKSCluster extends Construct {
                             cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
                             publisherCodeType: "SMDG_LINER_CODE",
                             partyName: key,
+                            springMailUsername: props.springMailUsername,
                             springMailPassword: process.env.SMTPPASSWORD,
                             notificationEmail: value
                         }
