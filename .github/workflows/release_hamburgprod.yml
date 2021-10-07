@@ -39,7 +39,7 @@ jobs:
           HOSTEDZONEID: 'Z0897388S7HMXDOADHBC'
           COGNITOAPPCLIENTID: "2id9n1me4q5pn6412r6dtamgul"
           COGNITOUSERPOOLID: "eu-west-1_UV95TORKw"
-          HELMVERSION: "0.1.42"
+          HELMVERSION: "0.1.44"
           SMTPUSERNAME: "AKIARP6MS7EFTHTJMPBM"
           SMTPPASSWORD: ${{ secrets.HAMBURGPRODSMTPPASSWORD }}
       - name: Updating load balancer dns
