@@ -17,8 +17,8 @@ jobs:
           cdk_args: '--cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess'
           cdk_stack: 'aws://853169102957/eu-west-1'
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGPRODAWSACCESSKEYID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGPRODAWSSECRETACCESSKEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGTESTAWSACCESSKEYID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGTESTAWSSECRETACCESSKEY }}
           PARTICIPANTS:  ${{ secrets.HAMBURGDEVPARTICIPANTS }}
           AWS_DEFAULT_REGION: 'eu-west-1'
           BASEURL: 'p6-hamburg-test.dcsa.org'
@@ -31,8 +31,8 @@ jobs:
           cdk_args: '--require-approval never'
           actions_comment: false
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGPRODAWSACCESSKEYID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGPRODAWSSECRETACCESSKEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGTESTAWSACCESSKEYID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGTESTAWSSECRETACCESSKEY }}
           PARTICIPANTS:  ${{ secrets.HAMBURGPRODPARTICIPANTS }}
           AWS_DEFAULT_REGION: 'eu-west-1'
           BASEURL: 'p6-hamburg-test.dcsa.org'
