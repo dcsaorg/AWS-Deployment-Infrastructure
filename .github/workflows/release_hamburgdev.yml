@@ -32,7 +32,7 @@ jobs:
           cdk_stack: 'aws://${{ env.awsaccountid }}/${{ env.awsregion }}'
         env:
           AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
-          AWS_SECRET_ACCESS_KEY: $${{ env.awssecretaccesskey }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
           PARTICIPANTS:  ${{ env.participants }}
           AWS_DEFAULT_REGION: ${{ env.awsregion }}
           BASEURL: ''
@@ -48,7 +48,7 @@ jobs:
           actions_comment: false
         env:
           AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
-          AWS_SECRET_ACCESS_KEY: $${{ env.awssecretaccesskey }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
           PARTICIPANTS:  ${{ env.participants }}
           AWS_DEFAULT_REGION: ${{ env.awsregion }}
           BASEURL: ${{ env.baseurl }}
@@ -63,7 +63,7 @@ jobs:
         with:
           role-skip-session-tagging: true
           aws-access-key-id: ${{ env.awsaccesskeyid }}
-          aws-secret-access-key: $${{ env.awssecretaccesskey }}
+          aws-secret-access-key: ${{ env.awssecretaccesskey }}
           aws-region:  ${{ env.awsregion }}
       - name: Updating load balancer dns
         run: |
