@@ -2,7 +2,7 @@ name: Publish
 
 on:
   push:
-    branches: [ hamburgproduction ]
+    branches: [ hamburgtest ]
 
 jobs:
   aws_cdk:
@@ -15,14 +15,14 @@ jobs:
         with:
           cdk_subcommand: 'bootstrap'
           cdk_args: '--cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess'
-          cdk_stack: 'aws://102971406603/eu-west-1'
+          cdk_stack: 'aws://853169102957/eu-west-1'
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGPRODAWSACCESSKEYID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGPRODAWSSECRETACCESSKEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGTESTAWSACCESSKEYID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGTESTAWSSECRETACCESSKEY }}
           PARTICIPANTS:  ${{ secrets.HAMBURGDEVPARTICIPANTS }}
           AWS_DEFAULT_REGION: 'eu-west-1'
-          BASEURL: 'p6-hamburg-production.dcsa.org'
-          HOSTEDZONEID: 'Z0897388S7HMXDOADHBC'
+          BASEURL: 'p6-hamburg-test.dcsa.org'
+          HOSTEDZONEID: 'Z0356896WKOUB3ZK0XRN'
       - name: Deploying the CDK Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -31,17 +31,17 @@ jobs:
           cdk_args: '--require-approval never'
           actions_comment: false
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGPRODAWSACCESSKEYID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGPRODAWSSECRETACCESSKEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGTESTAWSACCESSKEYID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGTESTAWSSECRETACCESSKEY }}
           PARTICIPANTS:  ${{ secrets.HAMBURGPRODPARTICIPANTS }}
           AWS_DEFAULT_REGION: 'eu-west-1'
-          BASEURL: 'p6-hamburg-production.dcsa.org'
-          HOSTEDZONEID: 'Z0897388S7HMXDOADHBC'
-          COGNITOAPPCLIENTID: "2id9n1me4q5pn6412r6dtamgul"
-          COGNITOUSERPOOLID: "eu-west-1_UV95TORKw"
+          BASEURL: 'p6-hamburg-test.dcsa.org'
+          HOSTEDZONEID: 'Z0356896WKOUB3ZK0XRN'
+          COGNITOAPPCLIENTID: "5bfutou7tg621i6h1fbgs4vlki"
+          COGNITOUSERPOOLID: "eu-west-1_q9s1DipXz"
           HELMVERSION: "0.1.46"
-          SMTPUSERNAME: "AKIARP6MS7EFTHTJMPBM"
-          SMTPPASSWORD: ${{ secrets.HAMBURGPRODSMTPPASSWORD }}
+          SMTPUSERNAME: ${{ secrets.HAMBURGTESTAWSACCESSKEYID }}
+          SMTPPASSWORD: ${{ secrets.HAMBURGTESTAWSSECRETACCESSKEY }}
       - name: Updating load balancer dns
         run: |
           sleep 3m
@@ -50,6 +50,6 @@ jobs:
           echo $alburl
           sed -i "s#mydns#$alburl#g" ./route53/route53.json
           cat ./route53/route53.json
-          aws route53 change-resource-record-sets --hosted-zone-id Z0897388S7HMXDOADHBC --change-batch file://./route53/route53.json
+          aws route53 change-resource-record-sets --hosted-zone-id Z0356896WKOUB3ZK0XRN --change-batch file://./route53/route53.json
 
                  
