@@ -5,7 +5,7 @@ on:
     branches: [ hamburgdevelopment ]
 
 env:
-  awsaccountid:'775190501834'
+  awsaccountid: '775190501834'
   awsregion: 'eu-west-1'
   baseurl: 'p6-hamburg-development.dcsa.org'
   hostedzoneid: 'Z059078111NG4D2HJ3FYI'
