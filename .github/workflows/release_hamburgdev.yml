@@ -52,7 +52,7 @@ jobs:
           PARTICIPANTS:  ${{ env.participants }}
           AWS_DEFAULT_REGION: ${{ env.awsregion }}
           BASEURL: ${{ env.baseurl }}
-          HOSTEDZONEID: ${{ env.awsregion }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
           COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
           COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
           HELMVERSION: ${{ env.helmversion }}
