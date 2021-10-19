@@ -33,7 +33,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
           AWS_SECRET_ACCESS_KEY: $${{ env.awssecretaccesskey }}
-          PARTICIPANTS:  ''
+          PARTICIPANTS:  ${{ env.participants }}
           AWS_DEFAULT_REGION: ${{ env.awsregion }}
           BASEURL: ''
           HOSTEDZONEID: ''
