@@ -4,9 +4,23 @@ on:
   push:
     branches: [ hamburgtest ]
 
+env:
+  awsaccountid: '853169102957'
+  awsregion: 'eu-west-1'
+  baseurl: 'p6-hamburg-test.dcsa.org'
+  hostedzoneid: 'Z0356896WKOUB3ZK0XRN'
+  smtpusername: ''
+  cognitoappclientid: '5bfutou7tg621i6h1fbgs4vlki'
+  cognitouserpoolid: 'eu-west-1_q9s1DipXz'
+  helmversion: '0.1.46'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
+    env:
+      smtppassword: ${{ secrets.HAMBURGTESTSMTPPASSWORD }}
+      participants: ${{ secrets.HAMBURGTESTPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.HAMBURGTESTAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.HAMBURGTESTAWSSECRETACCESSKEY }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
@@ -15,14 +29,16 @@ jobs:
         with:
           cdk_subcommand: 'bootstrap'
           cdk_args: '--cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess'
-          cdk_stack: 'aws://853169102957/eu-west-1'
+          cdk_stack: 'aws://${{ env.awsaccountid }}/${{ env.awsregion }}'
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGTESTAWSACCESSKEYID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGTESTAWSSECRETACCESSKEY }}
-          PARTICIPANTS:  ${{ secrets.HAMBURGDEVPARTICIPANTS }}
-          AWS_DEFAULT_REGION: 'eu-west-1'
-          BASEURL: 'p6-hamburg-test.dcsa.org'
-          HOSTEDZONEID: 'Z0356896WKOUB3ZK0XRN'
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ''
+          HOSTEDZONEID: ''
+          SMTPUSERNAME: ''
+          SMTPPASSWORD: ''
       - name: Deploying the CDK Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -31,17 +47,24 @@ jobs:
           cdk_args: '--require-approval never'
           actions_comment: false
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGTESTAWSACCESSKEYID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGTESTAWSSECRETACCESSKEY }}
-          PARTICIPANTS:  ${{ secrets.HAMBURGPRODPARTICIPANTS }}
-          AWS_DEFAULT_REGION: 'eu-west-1'
-          BASEURL: 'p6-hamburg-test.dcsa.org'
-          HOSTEDZONEID: 'Z0356896WKOUB3ZK0XRN'
-          COGNITOAPPCLIENTID: "5bfutou7tg621i6h1fbgs4vlki"
-          COGNITOUSERPOOLID: "eu-west-1_q9s1DipXz"
-          HELMVERSION: "0.1.46"
-          SMTPUSERNAME: ${{ secrets.HAMBURGTESTAWSACCESSKEYID }}
-          SMTPPASSWORD: ${{ secrets.HAMBURGTESTAWSSECRETACCESSKEY }}
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
+          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
+          HELMVERSION: ${{ env.helmversion }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-skip-session-tagging: true
+          aws-access-key-id: ${{ env.awsaccesskeyid }}
+          aws-secret-access-key: ${{ env.awssecretaccesskey }}
+          aws-region:  ${{ env.awsregion }}
       - name: Updating load balancer dns
         run: |
           sleep 3m
@@ -50,6 +73,6 @@ jobs:
           echo $alburl
           sed -i "s#mydns#$alburl#g" ./route53/route53.json
           cat ./route53/route53.json
-          aws route53 change-resource-record-sets --hosted-zone-id Z0356896WKOUB3ZK0XRN --change-batch file://./route53/route53.json
+          aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./route53/route53.json
 
                  

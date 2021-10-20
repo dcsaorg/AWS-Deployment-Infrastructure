@@ -73,6 +73,6 @@ jobs:
           echo $alburl
           sed -i "s#mydns#$alburl#g" ./route53/route53.json
           cat ./route53/route53.json
-          aws route53 change-resource-record-sets --hosted-zone-id Z059078111NG4D2HJ3FYI --change-batch file://./route53/route53.json
+          aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./route53/route53.json
 
                  
