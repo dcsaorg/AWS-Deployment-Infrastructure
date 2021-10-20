@@ -12,7 +12,7 @@ env:
   smtpusername: 'AKIA3I7HULHFFSNUVVB4'
   cognitoappclientid: '4u49pjh38su1ccea0l4dras9if'
   cognitouserpoolid: 'eu-west-1_LsLTYEjn5'
-  helmversion: '0.1.48'
+  helmversion: '0.1.49'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -73,6 +73,6 @@ jobs:
           echo $alburl
           sed -i "s#mydns#$alburl#g" ./route53/route53.json
           cat ./route53/route53.json
-          aws route53 change-resource-record-sets --hosted-zone-id Z059078111NG4D2HJ3FYI --change-batch file://./route53/route53.json
+          aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./route53/route53.json
 
                  
