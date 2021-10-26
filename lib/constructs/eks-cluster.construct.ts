@@ -90,5 +90,20 @@ export class DCSAEKSCluster extends Construct {
                 })
             }
         )
+
+        cluster.addHelmChart('el', {
+            chart: 'dcsaingresscluster',
+            repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
+            version: '0.0.1',
+            namespace: 'default',
+            values: {
+                certificateArn: props.hostedZoneCertificate.certificateArn,
+                env: {
+                    baseurl: process.env.BASEURL
+                },
+                participants: Array.from(participantsMap.keys())
+            }
+        })
+
     }
 }
