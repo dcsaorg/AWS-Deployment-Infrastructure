@@ -44,6 +44,11 @@ export class DCSAEKSCluster extends Construct {
         account.addToPrincipalPolicy(policyStatement)
         account.addToPrincipalPolicy(adminStatement)
 
+
+
+
+
+
         cluster.addHelmChart('ALBController', {
             chart: 'aws-load-balancer-controller',
             repository: 'https://aws.github.io/eks-charts',
