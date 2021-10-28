@@ -26,6 +26,8 @@
     "@aws-cdk/aws-s3": "^1.112.0",
     "@aws-cdk/aws-route53": "^1.112.0",
     "@aws-cdk/core": "1.112.0",
+    "@aws-cdk/aws-ec2": "1.112.0",
+    "@aws-cdk/aws-rds": "1.112.0",
     "source-map-support": "^0.5.16"
   }
 }
