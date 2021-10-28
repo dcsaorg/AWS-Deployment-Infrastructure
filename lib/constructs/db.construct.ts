@@ -21,6 +21,11 @@ export class DBConstruct extends Construct {
                     name: 'public-subnet-1',
                     subnetType: ec2.SubnetType.PUBLIC,
                     cidrMask: 24,
+                },
+                {
+                    name: 'isolated-subnet-1',
+                    subnetType: ec2.SubnetType.ISOLATED,
+                    cidrMask: 28,
                 }
             ],
         });
