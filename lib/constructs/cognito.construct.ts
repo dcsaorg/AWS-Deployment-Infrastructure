@@ -1,6 +1,7 @@
 import {Construct,Duration,RemovalPolicy,CfnOutput} from '@aws-cdk/core'
 import * as cognito from '@aws-cdk/aws-cognito'
 import {CfnUserPoolGroup, OAuthScope} from "@aws-cdk/aws-cognito";
+import { CfnWaitCondition } from '@aws-cdk/aws-cloudformation'
 
 export interface CognitoConstructProps {
     participants: string,
@@ -43,12 +44,11 @@ export class CognitoConstruct extends Construct {
 
         console.log(scopes)
 
-        pool.addResourceServer('upre',{
+        const resourceServer=pool.addResourceServer('upre',{
             identifier: "dcsa",
             scopes:scopes,
             userPoolResourceServerName:"ourresource"
         })
-
 
         console.log(participantsMap)
 
@@ -64,7 +64,7 @@ export class CognitoConstruct extends Construct {
                     },
                     scopes: [OAuthScope.custom(customScope)],
                 }
-            });
+            }).node.addDependency(resourceServer)
             new CfnUserPoolGroup(scope, key, {
                 groupName: key,
                 userPoolId: pool.userPoolId
