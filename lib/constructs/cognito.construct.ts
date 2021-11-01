@@ -1,6 +1,6 @@
 import {Construct,Duration,RemovalPolicy,CfnOutput} from '@aws-cdk/core'
 import * as cognito from '@aws-cdk/aws-cognito'
-import { OAuthScope } from "@aws-cdk/aws-cognito";
+import {CfnUserPoolGroup, OAuthScope} from "@aws-cdk/aws-cognito";
 
 export interface CognitoConstructProps {
     participants: string,
@@ -22,7 +22,7 @@ export class CognitoConstruct extends Construct {
         });
 
 
-        const clientui = pool.addClient('clui', {
+        pool.addClient('clui', {
             generateSecret: false,
             oAuth: {
                 flows: {
@@ -61,10 +61,11 @@ export class CognitoConstruct extends Construct {
         })
 
 
-
+        console.log(participantsMap)
 
         participantsMap.forEach((value: string, key: string) => {
             const customScope=`dcsa/${key}`
+            console.log(customScope)
             const client = pool.addClient('cl' + key, {
                 generateSecret: true,
                 oAuth: {
@@ -75,6 +76,12 @@ export class CognitoConstruct extends Construct {
                 }
             });
             const clientId = client.userPoolClientId;
+
+            /*new CfnUserPoolGroup(this, key, {
+                groupName: key,
+                userPoolId: pool.userPoolId
+            });*/
+
         });
     }
 }
