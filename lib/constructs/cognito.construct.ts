@@ -65,7 +65,8 @@ export class CognitoConstruct extends Construct {
         console.log(participantsMap)
 
         participantsMap.forEach((value: string, key: string) => {
-            const customScope=`dcsa/${key}`
+            let customScope=`dcsa/${key}`
+            customScope='dcsa/dcsa';
             console.log(customScope)
             const client = pool.addClient('cl' + key, {
                 generateSecret: true,
@@ -76,8 +77,6 @@ export class CognitoConstruct extends Construct {
                     scopes: [OAuthScope.custom(customScope)],
                 }
             });
-            const clientId = client.userPoolClientId;
-
             new CfnUserPoolGroup(scope, key, {
                 groupName: key,
                 userPoolId: pool.userPoolId
