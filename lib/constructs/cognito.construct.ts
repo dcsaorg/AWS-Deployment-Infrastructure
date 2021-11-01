@@ -1,6 +1,9 @@
 import {Construct,Duration,RemovalPolicy,CfnOutput} from '@aws-cdk/core'
 import * as cognito from '@aws-cdk/aws-cognito'
-import { OAuthScope } from "@aws-cdk/aws-cognito";
+import {CfnUserPoolGroup, OAuthScope} from "@aws-cdk/aws-cognito";
+import { CfnWaitCondition } from '@aws-cdk/aws-cloudformation'
+import * as route53 from "@aws-cdk/aws-route53";
+import * as acm from "@aws-cdk/aws-certificatemanager";
 
 export interface CognitoConstructProps {
     participants: string,
@@ -8,10 +11,14 @@ export interface CognitoConstructProps {
 
 
 export class CognitoConstruct extends Construct {
+
+    cognitoUserPoolId: string
+
     constructor(scope: Construct, id: string, props: CognitoConstructProps) {
-        super(scope, id)
+        super(scope, id);
 
         const pool=new cognito.UserPool(this, 'up', {
+            selfSignUpEnabled: true,
             userPoolName: 'up',
         });
 
@@ -20,6 +27,11 @@ export class CognitoConstruct extends Construct {
                 domainPrefix: 'weneedsomerandomhere',
             },
         });
+
+        this.cognitoUserPoolId=pool.userPoolId
+
+
+
 
         let jsonStr = props.participants;
         let jsonObj = JSON.parse(jsonStr);
@@ -36,24 +48,49 @@ export class CognitoConstruct extends Construct {
             )
         });
 
+        console.log(scopes)
 
-        pool.addResourceServer('upre',{
+        const resourceServer=pool.addResourceServer('upre',{
             identifier: "dcsa",
             scopes:scopes,
             userPoolResourceServerName:"ourresource"
         })
 
+        console.log(participantsMap)
+
         participantsMap.forEach((value: string, key: string) => {
-            const client = pool.addClient('cl' + key.substring(0, 3), {
+            let customScope=`dcsa/${key}`
+            console.log('['+customScope+']')
+            pool.addClient('cl' + key, {
                 generateSecret: true,
                 oAuth: {
                     flows: {
                         clientCredentials: true,
                     },
-                    scopes: [OAuthScope.custom("dcsa/" + key)],
+                    scopes: [OAuthScope.custom(customScope)],
                 }
+            }).node.addDependency(resourceServer)
+            new CfnUserPoolGroup(scope, key, {
+                groupName: key,
+                userPoolId: pool.userPoolId
             });
-            const clientId = client.userPoolClientId;
+
         });
+
+        pool.addClient('clui', {
+            generateSecret: false,
+            oAuth: {
+                flows: {
+                    implicitCodeGrant: true,
+                },
+                scopes: [ cognito.OAuthScope.OPENID ],
+                callbackUrls: [
+                    'https://localhost'
+                ],
+                logoutUrls:['https://localhost']
+            }
+        });
+
+
     }
 }
