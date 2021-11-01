@@ -9,7 +9,7 @@ export interface CognitoConstructProps {
 
 export class CognitoConstruct extends Construct {
     constructor(scope: Construct, id: string, props: CognitoConstructProps) {
-        super(scope, id)
+        super(scope, id);
 
         const pool=new cognito.UserPool(this, 'up', {
             userPoolName: 'up',
@@ -78,10 +78,10 @@ export class CognitoConstruct extends Construct {
             });
             const clientId = client.userPoolClientId;
 
-            /*new CfnUserPoolGroup(this, key, {
+            new CfnUserPoolGroup(scope, key, {
                 groupName: key,
                 userPoolId: pool.userPoolId
-            });*/
+            });
 
         });
     }
