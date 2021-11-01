@@ -12,6 +12,7 @@ export class CognitoConstruct extends Construct {
         super(scope, id);
 
         const pool=new cognito.UserPool(this, 'up', {
+            selfSignUpEnabled: true,
             userPoolName: 'up',
         });
 
@@ -66,9 +67,9 @@ export class CognitoConstruct extends Construct {
 
         participantsMap.forEach((value: string, key: string) => {
             let customScope=`dcsa/${key}`
-            customScope='dcsa/dcsa';
+            //customScope='dcsa/dcsa';
             console.log(customScope)
-            const client = pool.addClient('cl' + key, {
+            pool.addClient('cl' + key, {
                 generateSecret: true,
                 oAuth: {
                     flows: {
