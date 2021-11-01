@@ -21,6 +21,23 @@ export class CognitoConstruct extends Construct {
             },
         });
 
+
+        const clientui = pool.addClient('clui', {
+            generateSecret: false,
+            oAuth: {
+                flows: {
+                    implicitCodeGrant: true,
+                },
+                scopes: [ cognito.OAuthScope.OPENID ],
+                callbackUrls: [
+                    'https://localhost'
+                ],
+                logoutUrls:['https://localhost']
+            }
+        });
+
+
+
         let jsonStr = props.participants;
         let jsonObj = JSON.parse(jsonStr);
         let participantsMap = new Map<string, string>(Object.entries(jsonObj));
@@ -44,13 +61,10 @@ export class CognitoConstruct extends Construct {
         })
 
 
-        console.log("participants "+participantsMap,participantsMap);
 
 
         participantsMap.forEach((value: string, key: string) => {
-            console.log(`${key}`);
             const customScope=`dcsa/${key}`
-            console.log(customScope);
             const client = pool.addClient('cl' + key, {
                 generateSecret: true,
                 oAuth: {
