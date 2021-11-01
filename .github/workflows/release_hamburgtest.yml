@@ -2,25 +2,25 @@ name: Publish
 
 on:
   push:
-    branches: [ singaporedev ]
+    branches: [ hamburgtest ]
 
 env:
-  awsaccountid: '274839863309'
+  awsaccountid: '853169102957'
   awsregion: 'eu-west-1'
-  baseurl: 'p6-singapore-development.dcsa.org'
-  hostedzoneid: 'Z1022521R50HM96VGACU'
-  smtpusername: 'AKIAT77N3QAGQHUCPIUY'
-  cognitoappclientid: '22692793div4uhiou4hb9dgdee'
-  cognitouserpoolid: 'eu-west-1_gOhrzkT7W'
-  helmversion: '0.1.54'
+  baseurl: 'p6-hamburg-test.dcsa.org'
+  hostedzoneid: 'Z0356896WKOUB3ZK0XRN'
+  smtpusername: ''
+  cognitoappclientid: '5bfutou7tg621i6h1fbgs4vlki'
+  cognitouserpoolid: 'eu-west-1_q9s1DipXz'
+  helmversion: '0.1.46'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      smtppassword: ${{ secrets.SINGAPOREDEVSMTPPASSWORD }}
-      participants: ${{ secrets.SINGAPOREDEVPARTICIPANTS }}
-      awsaccesskeyid: ${{ secrets.SINGAPOREDEVAWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.SINGAPOREDEVAWSSECRETACCESSKEY }}
+      smtppassword: ${{ secrets.HAMBURGTESTSMTPPASSWORD }}
+      participants: ${{ secrets.HAMBURGTESTPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.HAMBURGTESTAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.HAMBURGTESTAWSSECRETACCESSKEY }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
@@ -60,7 +60,6 @@ jobs:
           SMTPUSERNAME: ${{ env.smtpusername }}
           SMTPPASSWORD: ${{ env.smtppassword }}
           EXPERIMENTAL: ''
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

@@ -9,7 +9,8 @@ export interface DCSAEKSClusterProps {
     cognitoUserPoolId: string,
     helmVersion: string,
     participants: string,
-    springMailUsername: string
+    springMailUsername: string,
+    experimental:boolean
 }
 
 
@@ -44,6 +45,11 @@ export class DCSAEKSCluster extends Construct {
         account.addToPrincipalPolicy(policyStatement)
         account.addToPrincipalPolicy(adminStatement)
 
+
+
+
+
+
         cluster.addHelmChart('ALBController', {
             chart: 'aws-load-balancer-controller',
             repository: 'https://aws.github.io/eks-charts',
@@ -69,7 +75,7 @@ export class DCSAEKSCluster extends Construct {
                     values: {
                         certificateArn: props.hostedZoneCertificate.certificateArn,
                         envType: {
-                            aws: true
+                            aws: props.experimental!
                         },
                         env: {
                             baseurl: process.env.BASEURL,
@@ -90,5 +96,23 @@ export class DCSAEKSCluster extends Construct {
                 })
             }
         )
+
+        if(props.experimental) {
+            cluster.addHelmChart('el', {
+                chart: 'dcsaingresscluster',
+                repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
+                version: '0.0.3',
+                namespace: 'default',
+                values: {
+                    certificateArn: props.hostedZoneCertificate.certificateArn,
+                    env: {
+                        baseurl: process.env.BASEURL
+                    },
+                    participants: Array.from(participantsMap.keys())
+                }
+            })
+        }
+
+
     }
 }
