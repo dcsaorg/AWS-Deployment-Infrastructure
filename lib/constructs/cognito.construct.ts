@@ -23,19 +23,6 @@ export class CognitoConstruct extends Construct {
         });
 
 
-        pool.addClient('clui', {
-            generateSecret: false,
-            oAuth: {
-                flows: {
-                    implicitCodeGrant: true,
-                },
-                scopes: [ cognito.OAuthScope.OPENID ],
-                callbackUrls: [
-                    'https://localhost'
-                ],
-                logoutUrls:['https://localhost']
-            }
-        });
 
 
 
@@ -68,7 +55,7 @@ export class CognitoConstruct extends Construct {
         participantsMap.forEach((value: string, key: string) => {
             let customScope=`dcsa/${key}`
             //customScope='dcsa/dcsa';
-            console.log(customScope)
+            console.log('['+customScope+']')
             pool.addClient('cl' + key, {
                 generateSecret: true,
                 oAuth: {
@@ -84,5 +71,21 @@ export class CognitoConstruct extends Construct {
             });
 
         });
+
+        pool.addClient('clui', {
+            generateSecret: false,
+            oAuth: {
+                flows: {
+                    implicitCodeGrant: true,
+                },
+                scopes: [ cognito.OAuthScope.OPENID ],
+                callbackUrls: [
+                    'https://localhost'
+                ],
+                logoutUrls:['https://localhost']
+            }
+        });
+
+
     }
 }
