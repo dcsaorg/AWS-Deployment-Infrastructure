@@ -11,7 +11,7 @@ export class DCSAStack extends cdk.Stack {
 
     const { hostedZoneCertificate } = new DCSARoute53(this, 'Route53', { "hostedZoneId": props.hostedZoneId, "baseUrl": props.baseUrl, "participants": props.participants})
 
-    new DBConstruct(this, "db",{"placeholder":"placeholdertext"});
+    //new DBConstruct(this, "db",{"placeholder":"placeholdertext"});
 
     new DCSAEKSCluster(this, 'EKSCluster', {
       hostedZoneCertificate, "cognitoUserPoolId": props.cognitoUserPoolId, "helmVersion": props.helmVersion, "participants": props.participants, "springMailUsername": props.springMailUsername
