@@ -21,6 +21,9 @@ export class CognitoConstruct extends Construct {
             },
         });
 
+        
+
+
         pool.addResourceServer('upre',{
             identifier: "https://resource-server/",
             scopes: [
