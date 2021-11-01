@@ -43,7 +43,7 @@ export class CognitoConstruct extends Construct {
             userPoolResourceServerName:"ourresource"
         })
 
-        participantsMap.forEach((value: string, key: string) => {
+        /*participantsMap.forEach((value: string, key: string) => {
             const client = pool.addClient('cl' + key.substring(0, 3), {
                 generateSecret: true,
                 oAuth: {
@@ -54,6 +54,6 @@ export class CognitoConstruct extends Construct {
                 }
             });
             const clientId = client.userPoolClientId;
-        });
+        });*/
     }
 }
