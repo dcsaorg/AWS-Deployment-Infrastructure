@@ -2,6 +2,8 @@ import {Construct,Duration,RemovalPolicy,CfnOutput} from '@aws-cdk/core'
 import * as cognito from '@aws-cdk/aws-cognito'
 import {CfnUserPoolGroup, OAuthScope} from "@aws-cdk/aws-cognito";
 import { CfnWaitCondition } from '@aws-cdk/aws-cloudformation'
+import * as route53 from "@aws-cdk/aws-route53";
+import * as acm from "@aws-cdk/aws-certificatemanager";
 
 export interface CognitoConstructProps {
     participants: string,
@@ -9,6 +11,9 @@ export interface CognitoConstructProps {
 
 
 export class CognitoConstruct extends Construct {
+
+    cognitoUserPoolId: string
+
     constructor(scope: Construct, id: string, props: CognitoConstructProps) {
         super(scope, id);
 
@@ -23,6 +28,7 @@ export class CognitoConstruct extends Construct {
             },
         });
 
+        this.cognitoUserPoolId=pool.userPoolId
 
 
 
@@ -54,7 +60,6 @@ export class CognitoConstruct extends Construct {
 
         participantsMap.forEach((value: string, key: string) => {
             let customScope=`dcsa/${key}`
-            //customScope='dcsa/dcsa';
             console.log('['+customScope+']')
             pool.addClient('cl' + key, {
                 generateSecret: true,
