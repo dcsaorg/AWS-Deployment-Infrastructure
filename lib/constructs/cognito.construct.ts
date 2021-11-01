@@ -43,25 +43,21 @@ export class CognitoConstruct extends Construct {
             userPoolResourceServerName:"ourresource"
         })
 
-        /*const client = pool.addClient('cl1'.substring(0, 3), {
-            generateSecret: true,
-            oAuth: {
-                flows: {
-                    clientCredentials: true,
-                },
-                scopes: [OAuthScope.custom("dcsa/dcsa")],
-            }
-        });*/
+
+        console.log("participants "+participantsMap,participantsMap);
 
 
         participantsMap.forEach((value: string, key: string) => {
+            console.log(`${key}`);
+            const customScope=`dcsa/${key}`
+            console.log(customScope);
             const client = pool.addClient('cl' + key, {
                 generateSecret: true,
                 oAuth: {
                     flows: {
                         clientCredentials: true,
                     },
-                    scopes: [OAuthScope.custom("dcsa/dcsa")],
+                    scopes: [OAuthScope.custom(customScope)],
                 }
             });
             const clientId = client.userPoolClientId;
