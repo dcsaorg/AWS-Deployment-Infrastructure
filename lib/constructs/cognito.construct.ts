@@ -53,6 +53,7 @@ export class CognitoConstruct extends Construct {
             )
         });
 
+        console.log(scopes)
 
         pool.addResourceServer('upre',{
             identifier: "dcsa",
