@@ -61,3 +61,41 @@ Do I have to been an AWS expert, skilled in Kubernetes or master of Typescript?.
 
 # TODO 
 DNS Handling  d
+
+# Steps to create a new cluster
+
+in route53 create public hosted zone , this gives us a range of dns entries that should be setup in ?
+
+In AWS IAM create access keys and add accesskey and secret to github secrets in the AWS-Hamburg-test-Infrastructure
+Naming convention here is cluster name + environment type + "ACCESSKEYID" / "AWSSECRETACCESSKEY" like >  "HAMBURGDEVAWSSECRETACCESSKEY"
+
+In AWS SES create smtp credentials and add the password to a github secrets in the AWS-Hamburg-test-Infrastructure
+Naming convention here is cluster name + environment type + "SMTPPASSWORD" like > "HAMBURGDEVSMTPPASSWORD"
+
+Add another secret to secrets in the AWS-Hamburg-test-Infrastructure describing the participants/organizations and there contact email in json format
+Naming convention here is cluster name + environment type + "PARTICIPANTS" like > HAMBURGDEVPARTICIPANTS
+format for participant string is :
+{"participantname1": "email@domain.com","participantname2": "NOT_SPECIFIED"}
+The participant name should match the groups created in cognito userpool. To disable email notifications for a participant use "NOT_SPECIFIED" in the email field 
+
+In AWS cognito create userpool and use these values in step-by-step guide
+*attributes, use default selected and one custom attribute string:custom 
+*policies, default settings
+*mfa and verifications, default settings
+*Messages customizations, default settings
+*tags, default settings
+*devices, default settings
+*app client, add a new app client only thing to change is to disable App client secret generation
+*triggers, default settings
+
+
+In the AWS-Hamburg-test-Infrastructure\.github\workflows folder make new yaml file for the release action, a github workflow action tha will run the cdk code and deploy to aws.
+In this file replace the variables in the env: section with values for the new cluster/aws account: 
+Here is a list of the configurable values: awsaccountid: '274839863309'
+  *awsregion: aws region
+  *baseurl: The baseurl for the cluster
+  *hostedzoneid: The id of the hosted zone in Route53
+  *smtpusername: the username for smtp service, password is stored in github secret from above step.
+  *cognitoappclientid: Id of the App client used
+  *cognitouserpoolid: Id of the cognito userpool used
+  *helmversion: Which version of the helm chart should we deploy

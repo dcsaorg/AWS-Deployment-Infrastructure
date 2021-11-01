@@ -2,13 +2,13 @@ name: Publish
 
 on:
   push:
-    branches: [ hamburgproduction ]
+    branches: [ singaporetest ]
 
 env:
-  awsaccountid: '102971406603'
+  awsaccountid: '201505850646'
   awsregion: 'eu-west-1'
-  baseurl: 'p6-hamburg-production.dcsa.org'
-  hostedzoneid: 'Z0897388S7HMXDOADHBC'
+  baseurl: 'p6-singapore-test.dcsa.org'
+  hostedzoneid: 'Z0523607JCEGLK7VIE2F'
   smtpusername: 'AKIARP6MS7EFTHTJMPBM'
   cognitoappclientid: '2id9n1me4q5pn6412r6dtamgul'
   cognitouserpoolid: 'eu-west-1_UV95TORKw'
@@ -18,9 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       smtppassword: ${{ secrets.HAMBURGPRODSMTPPASSWORD }}
-      participants: ${{ secrets.HAMBURGPRODPARTICIPANTS }}
-      awsaccesskeyid: ${{ secrets.HAMBURGPRODAWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.HAMBURGPRODAWSSECRETACCESSKEY }}
+      participants: ${{ secrets.SINGAPOREDEVPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.SINGAPORETESTAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.SINGAPORETESTAWSSECRETACCESSKEY }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
