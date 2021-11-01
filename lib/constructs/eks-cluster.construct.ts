@@ -97,7 +97,7 @@ export class DCSAEKSCluster extends Construct {
             }
         )
 
-        if(props.experimental) {
+        if(props.experimental==true) {
             cluster.addHelmChart('el', {
                 chart: 'dcsaingresscluster',
                 repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
