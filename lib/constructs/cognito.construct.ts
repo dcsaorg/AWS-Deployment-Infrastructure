@@ -38,7 +38,7 @@ export class CognitoConstruct extends Construct {
 
 
         pool.addResourceServer('upre',{
-            identifier: "https://resource-server/",
+            identifier: "dcsa",
             scopes:scopes,
             userPoolResourceServerName:"ourresource"
         })
@@ -50,7 +50,7 @@ export class CognitoConstruct extends Construct {
                     flows: {
                         clientCredentials: true,
                     },
-                    //scopes: [OAuthScope.custom("https://resource-server//" + key)],
+                    scopes: [OAuthScope.custom("dcsa/" + key)],
                 }
             });
             const clientId = client.userPoolClientId;
