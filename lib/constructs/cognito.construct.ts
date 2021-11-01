@@ -43,7 +43,7 @@ export class CognitoConstruct extends Construct {
             userPoolResourceServerName:"ourresource"
         })
 
-        const client = pool.addClient('cl1'.substring(0, 3), {
+        /*const client = pool.addClient('cl1'.substring(0, 3), {
             generateSecret: true,
             oAuth: {
                 flows: {
@@ -51,20 +51,20 @@ export class CognitoConstruct extends Construct {
                 },
                 scopes: [OAuthScope.custom("dcsa/dcsa")],
             }
-        });
+        });*/
 
 
-        /*participantsMap.forEach((value: string, key: string) => {
-            const client = pool.addClient('cl' + key.substring(0, 3), {
+        participantsMap.forEach((value: string, key: string) => {
+            const client = pool.addClient('cl' + key, {
                 generateSecret: true,
                 oAuth: {
                     flows: {
                         clientCredentials: true,
                     },
-                    scopes: [OAuthScope.custom("dcsa/" + key)],
+                    scopes: [OAuthScope.custom("dcsa/dcsa")],
                 }
             });
             const clientId = client.userPoolClientId;
-        });*/
+        });
     }
 }
