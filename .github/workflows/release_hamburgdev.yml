@@ -39,6 +39,7 @@ jobs:
           HOSTEDZONEID: ''
           SMTPUSERNAME: ''
           SMTPPASSWORD: ''
+          EXPERIMENTAL: ''
       - name: Deploying the CDK Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -58,6 +59,7 @@ jobs:
           HELMVERSION: ${{ env.helmversion }}
           SMTPUSERNAME: ${{ env.smtpusername }}
           SMTPPASSWORD: ${{ env.smtppassword }}
+          EXPERIMENTAL: 'true'
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

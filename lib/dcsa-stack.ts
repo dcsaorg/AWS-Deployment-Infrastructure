@@ -3,7 +3,7 @@ import { DCSARoute53 } from './constructs/route53.construct'
 import { DCSAEKSCluster } from './constructs/eks-cluster.construct'
 import { DBConstruct } from "./constructs/db.construct";
 
-export interface DCSAStackProps extends cdk.StackProps { hostedZoneId: string, baseUrl: string, participants: string, cognitoUserPoolId: string, helmVersion: string, springMailUsername: string}
+export interface DCSAStackProps extends cdk.StackProps { hostedZoneId: string, baseUrl: string, participants: string, cognitoUserPoolId: string, helmVersion: string, springMailUsername: string,experimental:string}
 
 export class DCSAStack extends cdk.Stack {
   constructor (scope: cdk.Construct, id: string, props: DCSAStackProps) {
@@ -11,10 +11,17 @@ export class DCSAStack extends cdk.Stack {
 
     const { hostedZoneCertificate } = new DCSARoute53(this, 'Route53', { "hostedZoneId": props.hostedZoneId, "baseUrl": props.baseUrl, "participants": props.participants})
 
-    //new DBConstruct(this, "db",{"placeholder":"placeholdertext"});
+    let experimental=false;
+    if(props.experimental==='true') {
+      experimental=true;
+    }
+
+    if(experimental) {
+      new DBConstruct(this, "db", {"placeholder": "placeholdertext"});
+    }
 
     new DCSAEKSCluster(this, 'EKSCluster', {
-      hostedZoneCertificate, "cognitoUserPoolId": props.cognitoUserPoolId, "helmVersion": props.helmVersion, "participants": props.participants, "springMailUsername": props.springMailUsername
+      hostedZoneCertificate, "cognitoUserPoolId": props.cognitoUserPoolId, "helmVersion": props.helmVersion, "participants": props.participants, "springMailUsername": props.springMailUsername,experimental: experimental
     })
   }
 }
