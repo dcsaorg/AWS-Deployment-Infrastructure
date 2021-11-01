@@ -18,7 +18,7 @@ export class DCSAStack extends cdk.Stack {
     }
 
     if(experimental) {
-      new DBConstruct(this, "db", {"placeholder": "placeholdertext"});
+      //new DBConstruct(this, "db", {"placeholder": "placeholdertext"});
       new CognitoConstruct(this, "cg", {participants: props.participants});
     }
 
