@@ -50,7 +50,7 @@ export class CognitoConstruct extends Construct {
                     flows: {
                         clientCredentials: true,
                     },
-                    scopes: [OAuthScope.custom("https://resource-server//" + key)],
+                    //scopes: [OAuthScope.custom("https://resource-server//" + key)],
                 }
             });
             const clientId = client.userPoolClientId;
