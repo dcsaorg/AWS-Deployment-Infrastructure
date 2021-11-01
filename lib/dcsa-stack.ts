@@ -2,6 +2,7 @@ import * as cdk from '@aws-cdk/core'
 import { DCSARoute53 } from './constructs/route53.construct'
 import { DCSAEKSCluster } from './constructs/eks-cluster.construct'
 import { DBConstruct } from "./constructs/db.construct";
+import {CognitoConstruct} from "./constructs/cognito.construct";
 
 export interface DCSAStackProps extends cdk.StackProps { hostedZoneId: string, baseUrl: string, participants: string, cognitoUserPoolId: string, helmVersion: string, springMailUsername: string,experimental:string}
 
@@ -18,10 +19,15 @@ export class DCSAStack extends cdk.Stack {
 
     if(experimental) {
       new DBConstruct(this, "db", {"placeholder": "placeholdertext"});
+      new CognitoConstruct(this, "cg", {participants: props.participants});
     }
 
-    new DCSAEKSCluster(this, 'EKSCluster', {
-      hostedZoneCertificate, "cognitoUserPoolId": props.cognitoUserPoolId, "helmVersion": props.helmVersion, "participants": props.participants, "springMailUsername": props.springMailUsername,experimental: experimental
-    })
+    if(!experimental) {
+      new DCSAEKSCluster(this, 'EKSCluster', {
+        hostedZoneCertificate, "cognitoUserPoolId": props.cognitoUserPoolId, "helmVersion": props.helmVersion, "participants": props.participants, "springMailUsername": props.springMailUsername,experimental: experimental
+      })
+    }
+
+
   }
 }
