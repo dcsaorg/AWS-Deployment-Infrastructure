@@ -75,7 +75,7 @@ export class DCSAEKSCluster extends Construct {
                     values: {
                         certificateArn: props.hostedZoneCertificate.certificateArn,
                         envType: {
-                            aws: props.experimental!
+                            aws: `${props.experimental!}`
                         },
                         env: {
                             baseurl: process.env.BASEURL,

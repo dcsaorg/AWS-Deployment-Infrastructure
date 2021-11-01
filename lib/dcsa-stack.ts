@@ -19,11 +19,15 @@ export class DCSAStack extends cdk.Stack {
 
     if(experimental) {
       new DBConstruct(this, "db", {"placeholder": "placeholdertext"});
-      new CognitoConstruct(this, "cg", {"placeholder": "placeholdertext"});
+      new CognitoConstruct(this, "cg", {participants: props.participants});
     }
 
-    new DCSAEKSCluster(this, 'EKSCluster', {
-      hostedZoneCertificate, "cognitoUserPoolId": props.cognitoUserPoolId, "helmVersion": props.helmVersion, "participants": props.participants, "springMailUsername": props.springMailUsername,experimental: experimental
-    })
+    if(!experimental) {
+      new DCSAEKSCluster(this, 'EKSCluster', {
+        hostedZoneCertificate, "cognitoUserPoolId": props.cognitoUserPoolId, "helmVersion": props.helmVersion, "participants": props.participants, "springMailUsername": props.springMailUsername,experimental: experimental
+      })
+    }
+
+
   }
 }

@@ -3,7 +3,7 @@ import * as cognito from '@aws-cdk/aws-cognito'
 import { OAuthScope } from "@aws-cdk/aws-cognito";
 
 export interface CognitoConstructProps {
-    placeholder: string
+    participants: string,
 }
 
 
@@ -21,26 +21,39 @@ export class CognitoConstruct extends Construct {
             },
         });
 
+        let jsonStr = props.participants;
+        let jsonObj = JSON.parse(jsonStr);
+        let participantsMap = new Map<string, string>(Object.entries(jsonObj));
+
+        let scopes=new Array();
+
+        participantsMap.forEach((value: string, key: string) => {
+            scopes.push(
+                {
+                    scopeDescription: key,
+                    scopeName: key,
+                }
+            )
+        });
+
+
         pool.addResourceServer('upre',{
             identifier: "https://resource-server/",
-            scopes: [
-                {
-                    scopeDescription: "todo1description",
-                    scopeName: "todo1name",
-                },
-            ],
+            scopes:scopes,
             userPoolResourceServerName:"ourresource"
         })
 
-        const client = pool.addClient('client1', {
-            generateSecret:true,
-            oAuth: {
-                flows: {
-                    clientCredentials: true,
-                },
-                scopes: [OAuthScope.custom("https://resource-server//todo1name")],
-            }});
-        const clientId = client.userPoolClientId;
-
+        participantsMap.forEach((value: string, key: string) => {
+            const client = pool.addClient('cl' + key.substring(0, 3), {
+                generateSecret: true,
+                oAuth: {
+                    flows: {
+                        clientCredentials: true,
+                    },
+                    scopes: [OAuthScope.custom("https://resource-server//" + key)],
+                }
+            });
+            const clientId = client.userPoolClientId;
+        });
     }
 }
