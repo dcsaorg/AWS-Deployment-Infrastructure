@@ -1,6 +1,6 @@
 import {Construct,Duration,RemovalPolicy,CfnOutput} from '@aws-cdk/core'
 import * as cognito from '@aws-cdk/aws-cognito'
-import {CfnUserPoolGroup, OAuthScope} from "@aws-cdk/aws-cognito";
+import {CfnUserPoolGroup, OAuthScope, UserPoolClient} from "@aws-cdk/aws-cognito";
 import * as cr from "@aws-cdk/custom-resources";
 
 export interface CognitoConstructProps {
@@ -77,7 +77,7 @@ export class CognitoConstruct extends Construct {
 
             if(key==='dcsa') {
                 this.dcsaClientId=client.userPoolClientId
-                this.dcsaClientSecret=getClientSecret("dcsa",this,pool.userPoolId,client.userPoolClientId)
+                this.dcsaClientSecret=getClientSecret("dcsa",this,pool.userPoolId,client)
             }
             new CfnUserPoolGroup(scope, key, {
                 groupName: key,
@@ -101,12 +101,12 @@ export class CognitoConstruct extends Construct {
         });
 
         this.uiClientId=uiClient.userPoolClientId
-        this.uiClientSecret=getClientSecret("ui",this,pool.userPoolId,uiClient.userPoolClientId)
+        this.uiClientSecret=getClientSecret("ui",this,pool.userPoolId,uiClient)
 
     }
 }
 
-function getClientSecret(suffix:string,scope:Construct,userPoolId:string, userPoolClientId:string):string {
+function getClientSecret(suffix:string,scope:Construct,userPoolId:string, userPoolClient:UserPoolClient):string {
     const describeCognitoUserPoolClient = new cr.AwsCustomResource(
         scope,
         'DescribeCognitoUserPoolClient'+suffix,
@@ -118,9 +118,9 @@ function getClientSecret(suffix:string,scope:Construct,userPoolId:string, userPo
                 action: 'describeUserPoolClient',
                 parameters: {
                     UserPoolId: userPoolId,
-                    ClientId: userPoolClientId,
+                    ClientId: userPoolClient.userPoolClientId,
                 },
-                physicalResourceId: cr.PhysicalResourceId.of(userPoolClientId),
+                physicalResourceId: cr.PhysicalResourceId.of(userPoolClient.userPoolClientId),
             },
             // TODO: can we restrict this policy more?
             policy: cr.AwsCustomResourcePolicy.fromSdkCalls({
@@ -128,7 +128,7 @@ function getClientSecret(suffix:string,scope:Construct,userPoolId:string, userPo
             }),
         }
     )
-
+    describeCognitoUserPoolClient.node.addDependency(userPoolClient);
     return describeCognitoUserPoolClient.getResponseField(
         'UserPoolClient.ClientSecret'
     )
