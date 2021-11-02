@@ -94,7 +94,10 @@ export class DCSAEKSCluster extends Construct {
                             partyName: key,
                             springMailUsername: props.springMailUsername,
                             springMailPassword: process.env.SMTPPASSWORD,
-                            notificationEmail: value
+                            notificationEmail: value,
+                            dcsaAppClientId: props.cognitoDCSAClientId,
+                            dcsaAppClientSecret: props.cognitoDCSAClientSecret,
+                            dcsaAppClientTokenUri: props.cognitoTokenUrl
                         }
                     }
                 })
