@@ -77,7 +77,7 @@ export class CognitoConstruct extends Construct {
 
             if(key==='dcsa') {
                 this.dcsaClientId=client.userPoolClientId
-                this.dcsaClientSecret=getClientSecret(this,pool.userPoolId,client.userPoolClientId)
+                this.dcsaClientSecret=getClientSecret("dcsa",this,pool.userPoolId,client.userPoolClientId)
             }
             new CfnUserPoolGroup(scope, key, {
                 groupName: key,
@@ -101,15 +101,15 @@ export class CognitoConstruct extends Construct {
         });
 
         this.uiClientId=uiClient.userPoolClientId
-        this.uiClientSecret=getClientSecret(this,pool.userPoolId,uiClient.userPoolClientId)
+        this.uiClientSecret=getClientSecret("ui",this,pool.userPoolId,uiClient.userPoolClientId)
 
     }
 }
 
-function getClientSecret(scope:Construct,userPoolId:string, userPoolClientId:string):string {
+function getClientSecret(suffix:string,scope:Construct,userPoolId:string, userPoolClientId:string):string {
     const describeCognitoUserPoolClient = new cr.AwsCustomResource(
         scope,
-        'DescribeCognitoUserPoolClient'+userPoolId,
+        'DescribeCognitoUserPoolClient'+suffix,
         {
             resourceType: 'Custom::DescribeCognitoUserPoolClient',
             onCreate: {
