@@ -113,7 +113,7 @@ function getClientSecret(suffix:string,scope:Construct,userPool:UserPool, userPo
         {
             resourceType: 'Custom::DescribeCognitoUserPoolClient',
             onCreate: {
-                region: 'us-east-1',
+                region: 'eu-west-1',
                 service: 'CognitoIdentityServiceProvider',
                 action: 'describeUserPoolClient',
                 parameters: {
