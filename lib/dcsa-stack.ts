@@ -4,6 +4,7 @@ import { DCSAEKSCluster } from './constructs/eks-cluster.construct'
 import { DBConstruct } from "./constructs/db.construct";
 import {CognitoConstruct} from "./constructs/cognito.construct";
 
+
 export interface DCSAStackProps extends cdk.StackProps { hostedZoneId: string, baseUrl: string, participants: string, cognitoUserPoolId: string, helmVersion: string, springMailUsername: string,experimental:string}
 
 export class DCSAStack extends cdk.Stack {
@@ -17,10 +18,20 @@ export class DCSAStack extends cdk.Stack {
       experimental=true;
     }
 
+
+
     if(experimental) {
       //new DBConstruct(this, "db", {"placeholder": "placeholdertext"});
-      new CognitoConstruct(this, "cg", {participants: props.participants});
+
+      const { tokenUrl,dcsaClientSecret,dcsaClientId,uiClientSecret,uiClientId,cognitoUserPoolId } =  new CognitoConstruct(this, "cg", {participants: props.participants});
+
+      new cdk.CfnOutput(this, 'UserPoolClientSecret', {
+        value: dcsaClientSecret,
+      })
+
     }
+
+
 
     if(!experimental) {
       new DCSAEKSCluster(this, 'EKSCluster', {
