@@ -1,9 +1,7 @@
 import {Construct,Duration,RemovalPolicy,CfnOutput} from '@aws-cdk/core'
 import * as cognito from '@aws-cdk/aws-cognito'
-import {CfnUserPoolGroup, OAuthScope} from "@aws-cdk/aws-cognito";
-import { CfnWaitCondition } from '@aws-cdk/aws-cloudformation'
-import * as route53 from "@aws-cdk/aws-route53";
-import * as acm from "@aws-cdk/aws-certificatemanager";
+import {CfnUserPoolGroup, OAuthScope, UserPool, UserPoolClient} from "@aws-cdk/aws-cognito";
+import * as cr from "@aws-cdk/custom-resources";
 
 export interface CognitoConstructProps {
     participants: string,
@@ -13,6 +11,11 @@ export interface CognitoConstructProps {
 export class CognitoConstruct extends Construct {
 
     cognitoUserPoolId: string
+    dcsaClientId: string
+    dcsaClientSecret:string
+    tokenUrl:string
+    uiClientId:string
+    uiClientSecret:string
 
     constructor(scope: Construct, id: string, props: CognitoConstructProps) {
         super(scope, id);
@@ -22,15 +25,17 @@ export class CognitoConstruct extends Construct {
             userPoolName: 'up',
         });
 
+        const urlid=makeid(10);
+
         pool.addDomain('dg', {
             cognitoDomain: {
-                domainPrefix: 'weneedsomerandomhere',
+                domainPrefix: urlid,
             },
         });
 
         this.cognitoUserPoolId=pool.userPoolId
 
-
+        this.tokenUrl="https://"+urlid+".auth.eu-west-1.amazoncognito.com/oauth2/token"
 
 
         let jsonStr = props.participants;
@@ -61,7 +66,7 @@ export class CognitoConstruct extends Construct {
         participantsMap.forEach((value: string, key: string) => {
             let customScope=`dcsa/${key}`
             console.log('['+customScope+']')
-            pool.addClient('cl' + key, {
+            let client=pool.addClient('cl' + key, {
                 generateSecret: true,
                 oAuth: {
                     flows: {
@@ -69,7 +74,13 @@ export class CognitoConstruct extends Construct {
                     },
                     scopes: [OAuthScope.custom(customScope)],
                 }
-            }).node.addDependency(resourceServer)
+            })
+            client.node.addDependency(resourceServer)
+
+            if(key==='dcsa') {
+                this.dcsaClientId=client.userPoolClientId
+                this.dcsaClientSecret=getClientSecret("dcsa",this,pool,client)
+            }
             new CfnUserPoolGroup(scope, key, {
                 groupName: key,
                 userPoolId: pool.userPoolId
@@ -77,7 +88,7 @@ export class CognitoConstruct extends Construct {
 
         });
 
-        pool.addClient('clui', {
+        const uiClient=pool.addClient('clui', {
             generateSecret: false,
             oAuth: {
                 flows: {
@@ -91,6 +102,48 @@ export class CognitoConstruct extends Construct {
             }
         });
 
+        this.uiClientId=uiClient.userPoolClientId
+        this.uiClientSecret=getClientSecret("ui",this,pool,uiClient)
 
     }
+}
+
+function getClientSecret(suffix:string,scope:Construct,userPool:UserPool, userPoolClient:UserPoolClient):string {
+    const describeCognitoUserPoolClient = new cr.AwsCustomResource(
+        scope,
+        'DescribeCognitoUserPoolClient'+suffix,
+        {
+            resourceType: 'Custom::DescribeCognitoUserPoolClient',
+            onCreate: {
+                region: 'eu-west-1',
+                service: 'CognitoIdentityServiceProvider',
+                action: 'describeUserPoolClient',
+                parameters: {
+                    UserPoolId: userPool.userPoolId,
+                    ClientId: userPoolClient.userPoolClientId,
+                },
+                physicalResourceId: cr.PhysicalResourceId.of(userPoolClient.userPoolClientId),
+            },
+            // TODO: can we restrict this policy more?
+            policy: cr.AwsCustomResourcePolicy.fromSdkCalls({
+                resources: cr.AwsCustomResourcePolicy.ANY_RESOURCE,
+            }),
+        }
+    )
+    describeCognitoUserPoolClient.node.addDependency(userPoolClient);
+    describeCognitoUserPoolClient.node.addDependency(userPool);
+    return describeCognitoUserPoolClient.getResponseField(
+        'UserPoolClient.ClientSecret'
+    )
+}
+
+function makeid(length:number) {
+    var result           = '';
+    var characters       = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return result;
 }
