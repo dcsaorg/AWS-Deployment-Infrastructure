@@ -25,15 +25,17 @@ export class CognitoConstruct extends Construct {
             userPoolName: 'up',
         });
 
+        const urlid=makeid(10);
+
         pool.addDomain('dg', {
             cognitoDomain: {
-                domainPrefix: 'weneedsomerandomhere',
+                domainPrefix: urlid,
             },
         });
 
         this.cognitoUserPoolId=pool.userPoolId
 
-        this.tokenUrl=pool.userPoolProviderUrl
+        this.tokenUrl="https://"+urlid+".auth.eu-west-1.amazoncognito.com/oauth2/token"
 
 
         let jsonStr = props.participants;
@@ -133,4 +135,15 @@ function getClientSecret(suffix:string,scope:Construct,userPool:UserPool, userPo
     return describeCognitoUserPoolClient.getResponseField(
         'UserPoolClient.ClientSecret'
     )
+}
+
+function makeid(length:number) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return result;
 }
