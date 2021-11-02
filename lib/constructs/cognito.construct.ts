@@ -109,7 +109,7 @@ export class CognitoConstruct extends Construct {
 function getClientSecret(scope:Construct,userPoolId:string, userPoolClientId:string):string {
     const describeCognitoUserPoolClient = new cr.AwsCustomResource(
         scope,
-        'DescribeCognitoUserPoolClient',
+        'DescribeCognitoUserPoolClient'+userPoolId,
         {
             resourceType: 'Custom::DescribeCognitoUserPoolClient',
             onCreate: {
