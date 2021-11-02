@@ -11,6 +11,10 @@ export interface DCSAEKSClusterProps {
     participants: string,
     springMailUsername: string,
     experimental:boolean
+    cognitoUIClientId:string
+    cognitoDCSAClientId:string,
+    cognitoDCSAClientSecret:string,
+    cognitoTokenUrl: string
 }
 
 
@@ -85,7 +89,7 @@ export class DCSAEKSCluster extends Construct {
                             company: key,
                             publisherRole: "CA",
                             cognitoUserPoolId: props.cognitoUserPoolId,
-                            cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
+                            cognitoAppClientId: props.cognitoUIClientId,
                             publisherCodeType: "SMDG_LINER_CODE",
                             partyName: key,
                             springMailUsername: props.springMailUsername,
