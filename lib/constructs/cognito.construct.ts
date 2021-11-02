@@ -1,9 +1,7 @@
 import {Construct,Duration,RemovalPolicy,CfnOutput} from '@aws-cdk/core'
 import * as cognito from '@aws-cdk/aws-cognito'
 import {CfnUserPoolGroup, OAuthScope} from "@aws-cdk/aws-cognito";
-import { CfnWaitCondition } from '@aws-cdk/aws-cloudformation'
-import * as route53 from "@aws-cdk/aws-route53";
-import * as acm from "@aws-cdk/aws-certificatemanager";
+import * as cr from "@aws-cdk/custom-resources";
 
 export interface CognitoConstructProps {
     participants: string,
@@ -13,6 +11,11 @@ export interface CognitoConstructProps {
 export class CognitoConstruct extends Construct {
 
     cognitoUserPoolId: string
+    dcsaClientId: string
+    dcsaClientSecret:string
+    tokenUrl:string
+    uiClientId:string
+    uiClientSecret:string
 
     constructor(scope: Construct, id: string, props: CognitoConstructProps) {
         super(scope, id);
@@ -30,7 +33,7 @@ export class CognitoConstruct extends Construct {
 
         this.cognitoUserPoolId=pool.userPoolId
 
-
+        this.tokenUrl=pool.userPoolProviderUrl
 
 
         let jsonStr = props.participants;
@@ -61,7 +64,7 @@ export class CognitoConstruct extends Construct {
         participantsMap.forEach((value: string, key: string) => {
             let customScope=`dcsa/${key}`
             console.log('['+customScope+']')
-            pool.addClient('cl' + key, {
+            let client=pool.addClient('cl' + key, {
                 generateSecret: true,
                 oAuth: {
                     flows: {
@@ -69,7 +72,13 @@ export class CognitoConstruct extends Construct {
                     },
                     scopes: [OAuthScope.custom(customScope)],
                 }
-            }).node.addDependency(resourceServer)
+            })
+            client.node.addDependency(resourceServer)
+
+            if(key==='dcsa') {
+                this.dcsaClientId=client.userPoolClientId
+                this.dcsaClientSecret=getClientSecret(this,pool.userPoolId,client.userPoolClientId)
+            }
             new CfnUserPoolGroup(scope, key, {
                 groupName: key,
                 userPoolId: pool.userPoolId
@@ -77,7 +86,7 @@ export class CognitoConstruct extends Construct {
 
         });
 
-        pool.addClient('clui', {
+        const uiClient=pool.addClient('clui', {
             generateSecret: false,
             oAuth: {
                 flows: {
@@ -91,6 +100,36 @@ export class CognitoConstruct extends Construct {
             }
         });
 
+        this.uiClientId=uiClient.userPoolClientId
+        this.uiClientSecret=getClientSecret(this,pool.userPoolId,uiClient.userPoolClientId)
 
     }
+}
+
+function getClientSecret(scope:Construct,userPoolId:string, userPoolClientId:string):string {
+    const describeCognitoUserPoolClient = new cr.AwsCustomResource(
+        scope,
+        'DescribeCognitoUserPoolClient',
+        {
+            resourceType: 'Custom::DescribeCognitoUserPoolClient',
+            onCreate: {
+                region: 'us-east-1',
+                service: 'CognitoIdentityServiceProvider',
+                action: 'describeUserPoolClient',
+                parameters: {
+                    UserPoolId: userPoolId,
+                    ClientId: userPoolClientId,
+                },
+                physicalResourceId: cr.PhysicalResourceId.of(userPoolClientId),
+            },
+            // TODO: can we restrict this policy more?
+            policy: cr.AwsCustomResourcePolicy.fromSdkCalls({
+                resources: cr.AwsCustomResourcePolicy.ANY_RESOURCE,
+            }),
+        }
+    )
+
+    return describeCognitoUserPoolClient.getResponseField(
+        'UserPoolClient.ClientSecret'
+    )
 }
