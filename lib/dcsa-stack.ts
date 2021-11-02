@@ -19,14 +19,15 @@ export class DCSAStack extends cdk.Stack {
     }
 
 
+    const { tokenUrl,dcsaClientSecret,dcsaClientId,uiClientId,cognitoUserPoolId } =  new CognitoConstruct(this, "cg", {participants: props.participants});
 
     if(experimental) {
       //new DBConstruct(this, "db", {"placeholder": "placeholdertext"});
 
-      const { tokenUrl,dcsaClientSecret,dcsaClientId,uiClientSecret,uiClientId,cognitoUserPoolId } =  new CognitoConstruct(this, "cg", {participants: props.participants});
+      //const { tokenUrl,dcsaClientSecret,dcsaClientId,uiClientSecret,uiClientId,cognitoUserPoolId } =  new CognitoConstruct(this, "cg", {participants: props.participants});
 
       new cdk.CfnOutput(this, 'UserPoolClientSecret', {
-        value: dcsaClientSecret,
+        value: tokenUrl,
       })
 
     }
@@ -35,7 +36,7 @@ export class DCSAStack extends cdk.Stack {
 
     if(!experimental) {
       new DCSAEKSCluster(this, 'EKSCluster', {
-        hostedZoneCertificate, "cognitoUserPoolId": props.cognitoUserPoolId, "helmVersion": props.helmVersion, "participants": props.participants, "springMailUsername": props.springMailUsername,experimental: experimental
+        hostedZoneCertificate, "cognitoUserPoolId": cognitoUserPoolId, "helmVersion": props.helmVersion, "participants": props.participants, "springMailUsername": props.springMailUsername,experimental: experimental,cognitoUIClientId: uiClientId,cognitoDCSAClientId:dcsaClientId,cognitoDCSAClientSecret:dcsaClientSecret,cognitoTokenUrl:tokenUrl
       })
     }
 
