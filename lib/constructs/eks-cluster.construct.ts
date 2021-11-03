@@ -9,7 +9,12 @@ export interface DCSAEKSClusterProps {
     cognitoUserPoolId: string,
     helmVersion: string,
     participants: string,
-    springMailUsername: string
+    springMailUsername: string,
+    experimental:boolean
+    cognitoUIClientId:string
+    cognitoDCSAClientId:string,
+    cognitoDCSAClientSecret:string,
+    cognitoTokenUrl: string
 }
 
 
@@ -44,6 +49,11 @@ export class DCSAEKSCluster extends Construct {
         account.addToPrincipalPolicy(policyStatement)
         account.addToPrincipalPolicy(adminStatement)
 
+
+
+
+
+
         cluster.addHelmChart('ALBController', {
             chart: 'aws-load-balancer-controller',
             repository: 'https://aws.github.io/eks-charts',
@@ -69,7 +79,7 @@ export class DCSAEKSCluster extends Construct {
                     values: {
                         certificateArn: props.hostedZoneCertificate.certificateArn,
                         envType: {
-                            aws: true
+                            aws: `${props.experimental!}`
                         },
                         env: {
                             baseurl: process.env.BASEURL,
@@ -79,16 +89,37 @@ export class DCSAEKSCluster extends Construct {
                             company: key,
                             publisherRole: "CA",
                             cognitoUserPoolId: props.cognitoUserPoolId,
-                            cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
+                            cognitoAppClientId: props.cognitoUIClientId,
                             publisherCodeType: "SMDG_LINER_CODE",
                             partyName: key,
                             springMailUsername: props.springMailUsername,
                             springMailPassword: process.env.SMTPPASSWORD,
-                            notificationEmail: value
+                            notificationEmail: value,
+                            dcsaAppClientId: props.cognitoDCSAClientId,
+                            dcsaAppClientSecret: props.cognitoDCSAClientSecret,
+                            dcsaAppClientTokenUri: props.cognitoTokenUrl
                         }
                     }
                 })
             }
         )
+
+        if(props.experimental==true) {
+            cluster.addHelmChart('el', {
+                chart: 'dcsaingresscluster',
+                repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
+                version: '0.0.3',
+                namespace: 'default',
+                values: {
+                    certificateArn: props.hostedZoneCertificate.certificateArn,
+                    env: {
+                        baseurl: process.env.BASEURL
+                    },
+                    participants: Array.from(participantsMap.keys())
+                }
+            })
+        }
+
+
     }
 }
