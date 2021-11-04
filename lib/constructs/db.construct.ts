@@ -78,13 +78,7 @@ export class DBConstruct extends Construct {
         new CfnOutput(this, 'dbEndpointPort', {
             value: dbInstance.instanceEndpoint.port.toString(),
         });
-
-        new CfnOutput(this, 'secretName', {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-            value: dbInstance.secret?.secretName!,
-        });
-
-
+        
 
     }
 }
