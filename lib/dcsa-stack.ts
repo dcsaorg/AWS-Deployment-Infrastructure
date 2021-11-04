@@ -21,9 +21,10 @@ export class DCSAStack extends cdk.Stack {
 
     const { tokenUrl,dcsaClientSecret,dcsaClientId,uiClientId,cognitoUserPoolId } =  new CognitoConstruct(this, "cg", {participants: props.participants});
 
+    if(experimental==true) {
     new DBConstruct(this, "db", {"placeholder": "placeholdertext"});
 
-
+    }
 
       new DCSAEKSCluster(this, 'EKSCluster', {
         hostedZoneCertificate, "cognitoUserPoolId": cognitoUserPoolId, "helmVersion": props.helmVersion, "participants": props.participants, "springMailUsername": props.springMailUsername,experimental: experimental,cognitoUIClientId: uiClientId,cognitoDCSAClientId:dcsaClientId,cognitoDCSAClientSecret:dcsaClientSecret,cognitoTokenUrl:tokenUrl
