@@ -36,7 +36,7 @@ export class DBConstruct extends Construct {
             ],
         });
 
-        const dbSecret = secret.Secret.fromSecretNameV2(this,"dbsecret","DBPassword")
+        //const dbSecret = secret.Secret.fromSecretNameV2(this,"dbsecret","DBPassword")
 
         const dbInstance = new rds.DatabaseInstance(this, 'db-instance', {
             vpc,
@@ -50,7 +50,7 @@ export class DBConstruct extends Construct {
                 ec2.InstanceClass.BURSTABLE3,
                 ec2.InstanceSize.MICRO,
             ),
-            credentials: rds.Credentials.fromPassword("postgres",dbSecret.secretValue),
+            credentials: rds.Credentials.fromGeneratedSecret('postgres'),
             multiAz: false,
             allocatedStorage: 100,
             maxAllocatedStorage: 105,
