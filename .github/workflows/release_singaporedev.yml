@@ -12,7 +12,7 @@ env:
   smtpusername: 'AKIAT77N3QAGQHUCPIUY'
   cognitoappclientid: '22692793div4uhiou4hb9dgdee'
   cognitouserpoolid: 'eu-west-1_gOhrzkT7W'
-  helmversion: '0.1.60'
+  helmversion: '0.1.64'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -21,9 +21,22 @@ jobs:
       participants: ${{ secrets.SINGAPOREDEVPARTICIPANTS }}
       awsaccesskeyid: ${{ secrets.SINGAPOREDEVAWSACCESSKEYID }}
       awssecretaccesskey: ${{ secrets.SINGAPOREDEVAWSSECRETACCESSKEY }}
+      dbpassword: ${{ secrets.HAMBURGDEV_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-skip-session-tagging: true
+          aws-access-key-id: ${{ env.awsaccesskeyid }}
+          aws-secret-access-key: ${{ env.awssecretaccesskey }}
+          aws-region:  ${{ env.awsregion }}
+      - name: Creating secret
+        run: |
+          aws secretsmanager create-secret --name DBPassword --secret-string ${{env.dbpassword}} || true
+          aws secretsmanager update-secret --secret-id DBPassword --secret-string ${{env.dbpassword}} || true
+
       - name: CDK Bootstrapping AWS Account
         uses: youyo/aws-cdk-github-actions@v2
         with:
