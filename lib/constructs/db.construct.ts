@@ -36,7 +36,7 @@ export class DBConstruct extends Construct {
             ],
         });
 
-        //const dbSecret = secret.Secret.fromSecretNameV2(this,"dbsecret","DBPassword")
+        const dbSecret = secret.Secret.fromSecretNameV2(this,"dbsecret","DBPassword")
 
         const dbInstance = new rds.DatabaseInstance(this, 'db-instance', {
             vpc,
