@@ -12,7 +12,7 @@ env:
   smtpusername: 'AKIA3I7HULHFFSNUVVB4'
   cognitoappclientid: '4u49pjh38su1ccea0l4dras9if'
   cognitouserpoolid: 'eu-west-1_LsLTYEjn5'
-  helmversion: '0.1.55'
+  helmversion: '0.1.64'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -52,6 +52,7 @@ jobs:
           SMTPUSERNAME: ''
           SMTPPASSWORD: ''
           EXPERIMENTAL: ''
+          DBPASSWORD: ${{env.dbpassword}}
       - name: Deploying the CDK Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -72,6 +73,7 @@ jobs:
           SMTPUSERNAME: ${{ env.smtpusername }}
           SMTPPASSWORD: ${{ env.smtppassword }}
           EXPERIMENTAL: 'true'
+          DBPASSWORD: ${{env.dbpassword}}
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
