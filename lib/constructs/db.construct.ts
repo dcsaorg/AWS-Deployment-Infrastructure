@@ -1,6 +1,8 @@
 import {Construct,Duration,RemovalPolicy,CfnOutput} from '@aws-cdk/core'
 import * as ec2 from '@aws-cdk/aws-ec2'
 import * as rds from '@aws-cdk/aws-rds'
+import * as secret from '@aws-cdk/aws-secretsmanager';
+
 
 export interface DBConstructProps {
     placeholder: string
@@ -8,6 +10,10 @@ export interface DBConstructProps {
 
 
 export class DBConstruct extends Construct {
+
+    dbHostname: string
+    dbPort:number
+
     constructor(scope: Construct, id: string, props: DBConstructProps) {
         super(scope, id)
 
@@ -30,6 +36,8 @@ export class DBConstruct extends Construct {
             ],
         });
 
+        const dbSecret = secret.Secret.fromSecretNameV2(this,"dbsecret","DBPassword")
+
         const dbInstance = new rds.DatabaseInstance(this, 'db-instance', {
             vpc,
             vpcSubnets: {
@@ -42,7 +50,7 @@ export class DBConstruct extends Construct {
                 ec2.InstanceClass.BURSTABLE3,
                 ec2.InstanceSize.MICRO,
             ),
-            credentials: rds.Credentials.fromGeneratedSecret('postgres'),
+            credentials: rds.Credentials.fromPassword("postgres",dbSecret.secretValue),
             multiAz: false,
             allocatedStorage: 100,
             maxAllocatedStorage: 105,
@@ -58,8 +66,17 @@ export class DBConstruct extends Construct {
 
         dbInstance.connections.allowFrom( ec2.Peer.anyIpv4(), ec2.Port.tcp(5432));
 
-        new CfnOutput(this, 'dbEndpoint', {
+        this.dbPort=dbInstance.instanceEndpoint.port
+        this.dbHostname=dbInstance.instanceEndpoint.hostname
+
+
+
+        new CfnOutput(this, 'dbEndpointHostname', {
             value: dbInstance.instanceEndpoint.hostname,
+        });
+
+        new CfnOutput(this, 'dbEndpointPort', {
+            value: dbInstance.instanceEndpoint.port.toString(),
         });
 
         new CfnOutput(this, 'secretName', {
