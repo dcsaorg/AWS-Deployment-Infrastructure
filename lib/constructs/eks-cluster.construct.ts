@@ -14,7 +14,11 @@ export interface DCSAEKSClusterProps {
     cognitoUIClientId:string
     cognitoDCSAClientId:string,
     cognitoDCSAClientSecret:string,
-    cognitoTokenUrl: string
+    cognitoTokenUrl: string,
+    dbHost:string,
+    dbPort:number,
+    dbPassword:string
+
 }
 
 
@@ -84,6 +88,11 @@ export class DCSAEKSCluster extends Construct {
                         env: {
                             baseurl: process.env.BASEURL,
                             participant: key
+                        },
+                        db: {
+                            host: props.dbHost,
+                            password: props.dbPassword,
+                            username: "postgres",
                         },
                         p6config: {
                             company: key,
