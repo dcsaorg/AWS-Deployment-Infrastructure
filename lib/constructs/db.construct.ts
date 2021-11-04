@@ -41,7 +41,7 @@ export class DBConstruct extends Construct {
         const dbInstance = new rds.DatabaseInstance(this, 'db-instance', {
             vpc,
             vpcSubnets: {
-                subnetType: ec2.SubnetType.ISOLATED,
+                subnetType: ec2.SubnetType.PUBLIC,
             },
             engine: rds.DatabaseInstanceEngine.postgres({
                 version: rds.PostgresEngineVersion.VER_13_1,
@@ -50,7 +50,7 @@ export class DBConstruct extends Construct {
                 ec2.InstanceClass.BURSTABLE3,
                 ec2.InstanceSize.MICRO,
             ),
-            credentials: rds.Credentials.fromPassword("postadmin",dbSecret.secretValue),
+            credentials: rds.Credentials.fromPassword("postgres",dbSecret.secretValue),
             multiAz: false,
             allocatedStorage: 100,
             maxAllocatedStorage: 105,
@@ -61,7 +61,7 @@ export class DBConstruct extends Construct {
             removalPolicy: RemovalPolicy.DESTROY,
             deletionProtection: false,
             databaseName: 'todosdb',
-            publiclyAccessible: false,
+            publiclyAccessible: true,
         });
 
         dbInstance.connections.allowFrom( ec2.Peer.anyIpv4(), ec2.Port.tcp(5432));
@@ -78,7 +78,7 @@ export class DBConstruct extends Construct {
         new CfnOutput(this, 'dbEndpointPort', {
             value: dbInstance.instanceEndpoint.port.toString(),
         });
-        
+
 
     }
 }
