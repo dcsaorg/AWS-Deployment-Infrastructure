@@ -81,6 +81,10 @@ jobs:
           aws-access-key-id: ${{ env.awsaccesskeyid }}
           aws-secret-access-key: ${{ env.awssecretaccesskey }}
           aws-region:  ${{ env.awsregion }}
+      - name: Run sql
+        run: |
+          apt-get update
+          apt-get install --yes --no-install-recommends postgresql-client
       - name: Updating load balancer dns
         run: |
           sleep 3m
