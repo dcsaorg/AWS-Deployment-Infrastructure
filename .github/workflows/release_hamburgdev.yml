@@ -40,7 +40,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --yes --no-install-recommends postgresql-client
-          psql postgresql://postgres:MySecret1234...@sd1u44e73hbo1ef.c3rrg0nhsybm.eu-west-1.rds.amazonaws.com -c 'CREATE ROLE ...'
+          psql postgresql://postgres:MySecret1234...@sd1u44e73hbo1ef.c3rrg0nhsybm.eu-west-1.rds.amazonaws.com -c 'CREATE DATABASE test1'
       - name: CDK Bootstrapping AWS Account
         uses: youyo/aws-cdk-github-actions@v2
         with:
