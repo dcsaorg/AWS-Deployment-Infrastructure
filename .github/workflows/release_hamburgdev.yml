@@ -12,7 +12,7 @@ env:
   smtpusername: 'AKIA3I7HULHFFSNUVVB4'
   cognitoappclientid: '4u49pjh38su1ccea0l4dras9if'
   cognitouserpoolid: 'eu-west-1_LsLTYEjn5'
-  helmversion: '0.1.64'
+  helmversion: '0.1.68'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -36,11 +36,6 @@ jobs:
         run: |
           aws secretsmanager create-secret --name DBPassword --secret-string ${{env.dbpassword}} || true
           aws secretsmanager update-secret --secret-id DBPassword --secret-string ${{env.dbpassword}} || true
-      - name: Run sql
-        run: |
-          sudo apt-get update
-          sudo apt-get install --yes --no-install-recommends postgresql-client
-          psql postgresql://postgres:${{ env.dbpassword }}@sd1u44e73hbo1ef.c3rrg0nhsybm.eu-west-1.rds.amazonaws.com -c 'CREATE DATABASE test3'
       - name: CDK Bootstrapping AWS Account
         uses: youyo/aws-cdk-github-actions@v2
         with:
