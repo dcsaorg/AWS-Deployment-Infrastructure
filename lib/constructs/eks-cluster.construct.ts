@@ -74,9 +74,15 @@ export class DCSAEKSCluster extends Construct {
             }
         })
 
+        var helmChartname="dcsasandboxhamburg";
+
+        if(props.experimental) {
+            helmChartname="dcsatestcluster";
+        }
+
         participantsMap.forEach((value: string, key: string) => {
                 cluster.addHelmChart(key.substring(0, 3), {
-                    chart: 'dcsasandboxhamburg',
+                    chart: helmChartname,
                     repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
                     version: props.helmVersion,
                     namespace: 'default',
