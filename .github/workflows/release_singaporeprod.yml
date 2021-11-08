@@ -8,7 +8,7 @@ env:
   awsaccountid: '728333546168'
   awsregion: 'eu-west-1'
   baseurl: 'p6-singapore-production.dcsa.org'
-  hostedzoneid: 'Z10223481BL59YAUPCR1I'
+  hostedzoneid: 'Z02960703HQEN55ZN3GIG'
   smtpusername: 'AKIA2TFAP6K4F5447AUL'
   cognitoappclientid: '2id9n1me4q5pn6412r6dtamgul'
   cognitouserpoolid: 'eu-west-1_UV95TORKw'
