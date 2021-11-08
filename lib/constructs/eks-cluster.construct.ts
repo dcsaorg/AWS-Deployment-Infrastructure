@@ -93,6 +93,7 @@ export class DCSAEKSCluster extends Construct {
                             host: props.dbHost,
                             password: props.dbPassword,
                             username: "postgres",
+                            name: key.replace("-","")
                         },
                         p6config: {
                             company: key,
@@ -113,7 +114,7 @@ export class DCSAEKSCluster extends Construct {
             }
         )
 
-        if(props.experimental==true) {
+        /*if(props.experimental==true) {
             cluster.addHelmChart('el', {
                 chart: 'dcsaingresscluster',
                 repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
@@ -127,7 +128,7 @@ export class DCSAEKSCluster extends Construct {
                     participants: Array.from(participantsMap.keys())
                 }
             })
-        }
+        }*/
 
 
     }
