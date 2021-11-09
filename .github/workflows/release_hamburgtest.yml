@@ -9,7 +9,7 @@ env:
   awsregion: 'eu-west-1'
   baseurl: 'p6-hamburg-test.dcsa.org'
   hostedzoneid: 'Z0356896WKOUB3ZK0XRN'
-  smtpusername: ''
+  smtpusername: 'AKIA4NJGXMBW74VQLDUD'
   cognitoappclientid: '5bfutou7tg621i6h1fbgs4vlki'
   cognitouserpoolid: 'eu-west-1_q9s1DipXz'
   helmversion: '0.1.69'
