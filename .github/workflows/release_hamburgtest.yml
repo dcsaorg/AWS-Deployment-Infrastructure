@@ -9,10 +9,10 @@ env:
   awsregion: 'eu-west-1'
   baseurl: 'p6-hamburg-test.dcsa.org'
   hostedzoneid: 'Z0356896WKOUB3ZK0XRN'
-  smtpusername: ''
+  smtpusername: 'AKIA4NJGXMBW74VQLDUD'
   cognitoappclientid: '5bfutou7tg621i6h1fbgs4vlki'
   cognitouserpoolid: 'eu-west-1_q9s1DipXz'
-  helmversion: '0.1.46'
+  helmversion: '0.1.70'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -21,9 +21,21 @@ jobs:
       participants: ${{ secrets.HAMBURGTESTPARTICIPANTS }}
       awsaccesskeyid: ${{ secrets.HAMBURGTESTAWSACCESSKEYID }}
       awssecretaccesskey: ${{ secrets.HAMBURGTESTAWSSECRETACCESSKEY }}
+      dbpassword: ${{ secrets.HAMBURGDEV_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-skip-session-tagging: true
+          aws-access-key-id: ${{ env.awsaccesskeyid }}
+          aws-secret-access-key: ${{ env.awssecretaccesskey }}
+          aws-region:  ${{ env.awsregion }}
+      - name: Creating secret
+        run: |
+          aws secretsmanager create-secret --name DBPassword --secret-string ${{env.dbpassword}} || true
+          aws secretsmanager update-secret --secret-id DBPassword --secret-string ${{env.dbpassword}} || true        
       - name: CDK Bootstrapping AWS Account
         uses: youyo/aws-cdk-github-actions@v2
         with:
