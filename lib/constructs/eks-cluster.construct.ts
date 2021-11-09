@@ -9,7 +9,16 @@ export interface DCSAEKSClusterProps {
     cognitoUserPoolId: string,
     helmVersion: string,
     participants: string,
-    springMailUsername: string
+    springMailUsername: string,
+    experimental:boolean
+    cognitoUIClientId:string
+    cognitoDCSAClientId:string,
+    cognitoDCSAClientSecret:string,
+    cognitoTokenUrl: string,
+    dbHost:string,
+    dbPort:number,
+    dbPassword:string
+
 }
 
 
@@ -44,6 +53,11 @@ export class DCSAEKSCluster extends Construct {
         account.addToPrincipalPolicy(policyStatement)
         account.addToPrincipalPolicy(adminStatement)
 
+
+
+
+
+
         cluster.addHelmChart('ALBController', {
             chart: 'aws-load-balancer-controller',
             repository: 'https://aws.github.io/eks-charts',
@@ -60,35 +74,68 @@ export class DCSAEKSCluster extends Construct {
             }
         })
 
+        var helmChartname="dcsasandboxhamburg";
+
+        if(props.experimental) {
+            helmChartname="dcsatestcluster";
+        }
+
         participantsMap.forEach((value: string, key: string) => {
                 cluster.addHelmChart(key.substring(0, 3), {
-                    chart: 'dcsasandboxhamburg',
+                    chart: helmChartname,
                     repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
                     version: props.helmVersion,
                     namespace: 'default',
                     values: {
                         certificateArn: props.hostedZoneCertificate.certificateArn,
                         envType: {
-                            aws: true
+                            aws: `${props.experimental!}`
                         },
                         env: {
                             baseurl: process.env.BASEURL,
                             participant: key
                         },
+                        db: {
+                            host: props.dbHost,
+                            password: props.dbPassword,
+                            username: "postgres",
+                            name: key.replace("-","")
+                        },
                         p6config: {
                             company: key,
                             publisherRole: "CA",
                             cognitoUserPoolId: props.cognitoUserPoolId,
-                            cognitoAppClientId: process.env.COGNITOAPPCLIENTID,
+                            cognitoAppClientId: props.cognitoUIClientId,
                             publisherCodeType: "SMDG_LINER_CODE",
                             partyName: key,
                             springMailUsername: props.springMailUsername,
                             springMailPassword: process.env.SMTPPASSWORD,
-                            notificationEmail: value
+                            notificationEmail: value,
+                            dcsaAppClientId: props.cognitoDCSAClientId,
+                            dcsaAppClientSecret: props.cognitoDCSAClientSecret,
+                            dcsaAppClientTokenUri: props.cognitoTokenUrl
                         }
                     }
                 })
             }
         )
+
+        /*if(props.experimental==true) {
+            cluster.addHelmChart('el', {
+                chart: 'dcsaingresscluster',
+                repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
+                version: '0.0.3',
+                namespace: 'default',
+                values: {
+                    certificateArn: props.hostedZoneCertificate.certificateArn,
+                    env: {
+                        baseurl: process.env.BASEURL
+                    },
+                    participants: Array.from(participantsMap.keys())
+                }
+            })
+        }*/
+
+
     }
 }

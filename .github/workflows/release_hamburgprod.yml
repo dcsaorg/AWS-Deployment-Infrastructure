@@ -4,9 +4,23 @@ on:
   push:
     branches: [ hamburgproduction ]
 
+env:
+  awsaccountid: '102971406603'
+  awsregion: 'eu-west-1'
+  baseurl: 'p6-hamburg-production.dcsa.org'
+  hostedzoneid: 'Z0897388S7HMXDOADHBC'
+  smtpusername: 'AKIARP6MS7EFTHTJMPBM'
+  cognitoappclientid: '2id9n1me4q5pn6412r6dtamgul'
+  cognitouserpoolid: 'eu-west-1_UV95TORKw'
+  helmversion: '0.1.46'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
+    env:
+      smtppassword: ${{ secrets.HAMBURGPRODSMTPPASSWORD }}
+      participants: ${{ secrets.HAMBURGPRODPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.HAMBURGPRODAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.HAMBURGPRODAWSSECRETACCESSKEY }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
@@ -15,14 +29,17 @@ jobs:
         with:
           cdk_subcommand: 'bootstrap'
           cdk_args: '--cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess'
-          cdk_stack: 'aws://102971406603/eu-west-1'
+          cdk_stack: 'aws://${{ env.awsaccountid }}/${{ env.awsregion }}'
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGPRODAWSACCESSKEYID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGPRODAWSSECRETACCESSKEY }}
-          PARTICIPANTS:  ${{ secrets.HAMBURGDEVPARTICIPANTS }}
-          AWS_DEFAULT_REGION: 'eu-west-1'
-          BASEURL: 'p6-hamburg-production.dcsa.org'
-          HOSTEDZONEID: 'Z0897388S7HMXDOADHBC'
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ''
+          HOSTEDZONEID: ''
+          SMTPUSERNAME: ''
+          SMTPPASSWORD: ''
+          EXPERIMENTAL: ''
       - name: Deploying the CDK Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -31,17 +48,25 @@ jobs:
           cdk_args: '--require-approval never'
           actions_comment: false
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGPRODAWSACCESSKEYID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGPRODAWSSECRETACCESSKEY }}
-          PARTICIPANTS:  ${{ secrets.HAMBURGPRODPARTICIPANTS }}
-          AWS_DEFAULT_REGION: 'eu-west-1'
-          BASEURL: 'p6-hamburg-production.dcsa.org'
-          HOSTEDZONEID: 'Z0897388S7HMXDOADHBC'
-          COGNITOAPPCLIENTID: "2id9n1me4q5pn6412r6dtamgul"
-          COGNITOUSERPOOLID: "eu-west-1_UV95TORKw"
-          HELMVERSION: "0.1.46"
-          SMTPUSERNAME: "AKIARP6MS7EFTHTJMPBM"
-          SMTPPASSWORD: ${{ secrets.HAMBURGPRODSMTPPASSWORD }}
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
+          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
+          HELMVERSION: ${{ env.helmversion }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          EXPERIMENTAL: ''
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-skip-session-tagging: true
+          aws-access-key-id: ${{ env.awsaccesskeyid }}
+          aws-secret-access-key: ${{ env.awssecretaccesskey }}
+          aws-region:  ${{ env.awsregion }}
       - name: Updating load balancer dns
         run: |
           sleep 3m
@@ -50,6 +75,6 @@ jobs:
           echo $alburl
           sed -i "s#mydns#$alburl#g" ./route53/route53.json
           cat ./route53/route53.json
-          aws route53 change-resource-record-sets --hosted-zone-id Z0897388S7HMXDOADHBC --change-batch file://./route53/route53.json
+          aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./route53/route53.json
 
                  
