@@ -10,7 +10,7 @@ export interface DBConstructProps {
 
 
 export class DBConstruct extends Construct {
-
+ 
     dbHostname: string
     dbPort:number
 
