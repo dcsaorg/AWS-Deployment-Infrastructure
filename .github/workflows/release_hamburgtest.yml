@@ -12,7 +12,7 @@ env:
   smtpusername: 'AKIA4NJGXMBW74VQLDUD'
   cognitoappclientid: '5bfutou7tg621i6h1fbgs4vlki'
   cognitouserpoolid: 'eu-west-1_q9s1DipXz'
-  helmversion: '0.1.72'
+  helmversion: '0.1.73'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
