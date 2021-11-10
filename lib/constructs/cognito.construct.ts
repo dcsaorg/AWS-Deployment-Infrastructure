@@ -27,6 +27,7 @@ export class CognitoConstruct extends Construct {
                 groups: new cognito.StringAttribute({ minLen: 1, maxLen: 255 }),
             },
         });
+        pool.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
         const urlid=makeid(10);
 
@@ -63,6 +64,7 @@ export class CognitoConstruct extends Construct {
             scopes:scopes,
             userPoolResourceServerName:"ourresource"
         })
+        resourceServer.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
         console.log(participantsMap)
 
@@ -79,6 +81,7 @@ export class CognitoConstruct extends Construct {
                 }
             })
             client.node.addDependency(resourceServer)
+            client.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
             if(key==='dcsa') {
                 this.dcsaClientId=client.userPoolClientId
@@ -104,6 +107,7 @@ export class CognitoConstruct extends Construct {
                 logoutUrls:['https://localhost']
             }
         });
+        uiClient.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
         this.uiClientId=uiClient.userPoolClientId
         this.uiClientSecret=getClientSecret("ui",this,pool,uiClient)
