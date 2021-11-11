@@ -2,40 +2,28 @@ name: Publish
 
 on:
   push:
-    branches: [ hamburgproduction ]
+    branches: [ training ]
 
 env:
-  awsaccountid: '102971406603'
+  awsaccountid: '487020291028'
   awsregion: 'eu-west-1'
-  baseurl: 'p6-hamburg-production.dcsa.org'
-  hostedzoneid: 'Z0897388S7HMXDOADHBC'
-  smtpusername: 'AKIARP6MS7EFTHTJMPBM'
-  cognitoappclientid: '2id9n1me4q5pn6412r6dtamgul'
-  cognitouserpoolid: 'eu-west-1_UV95TORKw'
-  helmversion: '0.1.73'
+  baseurl: 'p6-training@dcsa.org'
+  hostedzoneid: 'Z05111611VJ8QDHCL5TJW'
+  smtpusername: ''
+  cognitoappclientid: '22692793div4uhiou4hb9dgdee'
+  cognitouserpoolid: 'eu-west-1_gOhrzkT7W'
+  helmversion: '0.1.46'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      smtppassword: ${{ secrets.HAMBURGPRODSMTPPASSWORD }}
-      participants: ${{ secrets.HAMBURGPRODPARTICIPANTS }}
-      awsaccesskeyid: ${{ secrets.HAMBURGPRODAWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.HAMBURGPRODAWSSECRETACCESSKEY }}
-      dbpassword: ${{ secrets.HAMBURGDEV_DBPASSWORD }}
+      smtppassword: ${{ secrets.SINGAPOREDEVSMTPPASSWORD }}
+      participants: ${{ secrets.SINGAPOREDEVPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.SINGAPOREDEVAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.SINGAPOREDEVAWSSECRETACCESSKEY }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-skip-session-tagging: true
-          aws-access-key-id: ${{ env.awsaccesskeyid }}
-          aws-secret-access-key: ${{ env.awssecretaccesskey }}
-          aws-region:  ${{ env.awsregion }}
-      - name: Creating secret
-        run: |
-          aws secretsmanager create-secret --name DBPassword --secret-string ${{env.dbpassword}} || true
-          aws secretsmanager update-secret --secret-id DBPassword --secret-string ${{env.dbpassword}} || true
       - name: CDK Bootstrapping AWS Account
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -51,7 +39,6 @@ jobs:
           HOSTEDZONEID: ''
           SMTPUSERNAME: ''
           SMTPPASSWORD: ''
-          EXPERIMENTAL: ''
       - name: Deploying the CDK Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -71,7 +58,6 @@ jobs:
           HELMVERSION: ${{ env.helmversion }}
           SMTPUSERNAME: ${{ env.smtpusername }}
           SMTPPASSWORD: ${{ env.smtppassword }}
-          EXPERIMENTAL: ''
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

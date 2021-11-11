@@ -2,25 +2,25 @@ name: Publish
 
 on:
   push:
-    branches: [ hamburgproduction ]
+    branches: [ singaporeproduction ]
 
 env:
-  awsaccountid: '102971406603'
+  awsaccountid: '728333546168'
   awsregion: 'eu-west-1'
-  baseurl: 'p6-hamburg-production.dcsa.org'
-  hostedzoneid: 'Z0897388S7HMXDOADHBC'
-  smtpusername: 'AKIARP6MS7EFTHTJMPBM'
+  baseurl: 'p6-singapore-production.dcsa.org'
+  hostedzoneid: 'Z02960703HQEN55ZN3GIG'
+  smtpusername: 'AKIA2TFAP6K4F5447AUL'
   cognitoappclientid: '2id9n1me4q5pn6412r6dtamgul'
   cognitouserpoolid: 'eu-west-1_UV95TORKw'
-  helmversion: '0.1.73'
+  helmversion: '0.1.69'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      smtppassword: ${{ secrets.HAMBURGPRODSMTPPASSWORD }}
-      participants: ${{ secrets.HAMBURGPRODPARTICIPANTS }}
-      awsaccesskeyid: ${{ secrets.HAMBURGPRODAWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.HAMBURGPRODAWSSECRETACCESSKEY }}
+      smtppassword: ${{ secrets.SINGAPOREPRODSMTPPASSWORD }}
+      participants: ${{ secrets.SINGAPOREPRODPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.SINGAPOREPRODAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.SINGAPOREPRODAWSSECRETACCESSKEY }}
       dbpassword: ${{ secrets.HAMBURGDEV_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code

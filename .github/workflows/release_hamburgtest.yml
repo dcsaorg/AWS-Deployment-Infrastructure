@@ -2,25 +2,25 @@ name: Publish
 
 on:
   push:
-    branches: [ hamburgproduction ]
+    branches: [ hamburgtest ]
 
 env:
-  awsaccountid: '102971406603'
+  awsaccountid: '853169102957'
   awsregion: 'eu-west-1'
-  baseurl: 'p6-hamburg-production.dcsa.org'
-  hostedzoneid: 'Z0897388S7HMXDOADHBC'
-  smtpusername: 'AKIARP6MS7EFTHTJMPBM'
-  cognitoappclientid: '2id9n1me4q5pn6412r6dtamgul'
-  cognitouserpoolid: 'eu-west-1_UV95TORKw'
+  baseurl: 'p6-hamburg-test.dcsa.org'
+  hostedzoneid: 'Z0356896WKOUB3ZK0XRN'
+  smtpusername: 'AKIA4NJGXMBW74VQLDUD'
+  cognitoappclientid: '5bfutou7tg621i6h1fbgs4vlki'
+  cognitouserpoolid: 'eu-west-1_q9s1DipXz'
   helmversion: '0.1.73'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      smtppassword: ${{ secrets.HAMBURGPRODSMTPPASSWORD }}
-      participants: ${{ secrets.HAMBURGPRODPARTICIPANTS }}
-      awsaccesskeyid: ${{ secrets.HAMBURGPRODAWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.HAMBURGPRODAWSSECRETACCESSKEY }}
+      smtppassword: ${{ secrets.HAMBURGTESTSMTPPASSWORD }}
+      participants: ${{ secrets.HAMBURGTESTPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.HAMBURGTESTAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.HAMBURGTESTAWSSECRETACCESSKEY }}
       dbpassword: ${{ secrets.HAMBURGDEV_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
@@ -35,7 +35,7 @@ jobs:
       - name: Creating secret
         run: |
           aws secretsmanager create-secret --name DBPassword --secret-string ${{env.dbpassword}} || true
-          aws secretsmanager update-secret --secret-id DBPassword --secret-string ${{env.dbpassword}} || true
+          aws secretsmanager update-secret --secret-id DBPassword --secret-string ${{env.dbpassword}} || true        
       - name: CDK Bootstrapping AWS Account
         uses: youyo/aws-cdk-github-actions@v2
         with:
