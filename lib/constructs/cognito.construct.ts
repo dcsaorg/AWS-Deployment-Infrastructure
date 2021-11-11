@@ -69,7 +69,7 @@ export class CognitoConstruct extends Construct {
         console.log(participantsMap)
 
         participantsMap.forEach((value: string, key: string) => {
-            let customScope=`clients/${key}`
+            let customScope=`dcsa/${key}`
             console.log('['+customScope+']')
             let client=pool.addClient('cl' + key, {
                 generateSecret: true,
