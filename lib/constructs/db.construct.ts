@@ -55,8 +55,6 @@ export class DBConstruct extends Construct {
                     ec2.InstanceSize.MICRO,
                 ),
                 multiAz: false,
-                allocatedStorage: 100,
-                maxAllocatedStorage: 105,
                 allowMajorVersionUpgrade: false,
                 autoMinorVersionUpgrade: true,
                 backupRetention: Duration.days(0),
