@@ -63,7 +63,6 @@ export class DBConstruct extends Construct {
                 deleteAutomatedBackups: true,
                 removalPolicy: RemovalPolicy.DESTROY,
                 deletionProtection: false,
-                databaseName: 'todosdb',
                 publiclyAccessible: true,
             });
         } else {
