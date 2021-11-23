@@ -5,7 +5,7 @@ import { DBConstruct } from "./constructs/db.construct";
 import {CognitoConstruct} from "./constructs/cognito.construct";
 
 
-export interface DCSAStackProps extends cdk.StackProps { hostedZoneId: string, baseUrl: string, participants: string, cognitoUserPoolId: string, helmVersion: string, springMailUsername: string,experimental:string,dbpassword:string}
+export interface DCSAStackProps extends cdk.StackProps { hostedZoneId: string, baseUrl: string, participants: string, cognitoUserPoolId: string, helmVersion: string, springMailUsername: string,experimental:string,dbpassword:string,dbSnapshotID?:string}
 
 export class DCSAStack extends cdk.Stack {
   constructor (scope: cdk.Construct, id: string, props: DCSAStackProps) {
@@ -22,7 +22,7 @@ export class DCSAStack extends cdk.Stack {
     const { tokenUrl,dcsaClientSecret,dcsaClientId,uiClientId,cognitoUserPoolId } =  new CognitoConstruct(this, "cg", {participants: props.participants});
 
 
-   const {dbHostname,dbPort}= new DBConstruct(this, "db", {"placeholder": "placeholdertext"});
+   const {dbHostname,dbPort}= new DBConstruct(this, "db", {snapshotId: props.dbSnapshotID});
 
 
 
