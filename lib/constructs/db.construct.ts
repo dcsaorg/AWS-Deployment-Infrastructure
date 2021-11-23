@@ -54,7 +54,6 @@ export class DBConstruct extends Construct {
                     ec2.InstanceClass.BURSTABLE3,
                     ec2.InstanceSize.MICRO,
                 ),
-                credentials: rds.Credentials.fromPassword("postgres",dbSecret.secretValue),
                 multiAz: false,
                 allocatedStorage: 100,
                 maxAllocatedStorage: 105,
