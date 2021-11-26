@@ -2,26 +2,27 @@ name: Publish
 
 on:
   push:
-    branches: [ training ]
+    branches: [ valenciadevelopment ]
 
 env:
-  awsaccountid: '487020291028'
+  awsaccountid: '856059746030'
   awsregion: 'eu-west-1'
-  baseurl: 'p6-training.dcsa.org'
-  hostedzoneid: 'Z05111611VJ8QDHCL5TJW'
-  smtpusername: 'AKIAXCZFL4PKJSERVQQP'
-  cognitoappclientid: '22692793div4uhiou4hb9dgdee'
-  cognitouserpoolid: 'eu-west-1_gOhrzkT7W'
-  helmversion: '0.1.73'
+  baseurl: 'p6-valencia-development.dcsa.org'
+  hostedzoneid: 'Z10334181E71KL2EFPCXP'
+  smtpusername: 'AKIA3I7HULHFFSNUVVB4'
+  cognitoappclientid: '4u49pjh38su1ccea0l4dras9if'
+  cognitouserpoolid: 'eu-west-1_LsLTYEjn5'
+  helmversion: '0.1.06'
+  dbsnapshotId: 'arn:aws:rds:eu-west-1:856059746030:snapshot:test2'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      smtppassword: ${{ secrets.TRAININGSMTPPASSWORD }}
-      participants: ${{ secrets.TRAININGPARTICIPANTS }}
-      awsaccesskeyid: ${{ secrets.TRAININGAWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.TRAININGAWSSECRETACCESSKEY }}
-      dbpassword: ${{ secrets.HAMBURGDEV_DBPASSWORD }}
+      smtppassword: ${{ secrets.VALENCIADEVSMTPPASSWORD }}
+      participants: ${{ secrets.HAMBURGDEVPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.VALENCIADEVAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.VALENCIADEVAWSSECRETACCESSKEY }}
+      dbpassword: ${{ secrets.VALENCIADEV_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
@@ -52,6 +53,8 @@ jobs:
           SMTPUSERNAME: ''
           SMTPPASSWORD: ''
           EXPERIMENTAL: ''
+          DBPASSWORD: ${{env.dbpassword}}
+          DBSNAPSHOTID: ${{env.dbsnapshotId}}
       - name: Deploying the CDK Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -71,6 +74,9 @@ jobs:
           HELMVERSION: ${{ env.helmversion }}
           SMTPUSERNAME: ${{ env.smtpusername }}
           SMTPPASSWORD: ${{ env.smtppassword }}
+          EXPERIMENTAL: 'true'
+          DBPASSWORD: ${{env.dbpassword}}
+          DBSNAPSHOTID: ${{env.dbsnapshotId}}
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
