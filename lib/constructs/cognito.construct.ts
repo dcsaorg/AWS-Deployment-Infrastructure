@@ -5,11 +5,16 @@ import * as cr from "@aws-cdk/custom-resources";
 
 export interface CognitoConstructProps {
     participants: string,
+    cognitoUserPoolId: string,
+    dcsaClientId: string,
+    dcsaClientSecret:string,
+    tokenUrl:string,
+    uiClientId:string,
+    uiClientSecret:string
 }
 
 
 export class CognitoConstruct extends Construct {
-
     cognitoUserPoolId: string
     dcsaClientId: string
     dcsaClientSecret:string
@@ -19,6 +24,16 @@ export class CognitoConstruct extends Construct {
 
     constructor(scope: Construct, id: string, props: CognitoConstructProps) {
         super(scope, id);
+
+        if(props.cognitoUserPoolId.length>0) {
+            this.cognitoUserPoolId= props.cognitoUserPoolId;
+            this.dcsaClientId= props.dcsaClientId;
+            this.dcsaClientSecret= props.dcsaClientSecret;
+            this.tokenUrl= props.tokenUrl;
+            this.uiClientId= props.uiClientId;
+            this.uiClientSecret= props.uiClientSecret;
+        }
+
 
         const pool=new cognito.UserPool(this, 'up', {
             selfSignUpEnabled: true,
