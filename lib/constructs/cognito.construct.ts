@@ -31,6 +31,7 @@ export class CognitoConstruct extends Construct {
             this.tokenUrl= props.tokenUrl;
             this.uiClientId= props.uiClientId;
             //this.uiClientSecret= props.uiClientSecret;
+            return
         }
 
 
