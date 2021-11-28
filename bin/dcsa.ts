@@ -12,13 +12,11 @@ new DCSAStack(app, 'st', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "base
     "experimental": process.env.EXPERIMENTAL ?? "",
     "dbpassword": process.env.DBPASSWORD ?? "",
     dbSnapshotID:  process.env.DBSNAPSHOTID ?? "",
-    cognitoUserPoolId: process.env.DBSNAPSHOTID ?? "",
-    cognitoDcsaClientId: process.env.DBSNAPSHOTID ?? "",
-    cognitoDcsaClientSecret:process.env.DBSNAPSHOTID ?? "",
-    cognitoTokenUrl:process.env.DBSNAPSHOTID ?? "",
-    cognitoUiClientId:process.env.DBSNAPSHOTID ?? "",
-    cognitoUiClientSecret:process.env.DBSNAPSHOTID ?? ""
+    cognitoUserPoolId: process.env.COGNITOUSERPOOLID ?? "",
+    cognitoDcsaClientId: process.env.COGNITODCSACLIENTID ?? "",
+    cognitoDcsaClientSecret:process.env.COGNITODCSACLIENTSECRET ?? "",
+    cognitoTokenUrl:process.env.COGNITOTOKENURL ?? "",
+    cognitoUiClientId:process.env.COGNITOUICLIENTID ?? ""
 })
-
 
 app.synth()

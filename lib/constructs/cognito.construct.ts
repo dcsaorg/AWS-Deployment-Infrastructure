@@ -9,8 +9,7 @@ export interface CognitoConstructProps {
     dcsaClientId: string,
     dcsaClientSecret:string,
     tokenUrl:string,
-    uiClientId:string,
-    uiClientSecret:string
+    uiClientId:string
 }
 
 
@@ -20,7 +19,7 @@ export class CognitoConstruct extends Construct {
     dcsaClientSecret:string
     tokenUrl:string
     uiClientId:string
-    uiClientSecret:string
+
 
     constructor(scope: Construct, id: string, props: CognitoConstructProps) {
         super(scope, id);
@@ -31,7 +30,7 @@ export class CognitoConstruct extends Construct {
             this.dcsaClientSecret= props.dcsaClientSecret;
             this.tokenUrl= props.tokenUrl;
             this.uiClientId= props.uiClientId;
-            this.uiClientSecret= props.uiClientSecret;
+            //this.uiClientSecret= props.uiClientSecret;
         }
 
 
@@ -125,7 +124,7 @@ export class CognitoConstruct extends Construct {
         uiClient.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
         this.uiClientId=uiClient.userPoolClientId
-        this.uiClientSecret=getClientSecret("ui",this,pool,uiClient)
+        //this.uiClientSecret=getClientSecret("ui",this,pool,uiClient)
 
     }
 }

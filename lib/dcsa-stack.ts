@@ -17,8 +17,7 @@ export interface DCSAStackProps extends cdk.StackProps { hostedZoneId: string,
     cognitoDcsaClientId: string,
     cognitoDcsaClientSecret:string,
     cognitoTokenUrl:string,
-    cognitoUiClientId:string,
-    cognitoUiClientSecret:string
+    cognitoUiClientId:string
 }
 
 export class DCSAStack extends cdk.Stack {
@@ -39,8 +38,7 @@ export class DCSAStack extends cdk.Stack {
         dcsaClientId: props.cognitoDcsaClientId,
         dcsaClientSecret: props.cognitoDcsaClientSecret,
         tokenUrl:props.cognitoTokenUrl,
-        uiClientId: props.cognitoUiClientId,
-        uiClientSecret: props.cognitoUiClientSecret
+        uiClientId: props.cognitoUiClientId
     });
 
 
