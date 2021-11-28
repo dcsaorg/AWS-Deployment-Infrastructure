@@ -34,6 +34,7 @@ export class DCSAStack extends cdk.Stack {
 
 
     const { tokenUrl,dcsaClientSecret,dcsaClientId,uiClientId,cognitoUserPoolId } =  new CognitoConstruct(this, "cg", {
+        participants: props.participants,
         cognitoUserPoolId: props.cognitoUserPoolId,
         dcsaClientId: props.cognitoDcsaClientId,
         dcsaClientSecret: props.cognitoDcsaClientSecret,

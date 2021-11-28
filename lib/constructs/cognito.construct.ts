@@ -14,7 +14,7 @@ export interface CognitoConstructProps {
 
 
 export class CognitoConstruct extends Construct {
-
+    participants: string
     cognitoUserPoolId: string
     dcsaClientId: string
     dcsaClientSecret:string
