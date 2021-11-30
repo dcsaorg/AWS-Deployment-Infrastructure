@@ -8,7 +8,7 @@ env:
   awsaccountid: '487020291028'
   awsregion: 'eu-west-1'
   baseurl: 'p6-training.dcsa.org'
-  hostedzoneid: 'Z05111611VJ8QDHCL5TJW'
+  hostedzoneid: 'Z05029612O56NG6DMSTEE'
   smtpusername: 'AKIAXCZFL4PKJSERVQQP'
   cognitoappclientid: '22692793div4uhiou4hb9dgdee'
   cognitouserpoolid: 'eu-west-1_gOhrzkT7W'
