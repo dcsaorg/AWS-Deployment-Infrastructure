@@ -30,12 +30,7 @@ export class DCSAEKSCluster extends Construct {
             version: eks.KubernetesVersion.V1_18,
             clusterName: 'cl'
         })
-
-        let jsonStr = props.participants;
-        let jsonObj = JSON.parse(jsonStr);
-        let participantsMap = new Map<string, string>(Object.entries(jsonObj));
-
-        const policyStatement = new iam.PolicyStatement({
+       const policyStatement = new iam.PolicyStatement({
             resources: ['*'],
             actions: policyStatementActions
         })
@@ -52,11 +47,6 @@ export class DCSAEKSCluster extends Construct {
 
         account.addToPrincipalPolicy(policyStatement)
         account.addToPrincipalPolicy(adminStatement)
-
-
-
-
-
 
         cluster.addHelmChart('ALBController', {
             chart: 'aws-load-balancer-controller',
@@ -80,45 +70,51 @@ export class DCSAEKSCluster extends Construct {
             helmChartname="dcsatestcluster";
         }
 
-        participantsMap.forEach((value: string, key: string) => {
-                cluster.addHelmChart(key.substring(0, 3), {
-                    chart: helmChartname,
-                    repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
-                    version: props.helmVersion,
-                    namespace: 'default',
-                    values: {
-                        certificateArn: props.hostedZoneCertificate.certificateArn,
-                        envType: {
-                            aws: `${props.experimental!}`
-                        },
-                        env: {
-                            baseurl: process.env.BASEURL,
-                            participant: key
-                        },
-                        db: {
-                            host: props.dbHost,
-                            password: props.dbPassword,
-                            username: "postgres",
-                            name: key.replace("-","")
-                        },
-                        p6config: {
-                            company: key,
-                            publisherRole: "CA",
-                            cognitoUserPoolId: props.cognitoUserPoolId,
-                            cognitoAppClientId: props.cognitoUIClientId,
-                            publisherCodeType: "SMDG_LINER_CODE",
-                            partyName: key,
-                            springMailUsername: props.springMailUsername,
-                            springMailPassword: process.env.SMTPPASSWORD,
-                            notificationEmail: value,
-                            dcsaAppClientId: props.cognitoDCSAClientId,
-                            dcsaAppClientSecret: props.cognitoDCSAClientSecret,
-                            dcsaAppClientTokenUri: props.cognitoTokenUrl
-                        }
+        let jsonStr = props.participants;
+        let jsonObj = JSON.parse(jsonStr);
+        Object.values(jsonObj).forEach((participant :any) => {
+            cluster.addHelmChart(participant["name"].substring(0, 3), {
+                chart: helmChartname,
+                repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
+                version: props.helmVersion,
+                namespace: 'default',
+                values: {
+                    certificateArn: props.hostedZoneCertificate.certificateArn,
+                    envType: {
+                        aws: `${props.experimental!}`
+                    },
+                    env: {
+                        baseurl: process.env.BASEURL,
+                        participant: participant["name"]
+                    },
+                    db: {
+                        host: props.dbHost,
+                        password: props.dbPassword,
+                        username: "postgres",
+                        name: participant["name"].replace("-","")
+                    },
+                    p6config: {
+                        company: participant["name"],
+                        partyCode: participant["partycode"],
+                        publisherRoles: participant["publisherroles"] ?? "[]",
+                        cognitoUserPoolId: props.cognitoUserPoolId,
+                        cognitoAppClientId: props.cognitoUIClientId,
+                        publisherCodeType: "SMDG_LINER_CODE",
+                        partyName: participant["name"],
+                        springMailUsername: props.springMailUsername,
+                        springMailPassword: process.env.SMTPPASSWORD,
+                        notificationEmail: participant["email"],
+                        dcsaAppClientId: props.cognitoDCSAClientId,
+                        dcsaAppClientSecret: props.cognitoDCSAClientSecret,
+                        dcsaAppClientTokenUri: props.cognitoTokenUrl
                     }
-                })
-            }
-        )
+                }
+            })
+        })
+
+
+
+
 
         /*if(props.experimental==true) {
             cluster.addHelmChart('el', {
