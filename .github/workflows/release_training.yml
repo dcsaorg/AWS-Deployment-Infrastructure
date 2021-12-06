@@ -71,6 +71,7 @@ jobs:
           HELMVERSION: ${{ env.helmversion }}
           SMTPUSERNAME: ${{ env.smtpusername }}
           SMTPPASSWORD: ${{ env.smtppassword }}
+          EXPERIMENTAL: ''
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
