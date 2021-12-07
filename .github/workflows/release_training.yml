@@ -10,8 +10,8 @@ env:
   baseurl: 'p6-training.dcsa.org'
   hostedzoneid: 'Z05029612O56NG6DMSTEE'
   smtpusername: 'AKIAXCZFL4PKJSERVQQP'
-  cognitoappclientid: '22692793div4uhiou4hb9dgdee'
-  cognitouserpoolid: 'eu-west-1_gOhrzkT7W'
+  cognitoappclientid: ''
+  cognitouserpoolid: ''
   helmversion: '0.1.76'
 jobs:
   aws_cdk:
