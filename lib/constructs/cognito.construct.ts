@@ -71,7 +71,7 @@ export class CognitoConstruct extends Construct {
             )
         });
 
-        console.log(scopes)
+        console.log("Scopes = " + scopes)
 
         const resourceServer=pool.addResourceServer('upre',{
             identifier: "clients",
