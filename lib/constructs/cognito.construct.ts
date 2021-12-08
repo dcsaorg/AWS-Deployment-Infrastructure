@@ -24,7 +24,7 @@ export class CognitoConstruct extends Construct {
     constructor(scope: Construct, id: string, props: CognitoConstructProps) {
         super(scope, id);
 
-        if(props.cognitoUserPoolId.length>0) {
+        //if(props.cognitoUserPoolId.length>0) {
             this.cognitoUserPoolId= props.cognitoUserPoolId;
             this.dcsaClientId= props.dcsaClientId;
             this.dcsaClientSecret= props.dcsaClientSecret;
@@ -32,7 +32,7 @@ export class CognitoConstruct extends Construct {
             this.uiClientId= props.uiClientId;
             //this.uiClientSecret= props.uiClientSecret;
             return
-        }
+        //}
 
 
         const pool=new cognito.UserPool(this, 'up', {
@@ -71,7 +71,7 @@ export class CognitoConstruct extends Construct {
             )
         });
 
-        console.log(scopes)
+        console.log("Scopes = " + scopes)
 
         const resourceServer=pool.addResourceServer('upre',{
             identifier: "clients",
