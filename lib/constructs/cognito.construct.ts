@@ -36,7 +36,7 @@ export class CognitoConstruct extends Construct {
 
 
         const pool=new cognito.UserPool(this, 'up', {
-            selfSignUpEnabled: true,
+            selfSignUpEnabled: false,
             userPoolName: 'up',
             customAttributes: {
                 groups: new cognito.StringAttribute({ minLen: 1, maxLen: 255 }),
