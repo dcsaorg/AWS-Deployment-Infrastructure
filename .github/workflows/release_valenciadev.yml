@@ -84,6 +84,14 @@ jobs:
           aws-access-key-id: ${{ env.awsaccesskeyid }}
           aws-secret-access-key: ${{ env.awssecretaccesskey }}
           aws-region:  ${{ env.awsregion }}
+      - name: SQL updates
+        run: |
+          apt-get update
+          aws cloudformation describe-stacks --stack-name st
+          apt-get install --yes postgresql-client
+          psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
+        env:
+          PGPASSWORD: ${{env.dbpassword}}
       - name: Updating load balancer dns
         run: |
           sleep 3m
