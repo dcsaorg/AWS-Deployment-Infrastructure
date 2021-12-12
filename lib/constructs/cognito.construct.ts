@@ -36,7 +36,7 @@ export class CognitoConstruct extends Construct {
 
 
         const pool=new cognito.UserPool(this, 'up', {
-            selfSignUpEnabled: true,
+            selfSignUpEnabled: false,
             userPoolName: 'up',
             customAttributes: {
                 groups: new cognito.StringAttribute({ minLen: 1, maxLen: 255 }),
@@ -59,20 +59,19 @@ export class CognitoConstruct extends Construct {
 
         let jsonStr = props.participants;
         let jsonObj = JSON.parse(jsonStr);
-        let participantsMap = new Map<string, string>(Object.entries(jsonObj));
 
         let scopes=new Array();
 
-        participantsMap.forEach((value: string, key: string) => {
+        Object.values(jsonObj).forEach((participant :any) => {
             scopes.push(
                 {
-                    scopeDescription: key,
-                    scopeName: key,
+                    scopeDescription: participant["name"],
+                    scopeName: participant["name"],
                 }
             )
         });
 
-        console.log(scopes)
+        console.log("Scopes = " + scopes)
 
         const resourceServer=pool.addResourceServer('upre',{
             identifier: "clients",
@@ -81,12 +80,12 @@ export class CognitoConstruct extends Construct {
         })
         resourceServer.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
-        console.log(participantsMap)
+        console.log(jsonObj)
 
-        participantsMap.forEach((value: string, key: string) => {
-            let customScope=`clients/${key}`
+        Object.values(jsonObj).forEach((participant :any) => {
+            let customScope="clients/" + participant["name"];
             console.log('['+customScope+']')
-            let client=pool.addClient('cl' + key, {
+            let client=pool.addClient('cl' + participant["name"], {
                 generateSecret: true,
                 oAuth: {
                     flows: {
@@ -98,12 +97,12 @@ export class CognitoConstruct extends Construct {
             client.node.addDependency(resourceServer)
             client.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
-            if(key==='dcsa') {
+            if(participant["name"]==='dcsa') {
                 this.dcsaClientId=client.userPoolClientId
                 this.dcsaClientSecret=getClientSecret("dcsa",this,pool,client)
             }
-            new CfnUserPoolGroup(scope, key, {
-                groupName: key,
+            new CfnUserPoolGroup(scope, participant["name"], {
+                groupName: participant["name"],
                 userPoolId: pool.userPoolId
             });
 

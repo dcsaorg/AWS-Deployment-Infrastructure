@@ -16,15 +16,15 @@ export class DCSARoute53 extends Construct {
 
     let jsonStr = props.participants;
     let jsonObj = JSON.parse(jsonStr);
-    let participantsMap = new Map<string, string>(Object.entries(jsonObj));
+
     let firstParticipant = "";
     let i = 0;
-    participantsMap.forEach((value: string, key: string) => {
+    Object.values(jsonObj).forEach((participant :any) => {
       if (i === 0 ) {
-        firstParticipant= key;
+        firstParticipant= participant["name"];
       }
       else {
-      subjectAlternativeNames.push(key + "." + props.baseUrl);
+      subjectAlternativeNames.push(participant["name"] + "." + props.baseUrl);
       }
       i++;
     });

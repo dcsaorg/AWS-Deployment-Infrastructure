@@ -8,11 +8,11 @@ env:
   awsaccountid: '487020291028'
   awsregion: 'eu-west-1'
   baseurl: 'p6-training.dcsa.org'
-  hostedzoneid: 'Z05111611VJ8QDHCL5TJW'
+  hostedzoneid: 'Z05029612O56NG6DMSTEE'
   smtpusername: 'AKIAXCZFL4PKJSERVQQP'
-  cognitoappclientid: '22692793div4uhiou4hb9dgdee'
-  cognitouserpoolid: 'eu-west-1_gOhrzkT7W'
-  helmversion: '0.1.73'
+  cognitoappclientid: ''
+  cognitouserpoolid: ''
+  helmversion: '0.1.77'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -71,6 +71,7 @@ jobs:
           HELMVERSION: ${{ env.helmversion }}
           SMTPUSERNAME: ${{ env.smtpusername }}
           SMTPPASSWORD: ${{ env.smtppassword }}
+          EXPERIMENTAL: ''
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

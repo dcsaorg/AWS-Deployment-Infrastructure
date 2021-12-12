@@ -75,8 +75,22 @@ Naming convention here is cluster name + environment type + "SMTPPASSWORD" like 
 Add another secret to secrets in the AWS-Hamburg-test-Infrastructure describing the participants/organizations and there contact email in json format
 Naming convention here is cluster name + environment type + "PARTICIPANTS" like > HAMBURGDEVPARTICIPANTS
 format for participant string is :
-{"participantname1": "email@domain.com","participantname2": "NOT_SPECIFIED"}
+[{
+	"name": "firstcarrier",
+	"email": "email@email.com",
+	"publisherroles": ["CA", "AG", "VSL"],
+	"partycode": "MSK"
+}, {
+	"name": "terminal",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": ["TR"],
+	"partycode": "MSK"
+}]
+
 The participant name should match the groups created in cognito userpool. To disable email notifications for a participant use "NOT_SPECIFIED" in the email field 
+publisher roles can consist of any number of these roles
+ "CA", "AG", "VSL", "TR", "ATH", "PLT", "TWG", "BUK", "LSH"
+ or an empty string or "[]" to have no roles assigned.
 
 In AWS cognito create userpool and use these values in step-by-step guide
 *attributes, use default selected and one custom attribute string:custom 
