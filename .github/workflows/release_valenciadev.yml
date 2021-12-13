@@ -93,9 +93,11 @@ jobs:
           echo $dburl
           echo ${{ env.participants }}
           cat sqlscripts/test.json | jq -c '.[]' | while read i; do
-           echo $i | jq -c '.name'
+           carrier=$(echo $i | jq -c '.name' | tr -d '"')
+           echo $carrier
+           psql -h $dburl -U postgres -c 'create database $carrier'
           done
-          psql -h $dburl -U postgres -c 'SELECT 1;'
+
         env:
           PGPASSWORD: ${{env.dbpassword}}
       - name: Updating load balancer dns
