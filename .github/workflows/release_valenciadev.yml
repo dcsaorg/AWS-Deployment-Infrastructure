@@ -93,7 +93,7 @@ jobs:
           echo $dburl
           echo ${{ env.participants }}
           cat sqlscripts/test.json | jq -c '.[]' | while read i; do
-           echo $i | jc -c '.name'
+           echo $i | jq -c '.name'
           done
           psql -h $dburl -U postgres -c 'SELECT 1;'
         env:
