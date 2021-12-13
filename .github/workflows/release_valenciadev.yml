@@ -95,7 +95,7 @@ jobs:
           cat sqlscripts/test.json | jq -c '.[]' | while read i; do
            carrier=$(echo $i | jq -c '.name' | tr -d '"')
            echo $carrier
-           psql -h $dburl -U postgres -c 'create database $carrier'
+           psql -h $dburl -U postgres -c "create database $carrier"
           done
 
         env:
