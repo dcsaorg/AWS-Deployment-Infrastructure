@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       smtppassword: ${{ secrets.VALENCIADEVSMTPPASSWORD }}
-      participants: ${{ secrets.HAMBURGDEVPARTICIPANTS }}
+      participants: ${{ secrets.VALENCIADEVPARTICIPANTS }}
       awsaccesskeyid: ${{ secrets.VALENCIADEVAWSACCESSKEYID }}
       awssecretaccesskey: ${{ secrets.VALENCIADEVAWSSECRETACCESSKEY }}
       dbpassword: ${{ secrets.VALENCIADEV_DBPASSWORD }}
@@ -84,6 +84,23 @@ jobs:
           aws-access-key-id: ${{ env.awsaccesskeyid }}
           aws-secret-access-key: ${{ env.awssecretaccesskey }}
           aws-region:  ${{ env.awsregion }}
+      - name: SQL updates
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
+          sudo apt-get install jq
+          dburl=$(aws cloudformation describe-stacks --stack-name st | jq '.Stacks[0].Outputs[0].OutputValue' | tr -d '"')
+          echo $dburl
+          echo ${{ env.participants }}
+          cat sqlscripts/test.json
+          cat sqlscripts/test.json | jq -c '.[]' | while read i; do
+           carrier=$(echo $i | jq -c '.name' | tr -d '"')
+           echo $carrier
+           psql -h $dburl -U postgres -c "create database $carrier"
+          done
+
+        env:
+          PGPASSWORD: ${{env.dbpassword}}
       - name: Updating load balancer dns
         run: |
           sleep 3m
