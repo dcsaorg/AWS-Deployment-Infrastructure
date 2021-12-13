@@ -88,7 +88,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --yes postgresql-client
-          aws cloudformation describe-stacks --stack-name st
+          sudo apt-get install jq
+          aws cloudformation describe-stacks --stack-name st | jq '.Stacks[0]'
           psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
         env:
           PGPASSWORD: ${{env.dbpassword}}
