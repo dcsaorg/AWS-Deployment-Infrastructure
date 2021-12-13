@@ -92,7 +92,9 @@ jobs:
           dburl=$(aws cloudformation describe-stacks --stack-name st | jq '.Stacks[0].Outputs[0].OutputValue' | tr -d '"')
           echo $dburl
           echo ${{ env.participants }}
-          cat sqlscripts/test.json | jq -c '.[]'
+          cat sqlscripts/test.json | jq -c '.[]' | while read i; do
+           echo $i | jc -c '.name'
+          done
           psql -h $dburl -U postgres -c 'SELECT 1;'
         env:
           PGPASSWORD: ${{env.dbpassword}}
