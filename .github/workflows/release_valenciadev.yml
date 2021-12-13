@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       smtppassword: ${{ secrets.VALENCIADEVSMTPPASSWORD }}
-      participants: ${{ secrets.HAMBURGDEVPARTICIPANTS }}
+      participants: ${{ secrets.VALENCIADEVPARTICIPANTS }}
       awsaccesskeyid: ${{ secrets.VALENCIADEVAWSACCESSKEYID }}
       awssecretaccesskey: ${{ secrets.VALENCIADEVAWSSECRETACCESSKEY }}
       dbpassword: ${{ secrets.VALENCIADEV_DBPASSWORD }}
