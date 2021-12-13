@@ -91,9 +91,8 @@ jobs:
           sudo apt-get install jq
           dburl=$(aws cloudformation describe-stacks --stack-name st | jq '.Stacks[0].Outputs[0].OutputValue' | tr -d '"')
           echo $dburl
-          echo ${{ env.participants }} | jq -c '.[]'  | while read i; do
-            echo $i
-          done
+          echo ${{ env.participants }} 
+          echo ${{ env.participants }} | jq -c '.[]'
           psql -h $dburl -U postgres -c 'SELECT 1;'
         env:
           PGPASSWORD: ${{env.dbpassword}}
