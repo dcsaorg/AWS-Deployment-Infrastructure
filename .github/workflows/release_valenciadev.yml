@@ -91,7 +91,7 @@ jobs:
           sudo apt-get install jq
           dburl=$(aws cloudformation describe-stacks --stack-name st | jq '.Stacks[0].Outputs[0].OutputValue')
           echo $dburl
-          psql -h dburl -U postgres -c 'SELECT 1;'
+          psql -h $dburl -U postgres -c 'SELECT 1;'
         env:
           PGPASSWORD: ${{env.dbpassword}}
       - name: Updating load balancer dns
