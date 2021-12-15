@@ -1,5 +1,5 @@
 \set ON_ERROR_STOP true
-\connect :dscadbname
+\connect :dcsadbname
 
 BEGIN;
 
