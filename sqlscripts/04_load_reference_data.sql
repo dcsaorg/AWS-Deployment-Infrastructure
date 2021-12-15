@@ -1,6 +1,6 @@
 -- Assumes the PSQL client
 \set ON_ERROR_STOP true
-\connect :dscadbname
+\connect :dcsadbname
 
 -- Use a transaction so a bug will not leave tainted / incomplete data.
 BEGIN;
