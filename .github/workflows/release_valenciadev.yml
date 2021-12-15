@@ -93,17 +93,16 @@ jobs:
           echo $dburl
           echo ${{ env.participants }}
           cat sqlscripts/test.json
-          psql -h $dburl -U postgres -v dcsadbname="dcsadb" -f sqlscripts/01_create_dcsa_owner.sql
-          psql -h $dburl -U postgres -v dcsadbname="dcsadb" -f sqlscripts/02_create_database.sql
-          psql -h $dburl -U postgres -v dcsadbname="dcsadb" -f sqlscripts/03_dcsa_im_v3_0.sql
-          psql -h $dburl -U postgres -v dcsadbname="dcsadb" -f sqlscripts/04_load_reference_data.sql
-          psql -h $dburl -U postgres -v dcsadbname="dcsadb" -f sqlscripts/05_reference_implementation_support.sql
-           psql -h $dburl -U postgres -v dcsadbname="dcsadb" -f sqlscripts/06_phoney_ids.sql
-           psql -h $dburl -U postgres -v dcsadbname="dcsadb" -f sqlscripts/07_load_sample_data.sql
           cat sqlscripts/test.json | jq -c '.[]' | while read i; do
            carrier=$(echo $i | jq -c '.name' | tr -d '"')
            echo $carrier
-           psql -h $dburl -U postgres -c "create database $carrier"
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/01_create_dcsa_owner.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/02_create_database.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/03_dcsa_im_v3_0.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/04_load_reference_data.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/05_reference_implementation_support.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/06_phoney_ids.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/07_load_sample_data.sql
           done
 
         env:
