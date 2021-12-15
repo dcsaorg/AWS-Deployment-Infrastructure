@@ -4,7 +4,7 @@
 
 -- Cannot be done in a transaction
 DROP DATABASE IF EXISTS dcsa_openapi;
-CREATE DATABASE dcsa_openapi --OWNER dcsa_db_owner;
+CREATE DATABASE dcsa_openapi; --OWNER dcsa_db_owner;
 \connect dcsa_openapi
 
 BEGIN;
