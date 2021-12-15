@@ -93,6 +93,7 @@ jobs:
           echo $dburl
           echo ${{ env.participants }}
           cat sqlscripts/test.json
+          psql -h $dburl -U postgres -f ../sqlscripts/01_create_dcsa_owner.sql
           cat sqlscripts/test.json | jq -c '.[]' | while read i; do
            carrier=$(echo $i | jq -c '.name' | tr -d '"')
            echo $carrier
