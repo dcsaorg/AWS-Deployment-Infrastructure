@@ -21,7 +21,7 @@ jobs:
       participants: ${{ secrets.TRAININGPARTICIPANTS }}
       awsaccesskeyid: ${{ secrets.TRAININGAWSACCESSKEYID }}
       awssecretaccesskey: ${{ secrets.TRAININGAWSSECRETACCESSKEY }}
-      dbpassword: ${{ secrets.HAMBURGDEV_DBPASSWORD }}
+      dbpassword: ${{ secrets.TRAININGDEV_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
