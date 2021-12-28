@@ -12,7 +12,7 @@ env:
   smtpusername: 'AKIAXCZFL4PKJSERVQQP'
   cognitoappclientid: ''
   cognitouserpoolid: ''
-  helmversion: '0.1.80'
+  helmversion: '0.1.82'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -21,7 +21,7 @@ jobs:
       participants: ${{ secrets.TRAININGPARTICIPANTS }}
       awsaccesskeyid: ${{ secrets.TRAININGAWSACCESSKEYID }}
       awssecretaccesskey: ${{ secrets.TRAININGAWSSECRETACCESSKEY }}
-      dbpassword: ${{ secrets.HAMBURGDEV_DBPASSWORD }}
+      dbpassword: ${{ secrets.TRAININGDEV_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2

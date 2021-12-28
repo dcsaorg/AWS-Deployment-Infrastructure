@@ -78,12 +78,12 @@ format for participant string is :
 [{
 	"name": "firstcarrier",
 	"email": "email@email.com",
-	"publisherroles": ["CA", "AG", "VSL"],
+	"publisherroles": "CA,AG,VSL"
 	"partycode": "MSK"
 }, {
 	"name": "terminal",
 	"email": "NOT_SPECIFIED",
-	"publisherroles": ["TR"],
+	"publisherroles": "TR",
 	"partycode": "MSK"
 }]
 
