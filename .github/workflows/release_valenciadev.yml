@@ -92,7 +92,7 @@ jobs:
           dburl=$(aws cloudformation describe-stacks --stack-name st | jq '.Stacks[0].Outputs[0].OutputValue' | tr -d '"')
           echo $dburl
           echo ${{ env.participants }} > test123.json
-          cat sqlscripts/test.json | jq -c '.[]' | while read i; do
+          cat test123.json | jq -c '.[]' | while read i; do
            carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
            echo $carrierinternal
           done
