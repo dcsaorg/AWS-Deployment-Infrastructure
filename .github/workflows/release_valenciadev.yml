@@ -12,13 +12,13 @@ env:
   smtpusername: 'AKIA3I7HULHFFSNUVVB4'
   helmversion: '0.1.06'
   #If the dbsnapshotId is not '' the database will be create based on that snapshot
-  dbsnapshotId: 'arn:aws:rds:eu-west-1:856059746030:snapshot:test2'
+  dbsnapshotId: ''
   #if the cognito parameters below are supplied and not '' there will not be created a userpool
-  cognitouserpoolid: 'eu-west-1_Xi0ToasCd'
-  cognitouiclientid: '4vlt1d7lfgo8vkm21upf7426kb'
-  cognitodcsaclientid: '5l8nu18npf6jaeokp2t4vdnia6'
-  cognitodcsaclientsecret: '18e0ks4rujv9apojh10uc914ql8pht5h4l09hgkbac7jh7rgap89'
-  cognitotokenurl: 'https://owir44x17a.auth.eu-west-1.amazoncognito.com/oauth2/token'
+  cognitouserpoolid: ''
+  cognitouiclientid: ''
+  cognitodcsaclientid: ''
+  cognitodcsaclientsecret: ''
+  cognitotokenurl: ''
   participantsfile: 'sqlscripts/test.json'
 jobs:
   aws_cdk:

@@ -72,7 +72,9 @@ export class DCSAEKSCluster extends Construct {
 
         let jsonStr = props.participants;
         let jsonObj = JSON.parse(jsonStr);
+        let participantsArray = Array(0)
         Object.values(jsonObj).forEach((participant :any) => {
+            participantsArray.push(participant["name"]);
             cluster.addHelmChart(participant["name"].substring(0, 3), {
                 chart: helmChartname,
                 repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
@@ -113,10 +115,10 @@ export class DCSAEKSCluster extends Construct {
         })
 
 
+        
 
 
-
-        /*if(props.experimental==true) {
+        if(props.experimental==true) {
             cluster.addHelmChart('el', {
                 chart: 'dcsaingresscluster',
                 repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
@@ -127,10 +129,10 @@ export class DCSAEKSCluster extends Construct {
                     env: {
                         baseurl: process.env.BASEURL
                     },
-                    participants: Array.from(participantsMap.keys())
+                    participants:participantsArray
                 }
             })
-        }*/
+        }
 
 
     }
