@@ -115,7 +115,7 @@ jobs:
           cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
            carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
            echo $carrierinternal
-           carrierurl="$carrierinternal$carrierbaseurl"
+           carrierurl="$carrierinternal.$carrierbaseurl"
            echo $carrierurl
            cp ./route53/route53.json ./participantroute.json
            sed -i "s#mydns#$alburl#g" ./participantroute.json
