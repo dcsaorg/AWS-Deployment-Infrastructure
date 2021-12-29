@@ -115,7 +115,7 @@ jobs:
           cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
            carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
            echo $carrierinternal
-           carrierurl="$carrierinternal${{ env.baseurl }}"
+           carrierurl="$carrierinternal$carrierbaseurl"
            echo $carrierurl
            cp ./route53/route53.json ./participantroute.json
            sed -i "s#mydns#$alburl#g" ./participantroute.json
@@ -123,4 +123,5 @@ jobs:
            cat ./participantroute.json
            aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./participantroute.json
           done
-                 
+        env:
+          carrierbaseurl: ${{ env.baseurl }}
