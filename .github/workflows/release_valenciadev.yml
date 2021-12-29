@@ -119,7 +119,7 @@ jobs:
            echo $carrierurl
            cp ./route53/route53.json ./participantroute.json
            sed -i "s#mydns#$alburl#g" ./participantroute.json
-           sed -i "s#carrierurl#carrierurl#g" ./participantroute.json
+           sed -i "s#carrierurl#$carrierurl#g" ./participantroute.json
            cat ./participantroute.json
            aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./participantroute.json
           done
