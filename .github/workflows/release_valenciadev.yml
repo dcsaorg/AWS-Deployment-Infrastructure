@@ -95,7 +95,7 @@ jobs:
           cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
            carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
            echo $carrierinternal
-           suffix="01"
+           suffix=""
            carrier="$carrierinternal$suffix"
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/01_create_dcsa_owner.sql
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/02_create_database.sql
