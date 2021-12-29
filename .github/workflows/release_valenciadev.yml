@@ -85,36 +85,42 @@ jobs:
           aws-access-key-id: ${{ env.awsaccesskeyid }}
           aws-secret-access-key: ${{ env.awssecretaccesskey }}
           aws-region:  ${{ env.awsregion }}
-      - name: SQL updates
+#      - name: SQL updates
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get install --yes postgresql-client
+#          sudo apt-get install jq
+#          dburl=$(aws cloudformation describe-stacks --stack-name st | jq '.Stacks[0].Outputs[0].OutputValue' | tr -d '"')
+#          echo $dburl
+#          cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
+#           carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
+#           echo $carrierinternal
+#           suffix=""
+#           carrier="$carrierinternal$suffix"
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/01_create_dcsa_owner.sql
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/02_create_database.sql
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/03_dcsa_im_v3_0.sql
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/04_load_reference_data.sql
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/05_reference_implementation_support.sql
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/06_phoney_ids.sql
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/07_load_sample_data.sql
+#          done
+#        env:
+#          PGPASSWORD: ${{env.dbpassword}}
+      - name: Updating load balancer dns
         run: |
-          sudo apt-get update
-          sudo apt-get install --yes postgresql-client
-          sudo apt-get install jq
-          dburl=$(aws cloudformation describe-stacks --stack-name st | jq '.Stacks[0].Outputs[0].OutputValue' | tr -d '"')
-          echo $dburl
+#          sleep 3m
+          alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
+          echo $alburl
           cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
            carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
            echo $carrierinternal
-           suffix=""
-           carrier="$carrierinternal$suffix"
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/01_create_dcsa_owner.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/02_create_database.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/03_dcsa_im_v3_0.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/04_load_reference_data.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/05_reference_implementation_support.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/06_phoney_ids.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/07_load_sample_data.sql
+           carrierurl="$carrierinternal${{ env.baseurl }}"
+           echo $carrierurl
+           cp ./route53/route53.json ./participantroute.json
+           sed -i "s#mydns#$alburl#g" ./participantroute.json
+           sed -i "s#carrierurl#carrierurl#g" ./participantroute.json
+           cat ./participantroute.json
+           aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./participantroute.json
           done
-        env:
-          PGPASSWORD: ${{env.dbpassword}}
-      - name: Updating load balancer dns
-        run: |
-          sleep 3m
-          aws elbv2 describe-load-balancers
-          alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
-          echo $alburl
-          sed -i "s#mydns#$alburl#g" ./route53/route53.json
-          cat ./route53/route53.json
-          aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./route53/route53.json
-
                  
