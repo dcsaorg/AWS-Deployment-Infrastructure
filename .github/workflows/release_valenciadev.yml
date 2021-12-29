@@ -14,11 +14,11 @@ env:
   #If the dbsnapshotId is not '' the database will be create based on that snapshot
   dbsnapshotId: ''
   #if the cognito parameters below are supplied and not '' there will not be created a userpool
-  cognitouserpoolid: ''
+  cognitouserpoolid: 'eu-west-1_WnYu8Ezqh'
   cognitouiclientid: ''
   cognitodcsaclientid: ''
   cognitodcsaclientsecret: ''
-  cognitotokenurl: ''
+  cognitotokenurl: 'https://f5k83l3j5f.auth.eu-west-1.amazoncognito.com/oauth2/token'
   participantsfile: 'sqlscripts/test.json'
 jobs:
   aws_cdk:
