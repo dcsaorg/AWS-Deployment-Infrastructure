@@ -53,31 +53,31 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
           AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
           AWS_DEFAULT_REGION: ${{ env.awsregion }}
-      - name: Deploying the CDK Code
-        uses: youyo/aws-cdk-github-actions@v2
-        with:
-          cdk_subcommand: 'deploy'
-          cdk_stack: 'st'
-          cdk_args: '--require-approval never'
-          actions_comment: false
-        env:
-          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
-          PARTICIPANTS:  ${{ env.participants }}
-          AWS_DEFAULT_REGION: ${{ env.awsregion }}
-          BASEURL: ${{ env.baseurl }}
-          HOSTEDZONEID: ${{ env.hostedzoneid }}
-          HELMVERSION: ${{ env.helmversion }}
-          SMTPUSERNAME: ${{ env.smtpusername }}
-          SMTPPASSWORD: ${{ env.smtppassword }}
-          EXPERIMENTAL: 'true'
-          DBPASSWORD: ${{env.dbpassword}}
-          DBSNAPSHOTID: ${{env.dbsnapshotId}}
-          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
-          COGNITOUICLIENTID: ${{ env.cognitouiclientid }}
-          COGNITODCSACLIENTID: ${{ env.cognitodcsaclientid }}
-          COGNITODCSACLIENTSECRET: ${{ env.cognitodcsaclientsecret }}
-          COGNITOTOKENURL:  ${{ env.cognitotokenurl }}
+#      - name: Deploying the CDK Code
+#        uses: youyo/aws-cdk-github-actions@v2
+#        with:
+#          cdk_subcommand: 'deploy'
+#          cdk_stack: 'st'
+#          cdk_args: '--require-approval never'
+#          actions_comment: false
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+#          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+#          PARTICIPANTS:  ${{ env.participants }}
+#          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+#          BASEURL: ${{ env.baseurl }}
+#          HOSTEDZONEID: ${{ env.hostedzoneid }}
+#          HELMVERSION: ${{ env.helmversion }}
+#          SMTPUSERNAME: ${{ env.smtpusername }}
+#          SMTPPASSWORD: ${{ env.smtppassword }}
+#          EXPERIMENTAL: 'true'
+#          DBPASSWORD: ${{env.dbpassword}}
+#          DBSNAPSHOTID: ${{env.dbsnapshotId}}
+#          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
+#          COGNITOUICLIENTID: ${{ env.cognitouiclientid }}
+#          COGNITODCSACLIENTID: ${{ env.cognitodcsaclientid }}
+#          COGNITODCSACLIENTSECRET: ${{ env.cognitodcsaclientsecret }}
+#          COGNITOTOKENURL:  ${{ env.cognitotokenurl }}
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
