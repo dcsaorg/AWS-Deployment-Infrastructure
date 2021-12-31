@@ -80,6 +80,7 @@ export class DCSAEKSCluster extends Construct {
                 repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
                 version: props.helmVersion,
                 namespace: 'default',
+                release: participant["name"].substring(0, 3),
                 values: {
                     certificateArn: props.hostedZoneCertificate.certificateArn,
                     envType: {

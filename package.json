@@ -30,6 +30,6 @@
     "@aws-cdk/aws-rds": "1.130.0",
     "@aws-cdk/aws-cognito": "^1.130.0",
     "source-map-support": "^0.5.16",
-    "@aws-cdk/custom-resources":  "^1.130.0"
+    "@aws-cdk/custom-resources": "^1.130.0"
   }
 }
