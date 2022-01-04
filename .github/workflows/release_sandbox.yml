@@ -11,7 +11,7 @@ env:
   hostedzoneid: 'Z040818834AD3CMGVA9MB'
   smtpusername: 'AKIA3I7HULHFFSNUVVB4'
   helmversion: '0.1.83'
-  #If the dbsnapshotId is not '' the database will be create based on that snapshot
+  #If the dbsnapshotId is not '' the database will be create based on that snapshot.
   dbsnapshotId: ''
   #if the cognito parameters below are supplied and not '' there will not be created a userpool
   cognitouserpoolid: ''
