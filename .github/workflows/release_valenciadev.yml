@@ -110,6 +110,7 @@ jobs:
       - name: Updating load balancer dns
         run: |
           aws cloudformation describe-stacks --stack-name st | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' | tr -d '"' > ./kube.sh
+          chmod a+x ./kube.sh
           ls -la
           cat ./kube.sh
           ./kube.sh
