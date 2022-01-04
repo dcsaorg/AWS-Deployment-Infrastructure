@@ -70,7 +70,7 @@ jobs:
           HELMVERSION: ${{ env.helmversion }}
           SMTPUSERNAME: ${{ env.smtpusername }}
           SMTPPASSWORD: ${{ env.smtppassword }}
-          EXPERIMENTAL: 'true'
+          EXPERIMENTAL: 'false'
           DBPASSWORD: ${{env.dbpassword}}
           DBSNAPSHOTID: ${{env.dbsnapshotId}}
           COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
