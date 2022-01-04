@@ -109,7 +109,7 @@ jobs:
 #          PGPASSWORD: ${{env.dbpassword}}
       - name: Updating load balancer dns
         run: |
-          aws cloudformation describe-stacks --stack-name st | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("^E."))'
+          aws cloudformation describe-stacks --stack-name st | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("\bEKS\b"))'
           sleep 3m
           alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
           echo $alburl
