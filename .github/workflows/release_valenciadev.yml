@@ -127,7 +127,7 @@ jobs:
 #          carrierbaseurl: ${{ env.baseurl }}
       - name: HELM
         run: |
-          dburl=$(aws cloudformation describe-stacks --stack-name st | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' | tr -d '"')
+          dburl=$(aws cloudformation describe-stacks --stack-name st | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("EndpointHostname")) | .OutputValue' | tr -d '"')
           echo $dburl
           aws cloudformation describe-stacks --stack-name st
           aws cloudformation describe-stacks --stack-name st | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' | tr -d '"' > ./kube.sh
