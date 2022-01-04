@@ -90,7 +90,7 @@ jobs:
 #          sudo apt-get update
 #          sudo apt-get install --yes postgresql-client
 #          sudo apt-get install jq
-#          dburl=$(aws cloudformation describe-stacks --stack-name st | jq '.Stacks[0].Outputs[0].OutputValue' | tr -d '"')
+#          dburl=$(aws cloudformation describe-stacks --stack-name st | | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' | tr -d '"')
 #          echo $dburl
 #          cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
 #           carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
@@ -107,27 +107,32 @@ jobs:
 #          done
 #        env:
 #          PGPASSWORD: ${{env.dbpassword}}
-      - name: Updating load balancer dns
+#      - name: Updating load balancer dns
+#        run: |
+#          sleep 3m
+#          alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
+#          echo $alburl
+#          cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
+#           carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
+#           echo $carrierinternal
+#           carrierurl="$carrierinternal.$carrierbaseurl"
+#           echo $carrierurl
+#           cp ./route53/route53.json ./participantroute.json
+#           sed -i "s#mydns#$alburl#g" ./participantroute.json
+#           sed -i "s#carrierurl#$carrierurl#g" ./participantroute.json
+#           cat ./participantroute.json
+#           aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./participantroute.json
+#          done
+#        env:
+#          carrierbaseurl: ${{ env.baseurl }}
+      - name: HELM
         run: |
+          dburl=$(aws cloudformation describe-stacks --stack-name st | | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' | tr -d '"')
+          echo $dburl
+          aws cloudformation describe-stacks --stack-name st
           aws cloudformation describe-stacks --stack-name st | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' | tr -d '"' > ./kube.sh
           chmod a+x ./kube.sh
           ls -la
           cat ./kube.sh
           ./kube.sh
           helm list
-          sleep 3m
-          alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
-          echo $alburl
-          cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
-           carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
-           echo $carrierinternal
-           carrierurl="$carrierinternal.$carrierbaseurl"
-           echo $carrierurl
-           cp ./route53/route53.json ./participantroute.json
-           sed -i "s#mydns#$alburl#g" ./participantroute.json
-           sed -i "s#carrierurl#$carrierurl#g" ./participantroute.json
-           cat ./participantroute.json
-           aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./participantroute.json
-          done
-        env:
-          carrierbaseurl: ${{ env.baseurl }}
