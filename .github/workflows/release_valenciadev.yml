@@ -114,6 +114,7 @@ jobs:
           ls -la
           cat ./kube.sh
           ./kube.sh
+          helm status
           sleep 3m
           alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
           echo $alburl
