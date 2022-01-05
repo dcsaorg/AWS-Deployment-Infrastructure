@@ -66,10 +66,6 @@ export class DCSAEKSCluster extends Construct {
 
         var helmChartname="dcsasandboxhamburg";
 
-        if(props.experimental) {
-            helmChartname="dcsatestcluster";
-        }
-
         let jsonStr = props.participants;
         let jsonObj = JSON.parse(jsonStr);
         let participantsArray = Array(0)
@@ -116,10 +112,6 @@ export class DCSAEKSCluster extends Construct {
         })
 
 
-
-
-
-        if(props.experimental==true) {
             cluster.addHelmChart('el', {
                 chart: 'dcsaingresscluster',
                 repository: 'https://dcsaorg.github.io/Kubernetes-Packaging/',
@@ -135,6 +127,4 @@ export class DCSAEKSCluster extends Construct {
             })
         }
 
-
-    }
 }
