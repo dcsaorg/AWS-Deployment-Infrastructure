@@ -1,4 +1,5 @@
 import {Construct,Duration,RemovalPolicy,CfnOutput} from '@aws-cdk/core'
+import * as cdk from '@aws-cdk/core'
 import * as ec2 from '@aws-cdk/aws-ec2'
 import * as rds from '@aws-cdk/aws-rds'
 import * as secret from '@aws-cdk/aws-secretsmanager';
@@ -98,13 +99,12 @@ export class DBConstruct extends Construct {
         this.dbHostname=dbInstance.instanceEndpoint.hostname
 
 
-
         new CfnOutput(this, 'dbEndpointHostname', {
             value: dbInstance.instanceEndpoint.hostname,
         });
 
         new CfnOutput(this, 'dbEndpointPort', {
-            value: dbInstance.instanceEndpoint.port.toString(),
+            value: cdk.Token.asString(dbInstance.instanceEndpoint.port),
         });
 
 
