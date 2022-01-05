@@ -3,6 +3,7 @@ import { DCSARoute53 } from './constructs/route53.construct'
 import { DCSAEKSCluster } from './constructs/eks-cluster.construct'
 import { DBConstruct } from "./constructs/db.construct";
 import {CognitoConstruct} from "./constructs/cognito.construct";
+import { CfnOutput } from '@aws-cdk/core';
 
 
 export interface DCSAStackProps extends cdk.StackProps { hostedZoneId: string,
@@ -46,5 +47,19 @@ export class DCSAStack extends cdk.Stack {
       new DCSAEKSCluster(this, 'EKSCluster', {
         hostedZoneCertificate, "cognitoUserPoolId": cognitoUserPoolId, "helmVersion": props.helmVersion, "participants": props.participants, "springMailUsername": props.springMailUsername,experimental: experimental,cognitoUIClientId: uiClientId,cognitoDCSAClientId:dcsaClientId,cognitoDCSAClientSecret:dcsaClientSecret,cognitoTokenUrl:tokenUrl,dbPort:dbPort,dbHost:dbHostname,dbPassword: props.dbpassword
       })
+
+      new CfnOutput(this, 'hostedZoneCertificateArn', {
+        value: hostedZoneCertificate.certificateArn
+      });
+
+      new CfnOutput(this, 'dcsaAppClientId', {
+        value: dcsaClientId ?? ''
+      });
+      new CfnOutput(this, 'dcsaAppClientSecret', {
+        value: dcsaClientSecret ?? ''
+      });
+      new CfnOutput(this, 'dcsaAppClientTokenUri', {
+        value: tokenUrl ?? ''
+      });
   }
 }

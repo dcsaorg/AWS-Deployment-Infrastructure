@@ -54,23 +54,88 @@ jobs:
           SMTPPASSWORD: ''
           EXPERIMENTAL: ''
 
-      - name: Deploying the CDK Code
-        uses: youyo/aws-cdk-github-actions@v2
-        with:
-          cdk_subcommand: 'deploy'
-          cdk_stack: 'st'
-          cdk_args: '--require-approval never'
-          actions_comment: false
+      # - name: Deploying the CDK Code
+      #   uses: youyo/aws-cdk-github-actions@v2
+      #   with:
+      #     cdk_subcommand: 'deploy'
+      #     cdk_stack: 'st'
+      #     cdk_args: '--require-approval never'
+      #     actions_comment: false
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+      #     PARTICIPANTS:  ${{ env.participants }}
+      #     AWS_DEFAULT_REGION: ${{ env.awsregion }}
+      #     BASEURL: ${{ env.baseurl }}
+      #     HOSTEDZONEID: ${{ env.hostedzoneid }}
+      #     COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
+      #     COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
+      #     HELMVERSION: ${{ env.helmversion }}
+      #     SMTPUSERNAME: ${{ env.smtpusername }}
+      #     SMTPPASSWORD: ${{ env.smtppassword }}
+      #     EXPERIMENTAL: ''
+      
+      - name: HELM
+        run: |
+          #!/usr/bin/env bash
+          aws cloudformation describe-stacks --stack-name st > stack-out.json
+          jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' stack-out.json > ./kube.sh
+          . ./kube.sh
+          helm repo add dcsa https://dcsaorg.github.io/Kubernetes-Packaging/
+
+          certificateArn=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("hostedZoneCertificateArn")) | .OutputValue' stack-out.json)
+          dbHostName=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dbdbEndpointHostname")) | .OutputValue' stack-out.json)
+          dcsaAppClientId=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dcsaAppClientId")) | .OutputValue' stack-out.json)
+          dcsaAppClientSecret=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dcsaAppClientSecret")) | .OutputValue' stack-out.json)
+          dcsaAppClientTokenUri=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dcsaAppClientTokenUri")) | .OutputValue' stack-out.json)
+
+          participantNames=$(echo "$PARTICIPANTS" | jq -r '.[].name')
+          for participant in $participantNames; do
+            echo "Creating values values.yml for $participant"
+
+            participantTrimmed=$(echo $participant | tr -d '-')
+            partycode=$(echo "$PARTICIPANTS" | jq -r ".[] | select(.name|test(\"$participant\")) | .partycode")
+            publisherroles=$(echo "$PARTICIPANTS" | jq -r ".[] | select(.name|test(\"$participant\")) | .publisherroles")
+            email=$(echo "$PARTICIPANTS" | jq -r ".[] | select(.name|test(\"$participant\")) | .email")
+
+            cat <<EOF >> values.yml
+          certificateArn: "$certificateArn"
+
+          env:
+            baseurl: "$BASEURL"
+            participant: "$participant"
+
+          db:
+            host: "$dbHostName"
+            username: "postgres"
+            password: "${{env.dbpassword}}"
+            name: "$participantTrimmed"
+
+          p6config:
+            company: "$participant"
+            partyCode: "$partyCode"
+            publisherRoles: "$publisherroles"
+            cognitoUserPoolId: "$COGNITOUSERPOOLID"
+            cognitoAppClientId: "$COGNITOAPPCLIENTID"
+            publisherCodeType: "SMDG_LINER_CODE"
+            partyName: "$participant"
+            springMailUsername: "$SMTPUSERNAME"
+            springMailPassword: "$SMTPPASSWORD"
+            notificationEmail: "$email"
+            dcsaAppClientId: "$dcsaAppClientId"
+            dcsaAppClientSecret: "$dcsaAppClientSecret"
+            dcsaAppClientTokenUri: "$dcsaAppClientTokenUri"
+          EOF
+
+            echo "Deploying helm for $participant $partycode $publisherroles"
+            helm install "$participant" dcsa/dcsasandboxhamburg --values values.yml
+          done
+
+          helm list
         env:
-          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
           PARTICIPANTS:  ${{ env.participants }}
-          AWS_DEFAULT_REGION: ${{ env.awsregion }}
           BASEURL: ${{ env.baseurl }}
-          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
           COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
           COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
-          HELMVERSION: ${{ env.helmversion }}
-          SMTPUSERNAME: ${{ env.smtpusername }}
-          SMTPPASSWORD: ${{ env.smtppassword }}
-          EXPERIMENTAL: ''
