@@ -1,45 +1,45 @@
 [{"name": "evergreen-marine",
 	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA,VSL,AG",
+	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "EMC"
 }, {
 	"name": "cma-cgm",
 	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA,AG,VSL",
+	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "CMA"
 }, {
 	"name": "hapag-lloyd",
 	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA,AG,VSL",
+	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "HLC"
 }, {
 	"name": "yangming",
 	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA,AG,VSL",
+	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "YML"
 }, {
 	"name": "maersk",
 	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA,AG,VSL",
+	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "MSK"
 }, {
 	"name": "msc",
 	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA,AG,VSL",
+	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "MSC"
 }, {
 	"name": "one-line",
 	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA,AG,VSL",
+	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "ONE"
 }, {
 	"name": "zim",
 	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA,AG,VSL",
+	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "ZIM"
 }, {
 	"name": "hyundai",
 	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA,AG,VSL",
+	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "HMM"
 }]
