@@ -1,14 +1,14 @@
-[{"name": "evergreen-marine",
+[{"name": "evergreenmarine",
 	"email": "NOT_SPECIFIED",
 	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "EMC"
 }, {
-	"name": "cma-cgm",
+	"name": "cmacgm",
 	"email": "NOT_SPECIFIED",
 	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "CMA"
 }, {
-	"name": "hapag-lloyd",
+	"name": "hapaglloyd",
 	"email": "NOT_SPECIFIED",
 	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "HLC"
@@ -28,7 +28,7 @@
 	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "MSC"
 }, {
-	"name": "one-line",
+	"name": "oneline",
 	"email": "NOT_SPECIFIED",
 	"publisherRoles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "ONE"
