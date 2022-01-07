@@ -1,11 +1,45 @@
-[{
-  "name": "maersk",
-  "email": "NOT_SPECIFIED",
-  "publisherroles": "CA,AG,VSL",
-  "partycode": "MSK"
+[{"name": "evergreen-marine",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,VSL,AG",
+	"partycode": "EMC"
 }, {
-  "name": "msc",
-  "email": "NOT_SPECIFIED",
-  "publisherroles": "CA,AG,VSL",
-  "partycode": "MSC"
+	"name": "cma-cgm",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,AG,VSL",
+	"partycode": "CMA"
+}, {
+	"name": "hapag-lloyd",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,AG,VSL",
+	"partycode": "HLC"
+}, {
+	"name": "yangming",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,AG,VSL",
+	"partycode": "YML"
+}, {
+	"name": "maersk",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,AG,VSL",
+	"partycode": "MSK"
+}, {
+	"name": "msc",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,AG,VSL",
+	"partycode": "MSC"
+}, {
+	"name": "one-line",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,AG,VSL",
+	"partycode": "ONE"
+}, {
+	"name": "zim",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,AG,VSL",
+	"partycode": "ZIM"
+}, {
+	"name": "hyundai",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,AG,VSL",
+	"partycode": "HMM"
 }]
