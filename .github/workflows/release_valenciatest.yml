@@ -54,33 +54,46 @@ jobs:
           SMTPPASSWORD: ''
           EXPERIMENTAL: ''
 
-      - name: Deploying the CDK Code
-        uses: youyo/aws-cdk-github-actions@v2
-        with:
-          cdk_subcommand: 'deploy'
-          cdk_stack: 'st'
-          cdk_args: '--require-approval never'
-          actions_comment: false
-        env:
-          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
-          PARTICIPANTS:  ${{ env.participants }}
-          AWS_DEFAULT_REGION: ${{ env.awsregion }}
-          BASEURL: ${{ env.baseurl }}
-          HOSTEDZONEID: ${{ env.hostedzoneid }}
-          COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
-          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
-          HELMVERSION: ${{ env.helmversion }}
-          SMTPUSERNAME: ${{ env.smtpusername }}
-          SMTPPASSWORD: ${{ env.smtppassword }}
-          EXPERIMENTAL: ''
+      # - name: Deploying the CDK Code
+      #   uses: youyo/aws-cdk-github-actions@v2
+      #   with:
+      #     cdk_subcommand: 'deploy'
+      #     cdk_stack: 'st'
+      #     cdk_args: '--require-approval never'
+      #     actions_comment: false
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+      #     PARTICIPANTS:  ${{ env.participants }}
+      #     AWS_DEFAULT_REGION: ${{ env.awsregion }}
+      #     BASEURL: ${{ env.baseurl }}
+      #     HOSTEDZONEID: ${{ env.hostedzoneid }}
+      #     COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
+      #     COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
+      #     HELMVERSION: ${{ env.helmversion }}
+      #     SMTPUSERNAME: ${{ env.smtpusername }}
+      #     SMTPPASSWORD: ${{ env.smtppassword }}
+      #     EXPERIMENTAL: ''
       
-      - name: HELM
+      - name: Kube secrets
         run: |
           #!/usr/bin/env bash
+
           aws cloudformation describe-stacks --stack-name st > stack-out.json
           jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' stack-out.json > ./kube.sh
           . ./kube.sh
+
+          kubectl create secret generic database-credentials --from-literal=user=postgres --from-literal=password='${{env.dbpassword}}' || true
+          kubectl create secret generic smtp-credentials --from-literal=user='${{ env.smtpusername }}' --from-literal=password='${{ env.smtppassword }}' || true
+
+      - name: HELM
+        run: |
+          #!/usr/bin/env bash
+
+          aws cloudformation describe-stacks --stack-name st > stack-out.json
+          jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' stack-out.json > ./kube.sh
+          . ./kube.sh
+
           helm repo add dcsa https://dcsaorg.github.io/Kubernetes-Packaging/
 
           certificateArn=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("hostedZoneCertificateArn")) | .OutputValue' stack-out.json)
