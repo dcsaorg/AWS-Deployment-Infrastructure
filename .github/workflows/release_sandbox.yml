@@ -4,24 +4,55 @@ on:
   push:
     branches: [ sandbox ]
 
+env:
+  awsaccountid: '133515735418'
+  awsregion: 'eu-west-1'
+  baseurl: 'dev.dcsa.org'
+  hostedzoneid: 'Z040818834AD3CMGVA9MB'
+  smtpusername: 'AKIAR6FRIOF5NXRQQCMJ'
+  helmversion: '0.1.85'
+  #If the dbsnapshotId is not '' the database will be created based on that snapshot.
+  dbsnapshotId: ''
+  #if the cognito parameters below are supplied and not '' there will not be created a userpool
+  cognitouserpoolid: ''
+  cognitouiclientid: ''
+  cognitodcsaclientid: ''
+  cognitodcsaclientsecret: ''
+  cognitotokenurl: ''
+  participantsfile: 'sqlscripts/sandbox_participants.json'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
+    env:
+      smtppassword: ${{ secrets.SANDBOXSMTPPASSWORD }}
+      participants: ${{ secrets.SANDBOXPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.SANDBOXAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.SANDBOXAWSSECRETACCESSKEY }}
+      dbpassword: ${{ secrets.SANDBOX_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-skip-session-tagging: true
+          aws-access-key-id: ${{ env.awsaccesskeyid }}
+          aws-secret-access-key: ${{ env.awssecretaccesskey }}
+          aws-region:  ${{ env.awsregion }}
+      - name: Creating secret
+        run: |
+          aws secretsmanager create-secret --name DBPassword --secret-string ${{env.dbpassword}} || true
+          aws secretsmanager update-secret --secret-id DBPassword --secret-string ${{env.dbpassword}} || true
       - name: CDK Bootstrapping AWS Account
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'bootstrap'
           cdk_args: '--cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess'
-          cdk_stack: 'aws://775190501834/eu-west-1'
+          cdk_stack: 'aws://${{ env.awsaccountid }}/${{ env.awsregion }}'
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.SANDBOXAWSACCESSKEYID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.SANDBOXAWSSECRETACCESSKEY }}
-          AWS_DEFAULT_REGION: 'eu-west-1'
-          BASEURL: 'dev.dcsa.org'
-          HOSTEDZONEID: 'Z040818834AD3CMGVA9MB'
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
       - name: Deploying the CDK Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -30,22 +61,68 @@ jobs:
           cdk_args: '--require-approval never'
           actions_comment: false
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.HAMBURGDEVAWSACCESSKEYID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.HAMBURGDEVAWSSECRETACCESSKEY }}
-          AWS_DEFAULT_REGION: 'eu-west-1'
-          BASEURL: 'Z040818834AD3CMGVA9MB'
-          HOSTEDZONEID: 'Z040818834AD3CMGVA9MB'
-          PARTICIPANTS: "cma-cgm,dcsa"
-          COGNITOAPPCLIENTID: "4u49pjh38su1ccea0l4dras9if"
-          COGNITOUSERPOOLID: "eu-west-1_rJGpA7BVH"
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          HELMVERSION: ${{ env.helmversion }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          EXPERIMENTAL: 'false'
+          DBPASSWORD: ${{env.dbpassword}}
+          DBSNAPSHOTID: ${{env.dbsnapshotId}}
+          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
+          COGNITOUICLIENTID: ${{ env.cognitouiclientid }}
+          COGNITODCSACLIENTID: ${{ env.cognitodcsaclientid }}
+          COGNITODCSACLIENTSECRET: ${{ env.cognitodcsaclientsecret }}
+          COGNITOTOKENURL:  ${{ env.cognitotokenurl }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-skip-session-tagging: true
+          aws-access-key-id: ${{ env.awsaccesskeyid }}
+          aws-secret-access-key: ${{ env.awssecretaccesskey }}
+          aws-region:  ${{ env.awsregion }}
+      - name: SQL updates
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
+          sudo apt-get install jq
+          dburl=$(aws cloudformation describe-stacks --stack-name st | jq '.Stacks[0].Outputs[0].OutputValue' | tr -d '"')
+          echo $dburl
+          cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
+           carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
+           echo $carrierinternal
+           suffix=""
+           carrier="$carrierinternal$suffix"
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/01_create_dcsa_owner.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/02_create_database.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/03_dcsa_im_v3_0.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/04_load_reference_data.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/05_reference_implementation_support.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/06_phoney_ids.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/07_load_sample_data.sql
+          done
+        env:
+          PGPASSWORD: ${{env.dbpassword}}
       - name: Updating load balancer dns
         run: |
+          aws cloudformation describe-stacks --stack-name st
           sleep 3m
-          aws elbv2 describe-load-balancers
           alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
           echo $alburl
-          sed -i "s#mydns#$alburl#g" ./route53/route53.json
-          cat ./route53/route53.json
-          aws route53 change-resource-record-sets --hosted-zone-id Z059078111NG4D2HJ3FYI --change-batch file://./route53/route53.json
-
-                 
+          cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
+           carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
+           echo $carrierinternal
+           carrierurl="$carrierinternal.$carrierbaseurl"
+           echo $carrierurl
+           cp ./route53/route53.json ./participantroute.json
+           sed -i "s#mydns#$alburl#g" ./participantroute.json
+           sed -i "s#carrierurl#$carrierurl#g" ./participantroute.json
+           cat ./participantroute.json
+           aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./participantroute.json
+          done
+        env:
+          carrierbaseurl: ${{ env.baseurl }}
