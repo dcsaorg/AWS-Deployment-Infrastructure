@@ -44,7 +44,7 @@ export class CognitoConstruct extends Construct {
         });
         pool.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
-        const urlid=makeid(10);
+        const urlid=pool.userPoolId.replace("eu-west-1_", "dcsa-");
 
         pool.addDomain('dg', {
             cognitoDomain: {
@@ -156,15 +156,4 @@ function getClientSecret(suffix:string,scope:Construct,userPool:UserPool, userPo
     return describeCognitoUserPoolClient.getResponseField(
         'UserPoolClient.ClientSecret'
     )
-}
-
-function makeid(length:number) {
-    var result           = '';
-    var characters       = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() *
-            charactersLength));
-    }
-    return result;
 }
