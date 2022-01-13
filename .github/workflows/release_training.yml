@@ -19,7 +19,7 @@ env:
   cognitodcsaclientid: ''
   cognitodcsaclientsecret: ''
   cognitotokenurl: ''
-  participantsfile: 'sqlscripts/sandbox_participants.json'
+  participantsfile: 'sqlscripts/training_participants.json'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
