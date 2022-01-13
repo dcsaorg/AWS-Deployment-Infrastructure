@@ -1,0 +1,104 @@
+name: Publish
+
+on:
+  push:
+    branches: [ valenciatest ]
+
+env:
+  awsaccountid: '020609001582'
+  awsregion: 'eu-west-1'
+  baseurl: 'p6-valencia-test.dcsa.org'
+  hostedzoneid: 'Z051311714YW9TGCRZJ9C'
+  smtpusername: 'AKIAQJTDENBXHZLN64PV'
+  cognitoappclientid: ''
+  cognitouserpoolid: ''
+  helmversion: '0.1.80'
+jobs:
+  aws_cdk:
+    runs-on: ubuntu-latest
+    env:
+      smtppassword: ${{ secrets.VALENCIATESTSMTPPASSWORD }}
+      participants: ${{ secrets.VALENCIATESTPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.VALENCIATESTAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.VALENCIATESTAWSSECRETACCESSKEY }}
+      dbpassword: ${{ secrets.VALENCIATEST_DBPASSWORD }}
+    steps:
+      - name: Checkout the infrastructure code
+        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-skip-session-tagging: true
+          aws-access-key-id: ${{ env.awsaccesskeyid }}
+          aws-secret-access-key: ${{ env.awssecretaccesskey }}
+          aws-region:  ${{ env.awsregion }}
+
+      - name: Creating secret
+        run: |
+          aws secretsmanager create-secret --name DBPassword --secret-string ${{env.dbpassword}} || true
+          aws secretsmanager update-secret --secret-id DBPassword --secret-string ${{env.dbpassword}} || true
+      - name: CDK Bootstrapping AWS Account
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'bootstrap'
+          cdk_args: '--cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess'
+          cdk_stack: 'aws://${{ env.awsaccountid }}/${{ env.awsregion }}'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ''
+          HOSTEDZONEID: ''
+          SMTPUSERNAME: ''
+          SMTPPASSWORD: ''
+          EXPERIMENTAL: ''
+
+      - name: Deploying the CDK Code
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_stack: 'st'
+          cdk_args: '--require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
+          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
+          HELMVERSION: ${{ env.helmversion }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          EXPERIMENTAL: ''
+      
+      - name: Kube secrets
+        run: |
+          #!/usr/bin/env bash
+          # Ensure the script is executable in case it was edited on windows
+          script="./shell-scripts/set-kubernetes-secrets.sh"
+          chmod a+x $script && $script
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: ${{env.dbpassword}}
+          SMTP_USER: ${{ env.smtpusername }}
+          SMTP_PASSWORD: ${{ env.smtppassword }}
+
+      - name: HELM
+        run: |
+          #!/usr/bin/env bash
+          # Ensure the script is executable in case it was edited on windows
+          script="./shell-scripts/deploy-application.sh"
+          chmod a+x $script && $script
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: ${{env.dbpassword}}
+          PARTICIPANTS:  ${{ env.participants }}
+          BASEURL: ${{ env.baseurl }}
+          SMTP_PASSWORD: ${{ env.smtppassword }}
+          SMTP_USERNAME: ${{ env.smtpusername }}
+          COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
+          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
