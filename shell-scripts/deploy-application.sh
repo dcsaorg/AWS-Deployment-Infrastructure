@@ -48,6 +48,7 @@ p6config:
     dcsaAppClientId: "$dcsaAppClientId"
     dcsaAppClientSecret: "$dcsaAppClientSecret"
     dcsaAppClientTokenUri: "$dcsaAppClientTokenUri"
+    dockerImageTag: "$DOCKERIMAGETAG"
 EOF
 
     echo "Deploying helm for $participant $partycode $publisherroles"
