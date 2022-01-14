@@ -7,9 +7,9 @@ on:
 env:
   awsaccountid: '487020291028'
   awsregion: 'eu-west-1'
-  baseurl: 'p6-valencia-test.dcsa.org'
-  hostedzoneid: 'Z051311714YW9TGCRZJ9C'
-  smtpusername: 'AKIAQJTDENBXHZLN64PV'
+  baseurl: 'p6-training.dcsa.org'
+  hostedzoneid: 'Z05029612O56NG6DMSTEE'
+  smtpusername: 'AKIAXCZFL4PKJSERVQQP'
   cognitoappclientid: ''
   cognitouserpoolid: ''
   dockerImageTag: 'live-training'
