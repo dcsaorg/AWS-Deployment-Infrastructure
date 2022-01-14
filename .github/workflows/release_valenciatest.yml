@@ -10,8 +10,11 @@ env:
   baseurl: 'p6-valencia-test.dcsa.org'
   hostedzoneid: 'Z051311714YW9TGCRZJ9C'
   smtpusername: 'AKIAQJTDENBXHZLN64PV'
-  cognitoappclientid: ''
-  cognitouserpoolid: ''
+  #cognitouserpoolid: ''
+  #cognitoappclientid: '' # id of the ui client
+  #cognitodcsaclientid: ''
+  #cognitodcsaclientsecret: ''
+  #cognitotokenurl: ''
   helmversion: '0.1.80'
 jobs:
   aws_cdk:
@@ -25,6 +28,7 @@ jobs:
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -54,7 +58,52 @@ jobs:
           SMTPPASSWORD: ''
           EXPERIMENTAL: ''
 
-      - name: Deploying the CDK Code
+      - name: Check for CognitoStack
+        id: cognitoCheck
+        run: |
+          cognitoStackId=$(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE | jq -r '.StackSummaries[] | select(.StackName|test("cognito")) | .StackId')
+          echo "::set-output name=cognitoStackId::$cognitoStackId"
+
+      - name: Extract values from UserPool
+        id: userPoolData
+        if: ${{ steps.cognitoCheck.outputs.cognitoStackId == '' }}
+        run: |
+          #!/usr/bin/env bash
+          # Ensure the script is executable in case it was edited on windows
+          script="./shell-scripts/extract-userpool-info.sh"
+          chmod a+x $script && $script
+        env:
+          EXISTING_USERPOOLID: ${{ env.cognitouserpoolid }}
+          EXISTING_UICLIENTID: ${{ env.cognitoappclientid }}
+          EXISTING_DCSACLIENTID: ${{ env.cognitodcsaclientid }}
+          EXISTING_DCSACLIENTSECRET: ${{ env.cognitodcsaclientsecret }}
+          EXISTING_TOKENURL:  ${{ env.cognitotokenurl }}
+
+      - name: Deploying the CDK Cognito Code
+        uses: youyo/aws-cdk-github-actions@v2
+        if: ${{ steps.cognitoCheck.outputs.cognitoStackId == '' }}
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_stack: 'cognito'
+          cdk_args: '--require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          HELMVERSION: ${{ env.helmversion }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          EXISTING_USERPOOLID: ${{ steps.userPoolData.outputs.userPoolId }}
+          EXISTING_UICLIENTID: ${{ steps.userPoolData.outputs.uiClientId }}
+          EXISTING_DCSACLIENTID: ${{ steps.userPoolData.outputs.dcsaClientId }}
+          EXISTING_DCSACLIENTSECRET: ${{ steps.userPoolData.outputs.dcsaClientSecret }}
+          EXISTING_TOKENURL: ${{ steps.userPoolData.outputs.tokenUrl }}
+
+      - name: Deploying the CDK Cluster Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'deploy'
@@ -68,12 +117,9 @@ jobs:
           AWS_DEFAULT_REGION: ${{ env.awsregion }}
           BASEURL: ${{ env.baseurl }}
           HOSTEDZONEID: ${{ env.hostedzoneid }}
-          COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
-          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
           HELMVERSION: ${{ env.helmversion }}
           SMTPUSERNAME: ${{ env.smtpusername }}
           SMTPPASSWORD: ${{ env.smtppassword }}
-          EXPERIMENTAL: ''
       
       - name: Kube secrets
         run: |
@@ -100,5 +146,4 @@ jobs:
           BASEURL: ${{ env.baseurl }}
           SMTP_PASSWORD: ${{ env.smtppassword }}
           SMTP_USERNAME: ${{ env.smtpusername }}
-          COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
-          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
+ 

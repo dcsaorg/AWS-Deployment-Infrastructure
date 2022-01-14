@@ -1,16 +1,20 @@
 #!/usr/bin/env bash
 
-aws cloudformation describe-stacks --stack-name st > stack-out.json
-jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' stack-out.json > ./kube.sh
+aws cloudformation describe-stacks --stack-name st > st-stack-out.json
+aws cloudformation describe-stacks --stack-name cognito > cognito-stack-out.json
+jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' st-stack-out.json > ./kube.sh
 . ./kube.sh
 
 helm repo add dcsa https://dcsaorg.github.io/Kubernetes-Packaging/
 
-certificateArn=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("hostedZoneCertificateArn")) | .OutputValue' stack-out.json)
-dbHostName=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dbdbEndpointHostname")) | .OutputValue' stack-out.json)
-dcsaAppClientId=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dcsaAppClientId")) | .OutputValue' stack-out.json)
-dcsaAppClientSecret=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dcsaAppClientSecret")) | .OutputValue' stack-out.json)
-dcsaAppClientTokenUri=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dcsaAppClientTokenUri")) | .OutputValue' stack-out.json)
+certificateArn=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("hostedZoneCertificateArn")) | .OutputValue' st-stack-out.json)
+dbHostName=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dbEndpointHostname")) | .OutputValue' st-stack-out.json)
+
+userPoolId=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("userPoolId")) | .OutputValue' cognito-stack-out.json)
+tokenUrl=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("tokenUrl")) | .OutputValue' cognito-stack-out.json)
+dcsaClientId=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dcsaClientId")) | .OutputValue' cognito-stack-out.json)
+dcsaClientSecret=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dcsaClientSecret")) | .OutputValue' cognito-stack-out.json)
+uiClientId=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("uiClientId")) | .OutputValue' cognito-stack-out.json)
 
 participantNames=$(echo "$PARTICIPANTS" | jq -r '.[].name')
 for participant in $participantNames; do
@@ -18,7 +22,7 @@ for participant in $participantNames; do
 
     participantTrimmed=$(echo $participant | tr -d '-')
     partycode=$(echo "$PARTICIPANTS" | jq -r ".[] | select(.name|test(\"$participant\")) | .partycode")
-    publisherroles=$(echo "$PARTICIPANTS" | jq -r ".[] | select(.name|test(\"$participant\")) | .publisherroles")
+    publisherroles=$(echo "$PARTICIPANTS" | jq -r ".[] | select(.name|test(\"$participant\")) | .publisherroles" | tr -d '[] ')
     email=$(echo "$PARTICIPANTS" | jq -r ".[] | select(.name|test(\"$participant\")) | .email")
 
     cat <<EOF >> values.yml
@@ -38,16 +42,16 @@ p6config:
     company: "$participant"
     partyCode: "$partyCode"
     publisherRoles: "$publisherroles"
-    cognitoUserPoolId: "$COGNITOUSERPOOLID"
-    cognitoAppClientId: "$COGNITOAPPCLIENTID"
     publisherCodeType: "SMDG_LINER_CODE"
     partyName: "$participant"
     springMailUsername: "$SMTPUSERNAME"
     springMailPassword: "$SMTPPASSWORD"
     notificationEmail: "$email"
-    dcsaAppClientId: "$dcsaAppClientId"
-    dcsaAppClientSecret: "$dcsaAppClientSecret"
-    dcsaAppClientTokenUri: "$dcsaAppClientTokenUri"
+    cognitoUserPoolId: "$userPoolId"
+    cognitoAppClientId: "$uiClientId"
+    dcsaAppClientId: "$dcsaClientId"
+    dcsaAppClientSecret: "$dcsaClientSecret"
+    dcsaAppClientTokenUri: "$tokenUrl"
     dockerImageTag: "$DOCKERIMAGETAG"
 EOF
 

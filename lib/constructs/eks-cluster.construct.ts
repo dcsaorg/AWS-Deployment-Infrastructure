@@ -10,7 +10,6 @@ export interface DCSAEKSClusterProps {
     helmVersion: string,
     participants: string,
     springMailUsername: string,
-    experimental:boolean
     cognitoUIClientId:string
     cognitoDCSAClientId:string,
     cognitoDCSAClientSecret:string,
