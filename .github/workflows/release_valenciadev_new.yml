@@ -17,11 +17,11 @@ jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      smtppassword: ${{ secrets.VALENCIATESTSMTPPASSWORD }}
-      participants: ${{ secrets.VALENCIATESTPARTICIPANTS }}
-      awsaccesskeyid: ${{ secrets.VALENCIATESTAWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.VALENCIATESTAWSSECRETACCESSKEY }}
-      dbpassword: ${{ secrets.VALENCIATEST_DBPASSWORD }}
+      smtppassword: ${{ secrets.VALENCIADEVSMTPPASSWORD }}
+      participants: ${{ secrets.VALENCIADEVPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.VALENCIADEVAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.VALENCIADEVAWSSECRETACCESSKEY }}
+      dbpassword: ${{ secrets.VALENCIADEV_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
