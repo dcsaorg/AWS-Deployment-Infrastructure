@@ -9,9 +9,9 @@ env:
   awsregion: 'eu-west-1'
   baseurl: 'dev.dcsa.org'
   hostedzoneid: 'Z040818834AD3CMGVA9MB'
-  smtpusername: 'AKIA3I7HULHFFSNUVVB4'
-  helmversion: '0.1.83'
-  #If the dbsnapshotId is not '' the database will be create based on that snapshot.
+  smtpusername: 'AKIAR6FRIOF5NXRQQCMJ'
+  helmversion: '0.1.85'
+  #If the dbsnapshotId is not '' the database will be created based on that snapshot.
   dbsnapshotId: ''
   #if the cognito parameters below are supplied and not '' there will not be created a userpool
   cognitouserpoolid: ''

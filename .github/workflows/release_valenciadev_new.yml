@@ -2,27 +2,26 @@ name: Publish
 
 on:
   push:
-    branches: [ training ]
+    branches: [ valenciadevelopment ]
 
 env:
-  awsaccountid: '487020291028'
+  awsaccountid: '856059746030'
   awsregion: 'eu-west-1'
-  baseurl: 'p6-training.dcsa.org'
-  hostedzoneid: 'Z05029612O56NG6DMSTEE'
-  smtpusername: 'AKIAXCZFL4PKJSERVQQP'
+  baseurl: 'p6-valencia-development.dcsa.org'
+  hostedzoneid: 'Z10334181E71KL2EFPCXP'
+  smtpusername: 'AKIA3I7HULHFFSNUVVB4'
   cognitoappclientid: ''
   cognitouserpoolid: ''
-  dockerImageTag: 'live-training'
-  helmversion: '0.1.87'
+  helmversion: '0.1.80'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      smtppassword: ${{ secrets.TRAININGSMTPPASSWORD }}
-      participants: ${{ secrets.TRAININGPARTICIPANTS }}
-      awsaccesskeyid: ${{ secrets.TRAININGAWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.TRAININGAWSSECRETACCESSKEY }}
-      dbpassword: ${{ secrets.TRAININGDEV_DBPASSWORD }}
+      smtppassword: ${{ secrets.VALENCIATESTSMTPPASSWORD }}
+      participants: ${{ secrets.VALENCIATESTPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.VALENCIATESTAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.VALENCIATESTAWSSECRETACCESSKEY }}
+      dbpassword: ${{ secrets.VALENCIATEST_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
@@ -75,7 +74,28 @@ jobs:
           SMTPUSERNAME: ${{ env.smtpusername }}
           SMTPPASSWORD: ${{ env.smtppassword }}
           EXPERIMENTAL: ''
-      
+      - name: SQL updates
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
+          sudo apt-get install jq
+          dburl=$(aws cloudformation describe-stacks --stack-name st | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("EndpointHostname")) | .OutputValue' | tr -d '"')
+          echo $dburl
+          cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
+           carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
+           echo $carrierinternal
+           suffix=""
+           carrier="$carrierinternal$suffix"
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/01_create_dcsa_owner.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/02_create_database.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/03_dcsa_im_v3_0.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/04_load_reference_data.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/05_reference_implementation_support.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/06_phoney_ids.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/07_load_sample_data.sql
+          done
+        env:
+          PGPASSWORD: ${{env.dbpassword}}
       - name: Kube secrets
         run: |
           #!/usr/bin/env bash
@@ -103,5 +123,3 @@ jobs:
           SMTP_USERNAME: ${{ env.smtpusername }}
           COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
           COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
-          DOCKERIMAGETAG: ${{ env.dockerImageTag }}
-
