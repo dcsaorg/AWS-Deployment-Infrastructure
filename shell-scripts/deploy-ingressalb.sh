@@ -25,7 +25,7 @@ env:
 EOF
 
 echo "Deploying ingress helm for $participantNames"
-helm install ingress dcsa/dcsaingresscluster --values values.yml
+helm install ingressdcsa dcsa/dcsaingresscluster --values values.yml
 
 
 helm list
