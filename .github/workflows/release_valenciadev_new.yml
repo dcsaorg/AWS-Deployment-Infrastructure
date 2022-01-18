@@ -110,10 +110,10 @@ jobs:
 
       - name: HELM
         run: |
-#          #!/usr/bin/env bash
-#          # Ensure the script is executable in case it was edited on windows
-#          script="./shell-scripts/deploy-application.sh"
-#          chmod a+x $script && $script
+          #!/usr/bin/env bash
+          # Ensure the script is executable in case it was edited on windows
+          script="./shell-scripts/deploy-application.sh"
+          chmod a+x $script && $script
         env:
           DB_USER: postgres
           DB_PASSWORD: ${{env.dbpassword}}
