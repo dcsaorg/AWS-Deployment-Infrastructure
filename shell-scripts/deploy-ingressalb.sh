@@ -21,7 +21,7 @@ EOF
 
 for p in $participantNames; do
     cat <<EOF >> values-2.yml
-      - "$p"
+      - $p
 EOF
 done
 
