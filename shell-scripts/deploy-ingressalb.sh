@@ -16,7 +16,8 @@ certificateArn: "$certificateArn"
 
 env:
     baseurl: "$BASEURL"
-    participants: ["first", "second"]
+
+participants:
 EOF
 
 for p in $participantNames; do
