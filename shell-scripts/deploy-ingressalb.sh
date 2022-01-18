@@ -23,7 +23,7 @@ env:
     baseurl: "$BASEURL"
     participants: "$participant"
 EOF
-
+cat values.yml
 echo "Deploying ingress helm for $participantNames"
 helm install ingressdcsa dcsa/dcsaingresscluster --values values.yml
 
