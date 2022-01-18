@@ -2,7 +2,6 @@ import * as cdk from '@aws-cdk/core'
 import { DCSARoute53 } from './constructs/route53.construct'
 import { DCSAEKSCluster } from './constructs/eks-cluster.construct'
 import { DBConstruct } from "./constructs/db.construct";
-import {CognitoConstruct} from "./constructs/cognito.construct";
 import { CfnOutput } from '@aws-cdk/core';
 
 
@@ -27,39 +26,24 @@ export class DCSAStack extends cdk.Stack {
 
     const { hostedZoneCertificate } = new DCSARoute53(this, 'Route53', { "hostedZoneId": props.hostedZoneId, "baseUrl": props.baseUrl, "participants": props.participants})
 
-    let experimental=false;
-    if(props.experimental==='true') {
-      experimental=true;
-    }
-
-
-    const { tokenUrl,dcsaClientSecret,dcsaClientId,uiClientId,cognitoUserPoolId } =  new CognitoConstruct(this, "cg", {
-        participants: props.participants,
-        cognitoUserPoolId: props.cognitoUserPoolId,
-        dcsaClientId: props.cognitoDcsaClientId,
-        dcsaClientSecret: props.cognitoDcsaClientSecret,
-        tokenUrl:props.cognitoTokenUrl,
-        uiClientId: props.cognitoUiClientId
-    });
-
-
-   const {dbHostname,dbPort}= new DBConstruct(this, "db", {snapshotId: props.dbSnapshotID});
+    const {dbHostname,dbPort}= new DBConstruct(this, "db", {snapshotId: props.dbSnapshotID});
       new DCSAEKSCluster(this, 'EKSCluster', {
-        hostedZoneCertificate, "cognitoUserPoolId": cognitoUserPoolId, "helmVersion": props.helmVersion, "participants": props.participants, "springMailUsername": props.springMailUsername,experimental: experimental,cognitoUIClientId: uiClientId,cognitoDCSAClientId:dcsaClientId,cognitoDCSAClientSecret:dcsaClientSecret,cognitoTokenUrl:tokenUrl,dbPort:dbPort,dbHost:dbHostname,dbPassword: props.dbpassword
+        hostedZoneCertificate,
+        "cognitoUserPoolId": props.cognitoUserPoolId, 
+        "helmVersion": props.helmVersion, 
+        "participants": props.participants,
+        "springMailUsername": props.springMailUsername,
+        cognitoUIClientId: props.cognitoUiClientId,
+        cognitoDCSAClientId:props.cognitoDcsaClientId,
+        cognitoDCSAClientSecret: props.cognitoDcsaClientSecret,
+        cognitoTokenUrl: props.cognitoTokenUrl,
+        dbPort:dbPort,
+        dbHost:dbHostname,
+        dbPassword: props.dbpassword
       })
 
       new CfnOutput(this, 'hostedZoneCertificateArn', {
         value: hostedZoneCertificate.certificateArn
-      });
-
-      new CfnOutput(this, 'dcsaAppClientId', {
-        value: dcsaClientId ?? ''
-      });
-      new CfnOutput(this, 'dcsaAppClientSecret', {
-        value: dcsaClientSecret ?? ''
-      });
-      new CfnOutput(this, 'dcsaAppClientTokenUri', {
-        value: tokenUrl ?? ''
       });
   }
 }
