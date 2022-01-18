@@ -28,8 +28,8 @@ done
 cat values-*.yml > values.yml
 rm values-*.yml
 cat values.yml
-echo "Deploying ingress helm for $participantNames"
-helm install ingressdcsa dcsa/dcsaingresscluster --values values.yml
+echo "Deploying ingress helm for"
+helm upgrade --install ingressdcsa dcsa/dcsaingresscluster --values values.yml
 
 
 helm list
