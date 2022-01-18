@@ -11,7 +11,7 @@ participantNames=$(echo "$PARTICIPANTS" | jq -r '.[].name')
 
 echo "Creating values values.yml"
 
-cat <<EOF >> values.yml
+cat <<EOF >> values-1.yml
 certificateArn: "$certificateArn"
 
 env:
@@ -26,8 +26,8 @@ for p in $participantNames; do
 EOF
 done
 
-#cat values-*.yml > values.yml
-#rm values-*.yml
+cat values-*.yml > values.yml
+rm values-*.yml
 cat values.yml
 echo "Deploying ingress helm for"
 helm uninstall ingressdcsa
