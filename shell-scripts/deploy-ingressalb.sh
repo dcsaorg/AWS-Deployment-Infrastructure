@@ -29,7 +29,9 @@ done
 #rm values-*.yml
 cat values.yml
 echo "Deploying ingress helm for"
-helm upgrade --install --dry-run ingressdcsa dcsa/dcsaingresscluster --values values.yml --version 0.0.3
+helm uninstall ingressdcsa
+helm uninstall ingress
+helm upgrade --install --dry-run ingressdcsa dcsa/dcsaingresscluster --values values.yml --version v0.0.3
 
 
 helm list
