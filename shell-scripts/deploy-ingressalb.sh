@@ -22,12 +22,10 @@ certificateArn: "$certificateArn"
 env:
     baseurl: "$BASEURL"
     participants: "$participant"
-
-
 EOF
 
-    echo "Deploying ingress helm for $participantNames"
-    helm install ingress dcsa/dcsaingresscluster --values values.yml
-done
+echo "Deploying ingress helm for $participantNames"
+helm install ingress dcsa/dcsaingresscluster --values values.yml
+
 
 helm list
