@@ -13,6 +13,7 @@ env:
   cognitoappclientid: ''
   cognitouserpoolid: ''
   helmversion: '0.1.80'
+  dockerImageTag: 'live-hamburg'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
