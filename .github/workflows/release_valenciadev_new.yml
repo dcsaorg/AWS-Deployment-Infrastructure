@@ -15,6 +15,7 @@ env:
   helmversion: '0.1.80'
   dockerImageTag: 'live-hamburg'
   participantsfile: 'sqlscripts/test.json'
+  deploydb: 'true'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -61,7 +62,6 @@ jobs:
         run: |
           cognitoStackId=$(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE | jq -r '.StackSummaries[] | select(.StackName|test("cognito")) | .StackId')
           echo "::set-output name=cognitoStackId::$cognitoStackId"
-
       - name: Extract values from UserPool
         id: userPoolData
         if: ${{ steps.cognitoCheck.outputs.cognitoStackId == '' }}
@@ -100,7 +100,29 @@ jobs:
           EXISTING_DCSACLIENTID: ${{ steps.userPoolData.outputs.dcsaClientId }}
           EXISTING_DCSACLIENTSECRET: ${{ steps.userPoolData.outputs.dcsaClientSecret }}
           EXISTING_TOKENURL: ${{ steps.userPoolData.outputs.tokenUrl }}
-
+      - name: Deploying the CDK DB RDS Code
+        uses: youyo/aws-cdk-github-actions@v2
+        if: ${{ env.deploydb == 'true' }}
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_stack: 'db'
+          cdk_args: '--require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          HELMVERSION: ${{ env.helmversion }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          EXISTING_USERPOOLID: ${{ steps.userPoolData.outputs.userPoolId }}
+          EXISTING_UICLIENTID: ${{ steps.userPoolData.outputs.uiClientId }}
+          EXISTING_DCSACLIENTID: ${{ steps.userPoolData.outputs.dcsaClientId }}
+          EXISTING_DCSACLIENTSECRET: ${{ steps.userPoolData.outputs.dcsaClientSecret }}
+          EXISTING_TOKENURL: ${{ steps.userPoolData.outputs.tokenUrl }}
       - name: Deploying the CDK Cluster Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -135,7 +157,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes postgresql-client
           sudo apt-get install jq
-          dburl=$(aws cloudformation describe-stacks --stack-name st | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("EndpointHostname")) | .OutputValue' | tr -d '"')
+          dburl=$(aws cloudformation describe-stacks --stack-name db | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("EndpointHostname")) | .OutputValue' | tr -d '"')
           echo $dburl
           cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
            carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
