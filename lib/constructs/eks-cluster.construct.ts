@@ -5,20 +5,6 @@ import * as acm from '@aws-cdk/aws-certificatemanager'
 import policyStatementActions from '../constants/policyStatementActions.constant'
 
 export interface DCSAEKSClusterProps {
-    hostedZoneCertificate: acm.ICertificate,
-    cognitoUserPoolId: string,
-    helmVersion: string,
-    participants: string,
-    springMailUsername: string,
-    experimental:boolean
-    cognitoUIClientId:string
-    cognitoDCSAClientId:string,
-    cognitoDCSAClientSecret:string,
-    cognitoTokenUrl: string,
-    dbHost:string,
-    dbPort:number,
-    dbPassword:string
-
 }
 
 

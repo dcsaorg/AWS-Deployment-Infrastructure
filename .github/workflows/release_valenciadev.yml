@@ -2,7 +2,7 @@ name: Publish
 
 on:
   push:
-    branches: [ valenciadevelopment ]
+    branches: [ valenciadevelopment_old ]
 
 env:
   awsaccountid: '856059746030'
