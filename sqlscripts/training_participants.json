@@ -8,7 +8,7 @@
 	"publisherroles": "CA,VSL,AG",
 	"partycode": "CMA"
 }, {
-	"name": "port",
+	"name": "portauth",
 	"email": "NOT_SPECIFIED",
 	"publisherroles": "TR,ATH",
 	"partycode": "HLC"
