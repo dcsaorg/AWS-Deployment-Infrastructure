@@ -57,7 +57,7 @@ p6config:
 EOF
 
     echo "Deploying helm for $participant $partycode $publisherroles"
-    helm install "$participant" dcsa/dcsasandboxhamburg --values values.yml
+    helm install "$participant" dcsa/$HELMCHARTNAME --values values.yml
 done
 
 helm list
