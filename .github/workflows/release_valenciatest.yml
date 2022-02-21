@@ -16,6 +16,7 @@ env:
   #cognitodcsaclientsecret: ''
   #cognitotokenurl: ''
   dockerImageTag: 'live-hamburg'
+  helmChartName: 'dcsasandboxhamburg'
   helmversion: '0.1.80'
 jobs:
   aws_cdk:
@@ -148,3 +149,4 @@ jobs:
           SMTP_PASSWORD: ${{ env.smtppassword }}
           SMTP_USERNAME: ${{ env.smtpusername }}
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}
+          HELMCHARTNAME: ${{ env.helmChartName }}

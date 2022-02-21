@@ -206,7 +206,6 @@ jobs:
           COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
           COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}
-          HELMCHARTNAME: ${{ env.helmChartName }}
       - name: Updating load balancer dns
         run: |
           sleep 3m
