@@ -14,6 +14,7 @@ env:
   cognitouserpoolid: ''
   helmversion: '0.1.87'
   dockerImageTag: 'live-hamburg'
+  helmChartName: 'dcsasandboxhamburg'
   participantsfile: 'sqlscripts/training_participants.json'
   deploydb: 'true'
 jobs:
@@ -188,6 +189,7 @@ jobs:
           SMTP_PASSWORD: ${{ env.smtppassword }}
           SMTP_USERNAME: ${{ env.smtpusername }}
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}
+          HELMCHARTNAME: ${{ env.helmChartName }}
       - name: HELM 2
         run: |
           #!/usr/bin/env bash
