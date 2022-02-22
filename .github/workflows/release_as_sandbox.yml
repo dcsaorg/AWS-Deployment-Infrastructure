@@ -2,7 +2,7 @@ name: Publish
 
 on:
   push:
-    branches: [ assandbox ]
+    branches: [ hamburgtest ]
 
 env:
   awsaccountid: '516930787597'
