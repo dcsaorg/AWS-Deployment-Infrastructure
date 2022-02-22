@@ -1,11 +1,12 @@
 import {Construct,Duration,RemovalPolicy,CfnOutput} from '@aws-cdk/core'
+import * as cdk from '@aws-cdk/core'
 import * as ec2 from '@aws-cdk/aws-ec2'
 import * as rds from '@aws-cdk/aws-rds'
 import * as secret from '@aws-cdk/aws-secretsmanager';
 
 
 export interface DBConstructProps {
-    placeholder: string
+    snapshotId?: string
 }
 
 
@@ -38,31 +39,59 @@ export class DBConstruct extends Construct {
 
         const dbSecret = secret.Secret.fromSecretNameV2(this,"dbsecret","DBPassword")
 
-        const dbInstance = new rds.DatabaseInstance(this, 'db-instance', {
-            vpc,
-            vpcSubnets: {
-                subnetType: ec2.SubnetType.PUBLIC,
-            },
-            engine: rds.DatabaseInstanceEngine.postgres({
-                version: rds.PostgresEngineVersion.VER_13_1,
-            }),
-            instanceType: ec2.InstanceType.of(
-                ec2.InstanceClass.BURSTABLE3,
-                ec2.InstanceSize.MICRO,
-            ),
-            credentials: rds.Credentials.fromPassword("postgres",dbSecret.secretValue),
-            multiAz: false,
-            allocatedStorage: 100,
-            maxAllocatedStorage: 105,
-            allowMajorVersionUpgrade: false,
-            autoMinorVersionUpgrade: true,
-            backupRetention: Duration.days(0),
-            deleteAutomatedBackups: true,
-            removalPolicy: RemovalPolicy.DESTROY,
-            deletionProtection: false,
-            databaseName: 'todosdb',
-            publiclyAccessible: true,
-        });
+        var dbInstance = null
+
+        if(props.snapshotId && props.snapshotId.length>2) {
+            dbInstance = new rds.DatabaseInstanceFromSnapshot(this, 'db-instance', {
+                snapshotIdentifier: props.snapshotId,
+                vpc,
+                vpcSubnets: {
+                    subnetType: ec2.SubnetType.PUBLIC,
+                },
+                engine: rds.DatabaseInstanceEngine.postgres({
+                    version: rds.PostgresEngineVersion.VER_13_1,
+                }),
+                instanceType: ec2.InstanceType.of(
+                    ec2.InstanceClass.BURSTABLE3,
+                    ec2.InstanceSize.MICRO,
+                ),
+                multiAz: false,
+                allowMajorVersionUpgrade: false,
+                autoMinorVersionUpgrade: true,
+                backupRetention: Duration.days(0),
+                deleteAutomatedBackups: true,
+                removalPolicy: RemovalPolicy.DESTROY,
+                deletionProtection: false,
+                publiclyAccessible: true,
+            });
+        } else {
+            dbInstance = new rds.DatabaseInstance(this, 'db-instance', {
+                vpc,
+                vpcSubnets: {
+                    subnetType: ec2.SubnetType.PUBLIC,
+                },
+                engine: rds.DatabaseInstanceEngine.postgres({
+                    version: rds.PostgresEngineVersion.VER_13_1,
+                }),
+                instanceType: ec2.InstanceType.of(
+                    ec2.InstanceClass.BURSTABLE3,
+                    ec2.InstanceSize.MICRO,
+                ),
+                credentials: rds.Credentials.fromPassword("postgres",dbSecret.secretValue),
+                multiAz: false,
+                allocatedStorage: 100,
+                maxAllocatedStorage: 105,
+                allowMajorVersionUpgrade: false,
+                autoMinorVersionUpgrade: true,
+                backupRetention: Duration.days(0),
+                deleteAutomatedBackups: true,
+                removalPolicy: RemovalPolicy.DESTROY,
+                deletionProtection: false,
+                databaseName: 'todosdb',
+                publiclyAccessible: true,
+            });
+        }
+
 
         dbInstance.connections.allowFrom( ec2.Peer.anyIpv4(), ec2.Port.tcp(5432));
 
@@ -70,13 +99,12 @@ export class DBConstruct extends Construct {
         this.dbHostname=dbInstance.instanceEndpoint.hostname
 
 
-
         new CfnOutput(this, 'dbEndpointHostname', {
             value: dbInstance.instanceEndpoint.hostname,
         });
 
         new CfnOutput(this, 'dbEndpointPort', {
-            value: dbInstance.instanceEndpoint.port.toString(),
+            value: cdk.Token.asString(dbInstance.instanceEndpoint.port),
         });
 
 

@@ -5,23 +5,38 @@ import * as cr from "@aws-cdk/custom-resources";
 
 export interface CognitoConstructProps {
     participants: string,
+    cognitoUserPoolId: string,
+    dcsaClientId: string,
+    dcsaClientSecret:string,
+    tokenUrl:string,
+    uiClientId:string
 }
 
 
 export class CognitoConstruct extends Construct {
-
     cognitoUserPoolId: string
     dcsaClientId: string
     dcsaClientSecret:string
     tokenUrl:string
     uiClientId:string
-    uiClientSecret:string
+
 
     constructor(scope: Construct, id: string, props: CognitoConstructProps) {
         super(scope, id);
 
+        if(props.cognitoUserPoolId.length>0) {
+            this.cognitoUserPoolId= props.cognitoUserPoolId;
+            this.dcsaClientId= props.dcsaClientId;
+            this.dcsaClientSecret= props.dcsaClientSecret;
+            this.tokenUrl= props.tokenUrl;
+            this.uiClientId= props.uiClientId;
+            //this.uiClientSecret= props.uiClientSecret;
+            return
+        }
+
+
         const pool=new cognito.UserPool(this, 'up', {
-            selfSignUpEnabled: true,
+            selfSignUpEnabled: false,
             userPoolName: 'up',
             customAttributes: {
                 groups: new cognito.StringAttribute({ minLen: 1, maxLen: 255 }),
@@ -44,34 +59,33 @@ export class CognitoConstruct extends Construct {
 
         let jsonStr = props.participants;
         let jsonObj = JSON.parse(jsonStr);
-        let participantsMap = new Map<string, string>(Object.entries(jsonObj));
 
         let scopes=new Array();
 
-        participantsMap.forEach((value: string, key: string) => {
+        Object.values(jsonObj).forEach((participant :any) => {
             scopes.push(
                 {
-                    scopeDescription: key,
-                    scopeName: key,
+                    scopeDescription: participant["name"],
+                    scopeName: participant["name"],
                 }
             )
         });
 
-        console.log(scopes)
+        console.log("Scopes = " + scopes)
 
         const resourceServer=pool.addResourceServer('upre',{
-            identifier: "dcsa",
+            identifier: "clients",
             scopes:scopes,
             userPoolResourceServerName:"ourresource"
         })
         resourceServer.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
-        console.log(participantsMap)
+        console.log(jsonObj)
 
-        participantsMap.forEach((value: string, key: string) => {
-            let customScope=`dcsa/${key}`
+        Object.values(jsonObj).forEach((participant :any) => {
+            let customScope="clients/" + participant["name"];
             console.log('['+customScope+']')
-            let client=pool.addClient('cl' + key, {
+            let client=pool.addClient('cl' + participant["name"], {
                 generateSecret: true,
                 oAuth: {
                     flows: {
@@ -83,12 +97,12 @@ export class CognitoConstruct extends Construct {
             client.node.addDependency(resourceServer)
             client.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
-            if(key==='dcsa') {
+            if(participant["name"]==='dcsa') {
                 this.dcsaClientId=client.userPoolClientId
                 this.dcsaClientSecret=getClientSecret("dcsa",this,pool,client)
             }
-            new CfnUserPoolGroup(scope, key, {
-                groupName: key,
+            new CfnUserPoolGroup(scope, participant["name"], {
+                groupName: participant["name"],
                 userPoolId: pool.userPoolId
             });
 
@@ -110,7 +124,7 @@ export class CognitoConstruct extends Construct {
         uiClient.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
         this.uiClientId=uiClient.userPoolClientId
-        this.uiClientSecret=getClientSecret("ui",this,pool,uiClient)
+        //this.uiClientSecret=getClientSecret("ui",this,pool,uiClient)
 
     }
 }
