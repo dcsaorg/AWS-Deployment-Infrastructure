@@ -1,0 +1,135 @@
+name: Publish
+
+on:
+  push:
+    branches: [ valenciadevelopment_old ]
+
+env:
+  awsaccountid: '856059746030'
+  awsregion: 'eu-west-1'
+  baseurl: 'p6-valencia-development.dcsa.org'
+  hostedzoneid: 'Z10334181E71KL2EFPCXP'
+  smtpusername: 'AKIA3I7HULHFFSNUVVB4'
+  helmversion: '0.1.07'
+  helmChartName: 'dcsasandboxhamburg'
+  #If the dbsnapshotId is not '' the database will be create based on that snapshot
+  dbsnapshotId: ''
+  #if the cognito parameters below are supplied and not '' there will not be created a userpool
+  cognitouserpoolid: ''
+  cognitouiclientid: ''
+  cognitodcsaclientid: ''
+  cognitodcsaclientsecret: ''
+  cognitotokenurl: ''
+  participantsfile: 'sqlscripts/test.json'
+jobs:
+  aws_cdk:
+    runs-on: ubuntu-latest
+    env:
+      smtppassword: ${{ secrets.VALENCIADEVSMTPPASSWORD }}
+      participants: ${{ secrets.VALENCIADEVPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.VALENCIADEVAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.VALENCIADEVAWSSECRETACCESSKEY }}
+      dbpassword: ${{ secrets.VALENCIADEV_DBPASSWORD }}
+    steps:
+      - name: Checkout the infrastructure code
+        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-skip-session-tagging: true
+          aws-access-key-id: ${{ env.awsaccesskeyid }}
+          aws-secret-access-key: ${{ env.awssecretaccesskey }}
+          aws-region:  ${{ env.awsregion }}
+      - name: Creating secret
+        run: |
+          aws secretsmanager create-secret --name DBPassword --secret-string ${{env.dbpassword}} || true
+          aws secretsmanager update-secret --secret-id DBPassword --secret-string ${{env.dbpassword}} || true
+      - name: CDK Bootstrapping AWS Account
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'bootstrap'
+          cdk_args: '--cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess'
+          cdk_stack: 'aws://${{ env.awsaccountid }}/${{ env.awsregion }}'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+#      - name: Deploying the CDK Code
+#        uses: youyo/aws-cdk-github-actions@v2
+#        with:
+#          cdk_subcommand: 'deploy'
+#          cdk_stack: 'st'
+#          cdk_args: '--require-approval never'
+#          actions_comment: false
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+#          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+#          PARTICIPANTS:  ${{ env.participants }}
+#          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+#          BASEURL: ${{ env.baseurl }}
+#          HOSTEDZONEID: ${{ env.hostedzoneid }}
+#          HELMVERSION: ${{ env.helmversion }}
+#          SMTPUSERNAME: ${{ env.smtpusername }}
+#          SMTPPASSWORD: ${{ env.smtppassword }}
+#          EXPERIMENTAL: 'true'
+#          DBPASSWORD: ${{env.dbpassword}}
+#          DBSNAPSHOTID: ${{env.dbsnapshotId}}
+#          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
+#          COGNITOUICLIENTID: ${{ env.cognitouiclientid }}
+#          COGNITODCSACLIENTID: ${{ env.cognitodcsaclientid }}
+#          COGNITODCSACLIENTSECRET: ${{ env.cognitodcsaclientsecret }}
+#          COGNITOTOKENURL:  ${{ env.cognitotokenurl }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-skip-session-tagging: true
+          aws-access-key-id: ${{ env.awsaccesskeyid }}
+          aws-secret-access-key: ${{ env.awssecretaccesskey }}
+          aws-region:  ${{ env.awsregion }}
+#      - name: SQL updates
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get install --yes postgresql-client
+#          sudo apt-get install jq
+#          dburl=$(aws cloudformation describe-stacks --stack-name st | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("EndpointHostname")) | .OutputValue' | tr -d '"')
+#          echo $dburl
+#          cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
+#           carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
+#           echo $carrierinternal
+#           suffix=""
+#           carrier="$carrierinternal$suffix"
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/01_create_dcsa_owner.sql
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/02_create_database.sql
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/03_dcsa_im_v3_0.sql
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/04_load_reference_data.sql
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/05_reference_implementation_support.sql
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/06_phoney_ids.sql
+#           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/07_load_sample_data.sql
+#          done
+#        env:
+#          PGPASSWORD: ${{env.dbpassword}}
+#      - name: Updating load balancer dns
+#        run: |
+#          sleep 3m
+#          alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
+#          echo $alburl
+#          cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
+#           carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
+#           echo $carrierinternal
+#           carrierurl="$carrierinternal.$carrierbaseurl"
+#           echo $carrierurl
+#           cp ./route53/route53.json ./participantroute.json
+#           sed -i "s#mydns#$alburl#g" ./participantroute.json
+#           sed -i "s#carrierurl#$carrierurl#g" ./participantroute.json
+#           cat ./participantroute.json
+#           aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./participantroute.json
+#          done
+#        env:
+#          carrierbaseurl: ${{ env.baseurl }}
+      - name: HELM
+        run: |
+          aws cloudformation describe-stacks --stack-name st
+          aws cloudformation describe-stacks --stack-name st | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' | tr -d '"' > ./kube.sh
+          chmod a+x ./kube.sh
+          ./kube.sh
+          helm list
