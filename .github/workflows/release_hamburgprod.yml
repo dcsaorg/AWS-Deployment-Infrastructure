@@ -15,7 +15,7 @@ env:
   helmversion: '0.1.87'
   dockerImageTag: 'live-hamburg'
   helmChartName: 'dcsasandboxhamburg'
-  participantsfile: 'sqlscripts/training_participants.json'
+  participantsfile: 'sqlscripts/tnt_sandbox_participants.json'
   deploydb: 'true'
 jobs:
   aws_cdk:
