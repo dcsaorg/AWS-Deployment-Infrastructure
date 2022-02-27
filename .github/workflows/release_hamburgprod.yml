@@ -153,6 +153,7 @@ jobs:
           SMTP_USER: ${{ env.smtpusername }}
           SMTP_PASSWORD: ${{ env.smtppassword }}
       - name: SQL updates
+        if: ${{ env.deploydb == 'true' }}
         run: |
           sudo apt-get update
           sudo apt-get install --yes postgresql-client
