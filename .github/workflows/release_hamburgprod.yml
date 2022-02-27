@@ -16,7 +16,7 @@ env:
   dockerImageTag: 'live-hamburg'
   helmChartName: 'dcsasandboxhamburg'
   participantsfile: 'sqlscripts/tnt_sandbox_participants.json'
-  deploydb: 'true'
+  deploydb: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
