@@ -16,7 +16,7 @@ env:
   dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'
   participantsfile: 'sqlscripts/sandbox_participants.json'
-  deploydb: 'true'
+  deploydb: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -151,8 +151,8 @@ jobs:
         env:
           DB_USER: postgres
           DB_PASSWORD: ${{env.dbpassword}}
-          SMTP_USER: ${{ env.smtpusername }}
-          SMTP_PASSWORD: ${{ env.smtppassword }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
       - name: SQL updates
         if: ${{ env.deploydb == 'true' }}
         run: |
@@ -187,8 +187,8 @@ jobs:
           DB_PASSWORD: ${{env.dbpassword}}
           PARTICIPANTS:  ${{ env.participants }}
           BASEURL: ${{ env.baseurl }}
-          SMTP_PASSWORD: ${{ env.smtppassword }}
-          SMTP_USERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}
           HELMCHARTNAME: ${{ env.helmChartName }}
       - name: HELM 2
@@ -202,8 +202,8 @@ jobs:
           DB_PASSWORD: ${{env.dbpassword}}
           PARTICIPANTS:  ${{ env.participants }}
           BASEURL: ${{ env.baseurl }}
-          SMTP_PASSWORD: ${{ env.smtppassword }}
-          SMTP_USERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
           COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
           COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}
