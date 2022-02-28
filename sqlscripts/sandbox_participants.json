@@ -42,4 +42,9 @@
 	"email": "NOT_SPECIFIED",
 	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "HMM"
+}, {
+	"name": "wartsila",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
+	"partycode": "CMA"
 }]
