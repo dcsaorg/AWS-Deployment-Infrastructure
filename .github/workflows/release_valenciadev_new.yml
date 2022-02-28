@@ -2,30 +2,29 @@ name: Publish
 
 on:
   push:
-    branches: [ sandbox ]
+    branches: [ valenciadevelopment ]
 
 env:
-  awsaccountid: '133515735418'
+  awsaccountid: '856059746030'
   awsregion: 'eu-west-1'
-  baseurl: 'dev.dcsa.org'
-  hostedzoneid: 'Z040818834AD3CMGVA9MB'
-  smtpusername: 'AKIAR6FRIOF5NXRQQCMJ'
+  baseurl: 'p6-valencia-development.dcsa.org'
+  hostedzoneid: 'Z10334181E71KL2EFPCXP'
+  smtpusername: 'AKIA3I7HULHFFSNUVVB4'
   cognitoappclientid: ''
   cognitouserpoolid: ''
-  helmversion: '0.1.87'
-  dockerImageTag: 'live-dev'
-  helmChartName: 'dcsasandboxhamburg'
-  participantsfile: 'sqlscripts/sandbox_participants.json'
+  helmversion: '0.1.80'
+  dockerImageTag: 'live-hamburg'
+  participantsfile: 'sqlscripts/test.json'
   deploydb: 'true'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      smtppassword: ${{ secrets.SANDBOXSMTPPASSWORD }}
-      participants: ${{ secrets.SANDBOXPARTICIPANTS }}
-      awsaccesskeyid: ${{ secrets.SANDBOXAWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.SANDBOXAWSSECRETACCESSKEY }}
-      dbpassword: ${{ secrets.SANDBOX_DBPASSWORD }}
+      smtppassword: ${{ secrets.VALENCIADEVSMTPPASSWORD }}
+      participants: ${{ secrets.VALENCIADEVPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.VALENCIADEVAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.VALENCIADEVAWSSECRETACCESSKEY }}
+      dbpassword: ${{ secrets.VALENCIADEV_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
@@ -154,7 +153,6 @@ jobs:
           SMTP_USER: ${{ env.smtpusername }}
           SMTP_PASSWORD: ${{ env.smtppassword }}
       - name: SQL updates
-        if: ${{ env.deploydb == 'true' }}
         run: |
           sudo apt-get update
           sudo apt-get install --yes postgresql-client
@@ -190,7 +188,6 @@ jobs:
           SMTP_PASSWORD: ${{ env.smtppassword }}
           SMTP_USERNAME: ${{ env.smtpusername }}
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}
-          HELMCHARTNAME: ${{ env.helmChartName }}
       - name: HELM 2
         run: |
           #!/usr/bin/env bash
@@ -206,7 +203,6 @@ jobs:
           SMTP_USERNAME: ${{ env.smtpusername }}
           COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
           COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
-          DOCKERIMAGETAG: ${{ env.dockerImageTag }}
       - name: Updating load balancer dns
         run: |
           sleep 3m

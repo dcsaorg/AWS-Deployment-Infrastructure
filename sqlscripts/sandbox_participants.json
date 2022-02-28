@@ -1,45 +1,61 @@
 [{"name": "evergreenmarine",
 	"email": "NOT_SPECIFIED",
-	"publisherRoles": "[CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH]",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "EMC"
 }, {
 	"name": "cmacgm",
 	"email": "NOT_SPECIFIED",
-	"publisherRoles": "[CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH]",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "CMA"
 }, {
 	"name": "hapaglloyd",
 	"email": "NOT_SPECIFIED",
-	"publisherRoles": "[CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH]",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "HLC"
 }, {
 	"name": "yangming",
 	"email": "NOT_SPECIFIED",
-	"publisherRoles": "[CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH]",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "YML"
 }, {
 	"name": "maersk",
 	"email": "NOT_SPECIFIED",
-	"publisherRoles": "[CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH]",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "MSK"
 }, {
 	"name": "msc",
 	"email": "NOT_SPECIFIED",
-	"publisherRoles": "[CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH]",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "MSC"
 }, {
 	"name": "oneline",
 	"email": "NOT_SPECIFIED",
-	"publisherRoles": "[CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH]",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "ONE"
 }, {
 	"name": "zim",
 	"email": "NOT_SPECIFIED",
-	"publisherRoles": "[CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH]",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "ZIM"
 }, {
 	"name": "hyundai",
 	"email": "NOT_SPECIFIED",
-	"publisherRoles": "[CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH]",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "HMM"
-}]
+},{
+	"name": "wartsila",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
+	"partycode": "WAR"
+},{
+	"name": "hvcc-hamburg",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
+	"partycode": "HVC"
+},{
+	"name": "psa",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
+	"partycode": "PSA"
+}
+]

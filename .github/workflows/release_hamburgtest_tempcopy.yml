@@ -2,30 +2,30 @@ name: Publish
 
 on:
   push:
-    branches: [ sandbox ]
+    branches: [ hamburgtest ]
 
 env:
-  awsaccountid: '133515735418'
+  awsaccountid: '853169102957'
   awsregion: 'eu-west-1'
-  baseurl: 'dev.dcsa.org'
-  hostedzoneid: 'Z040818834AD3CMGVA9MB'
-  smtpusername: 'AKIAR6FRIOF5NXRQQCMJ'
-  cognitoappclientid: ''
-  cognitouserpoolid: ''
-  helmversion: '0.1.87'
-  dockerImageTag: 'live-dev'
-  helmChartName: 'dcsasandboxhamburg'
-  participantsfile: 'sqlscripts/sandbox_participants.json'
-  deploydb: 'true'
+  baseurl: 'p6-hamburg-test.dcsa.org'
+  hostedzoneid: 'Z0356896WKOUB3ZK0XRN'
+  smtpusername: 'AKIA4NJGXMBW74VQLDUD'
+  cognitoappclientid:
+  cognitouserpoolid:
+  helmversion: '0.1.0'
+  dockerImageTag: 'latest'
+  helmChartName: 'dcsaadoptionsuccess'
+  participantsfile: 'sqlscripts/training_participants.json'
+
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      smtppassword: ${{ secrets.SANDBOXSMTPPASSWORD }}
-      participants: ${{ secrets.SANDBOXPARTICIPANTS }}
-      awsaccesskeyid: ${{ secrets.SANDBOXAWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.SANDBOXAWSSECRETACCESSKEY }}
-      dbpassword: ${{ secrets.SANDBOX_DBPASSWORD }}
+      smtppassword: ${{ secrets.HAMBURGTESTSMTPPASSWORD }}
+      participants: ${{ secrets.HAMBURGTESTPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.HAMBURGTESTAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.HAMBURGTESTAWSSECRETACCESSKEY }}
+      dbpassword: ${{ secrets.HAMBURGDEV_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
@@ -36,11 +36,10 @@ jobs:
           aws-access-key-id: ${{ env.awsaccesskeyid }}
           aws-secret-access-key: ${{ env.awssecretaccesskey }}
           aws-region:  ${{ env.awsregion }}
-
       - name: Creating secret
         run: |
           aws secretsmanager create-secret --name DBPassword --secret-string ${{env.dbpassword}} || true
-          aws secretsmanager update-secret --secret-id DBPassword --secret-string ${{env.dbpassword}} || true
+          aws secretsmanager update-secret --secret-id DBPassword --secret-string ${{env.dbpassword}} || true        
       - name: CDK Bootstrapping AWS Account
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -154,7 +153,6 @@ jobs:
           SMTP_USER: ${{ env.smtpusername }}
           SMTP_PASSWORD: ${{ env.smtppassword }}
       - name: SQL updates
-        if: ${{ env.deploydb == 'true' }}
         run: |
           sudo apt-get update
           sudo apt-get install --yes postgresql-client

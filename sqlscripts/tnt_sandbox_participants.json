@@ -1,0 +1,20 @@
+[{"name": "mulesoft",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,VSL,AG",
+	"partycode": "EMC"
+}, {
+	"name": "dcsa",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "TR",
+	"partycode": "YML"
+}, {
+	"name": "mikker",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,VSL,AG",
+	"partycode": "MIK"
+}, {
+	"name": "porten",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,VSL,AG",
+	"partycode": "POR"
+}]

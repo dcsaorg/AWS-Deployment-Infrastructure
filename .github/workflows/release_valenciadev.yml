@@ -2,7 +2,7 @@ name: Publish
 
 on:
   push:
-    branches: [ valenciadevelopment ]
+    branches: [ valenciadevelopment_old ]
 
 env:
   awsaccountid: '856059746030'
@@ -11,6 +11,7 @@ env:
   hostedzoneid: 'Z10334181E71KL2EFPCXP'
   smtpusername: 'AKIA3I7HULHFFSNUVVB4'
   helmversion: '0.1.07'
+  helmChartName: 'dcsasandboxhamburg'
   #If the dbsnapshotId is not '' the database will be create based on that snapshot
   dbsnapshotId: ''
   #if the cognito parameters below are supplied and not '' there will not be created a userpool

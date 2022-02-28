@@ -1,0 +1,20 @@
+[{"name": "firstcarrier",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,VSL,AG",
+	"partycode": "EMC"
+}, {
+	"name": "secondcarrier",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,VSL,AG",
+	"partycode": "CMA"
+}, {
+	"name": "portauth",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "ATH",
+	"partycode": "HLC"
+}, {
+	"name": "terminal",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "TR",
+	"partycode": "YML"
+}]

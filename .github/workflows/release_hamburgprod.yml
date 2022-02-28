@@ -10,9 +10,13 @@ env:
   baseurl: 'p6-hamburg-production.dcsa.org'
   hostedzoneid: 'Z0897388S7HMXDOADHBC'
   smtpusername: 'AKIARP6MS7EFTHTJMPBM'
-  cognitoappclientid: '2id9n1me4q5pn6412r6dtamgul'
-  cognitouserpoolid: 'eu-west-1_UV95TORKw'
-  helmversion: '0.1.73'
+  cognitoappclientid: ''
+  cognitouserpoolid: ''
+  helmversion: '0.1.87'
+  dockerImageTag: 'live-hamburg'
+  helmChartName: 'dcsasandboxhamburg'
+  participantsfile: 'sqlscripts/tnt_sandbox_participants.json'
+  deploydb: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -52,7 +56,74 @@ jobs:
           SMTPUSERNAME: ''
           SMTPPASSWORD: ''
           EXPERIMENTAL: ''
-      - name: Deploying the CDK Code
+
+      - name: Check for CognitoStack
+        id: cognitoCheck
+        run: |
+          cognitoStackId=$(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE | jq -r '.StackSummaries[] | select(.StackName|test("cognito")) | .StackId')
+          echo "::set-output name=cognitoStackId::$cognitoStackId"
+      - name: Extract values from UserPool
+        id: userPoolData
+        if: ${{ steps.cognitoCheck.outputs.cognitoStackId == '' }}
+        run: |
+          #!/usr/bin/env bash
+          # Ensure the script is executable in case it was edited on windows
+          script="./shell-scripts/extract-userpool-info.sh"
+          chmod a+x $script && $script
+        env:
+          EXISTING_USERPOOLID: ${{ env.cognitouserpoolid }}
+          EXISTING_UICLIENTID: ${{ env.cognitoappclientid }}
+          EXISTING_DCSACLIENTID: ${{ env.cognitodcsaclientid }}
+          EXISTING_DCSACLIENTSECRET: ${{ env.cognitodcsaclientsecret }}
+          EXISTING_TOKENURL:  ${{ env.cognitotokenurl }}
+
+      - name: Deploying the CDK Cognito Code
+        uses: youyo/aws-cdk-github-actions@v2
+        if: ${{ steps.cognitoCheck.outputs.cognitoStackId == '' }}
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_stack: 'cognito'
+          cdk_args: '--require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          HELMVERSION: ${{ env.helmversion }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          EXISTING_USERPOOLID: ${{ steps.userPoolData.outputs.userPoolId }}
+          EXISTING_UICLIENTID: ${{ steps.userPoolData.outputs.uiClientId }}
+          EXISTING_DCSACLIENTID: ${{ steps.userPoolData.outputs.dcsaClientId }}
+          EXISTING_DCSACLIENTSECRET: ${{ steps.userPoolData.outputs.dcsaClientSecret }}
+          EXISTING_TOKENURL: ${{ steps.userPoolData.outputs.tokenUrl }}
+      - name: Deploying the CDK DB RDS Code
+        uses: youyo/aws-cdk-github-actions@v2
+        if: ${{ env.deploydb == 'true' }}
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_stack: 'db'
+          cdk_args: '--require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          HELMVERSION: ${{ env.helmversion }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          EXISTING_USERPOOLID: ${{ steps.userPoolData.outputs.userPoolId }}
+          EXISTING_UICLIENTID: ${{ steps.userPoolData.outputs.uiClientId }}
+          EXISTING_DCSACLIENTID: ${{ steps.userPoolData.outputs.dcsaClientId }}
+          EXISTING_DCSACLIENTSECRET: ${{ steps.userPoolData.outputs.dcsaClientSecret }}
+          EXISTING_TOKENURL: ${{ steps.userPoolData.outputs.tokenUrl }}
+      - name: Deploying the CDK Cluster Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'deploy'
@@ -66,27 +137,90 @@ jobs:
           AWS_DEFAULT_REGION: ${{ env.awsregion }}
           BASEURL: ${{ env.baseurl }}
           HOSTEDZONEID: ${{ env.hostedzoneid }}
-          COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
-          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
           HELMVERSION: ${{ env.helmversion }}
           SMTPUSERNAME: ${{ env.smtpusername }}
           SMTPPASSWORD: ${{ env.smtppassword }}
-          EXPERIMENTAL: ''
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-skip-session-tagging: true
-          aws-access-key-id: ${{ env.awsaccesskeyid }}
-          aws-secret-access-key: ${{ env.awssecretaccesskey }}
-          aws-region:  ${{ env.awsregion }}
+
+      - name: Kube secrets
+        run: |
+          #!/usr/bin/env bash
+          # Ensure the script is executable in case it was edited on windows
+          script="./shell-scripts/set-kubernetes-secrets.sh"
+          chmod a+x $script && $script
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: ${{env.dbpassword}}
+          SMTP_USER: ${{ env.smtpusername }}
+          SMTP_PASSWORD: ${{ env.smtppassword }}
+      - name: SQL updates
+        if: ${{ env.deploydb == 'true' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
+          sudo apt-get install jq
+          dburl=$(aws cloudformation describe-stacks --stack-name db | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("EndpointHostname")) | .OutputValue' | tr -d '"')
+          echo $dburl
+          cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
+           carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
+           echo $carrierinternal
+           suffix=""
+           carrier="$carrierinternal$suffix"
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/01_create_dcsa_owner.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/02_create_database.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/03_dcsa_im_v3_0.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/04_load_reference_data.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/05_reference_implementation_support.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/06_phoney_ids.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/07_load_sample_data.sql
+          done
+        env:
+          PGPASSWORD: ${{env.dbpassword}}
+      - name: HELM
+        run: |
+          #!/usr/bin/env bash
+          # Ensure the script is executable in case it was edited on windows
+          script="./shell-scripts/deploy-application.sh"
+          chmod a+x $script && $script
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: ${{env.dbpassword}}
+          PARTICIPANTS:  ${{ env.participants }}
+          BASEURL: ${{ env.baseurl }}
+          SMTP_PASSWORD: ${{ env.smtppassword }}
+          SMTP_USERNAME: ${{ env.smtpusername }}
+          DOCKERIMAGETAG: ${{ env.dockerImageTag }}
+          HELMCHARTNAME: ${{ env.helmChartName }}
+      - name: HELM 2
+        run: |
+          #!/usr/bin/env bash
+          # Ensure the script is executable in case it was edited on windows
+          script="./shell-scripts/deploy-ingressalb.sh"
+          chmod a+x $script && $script
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: ${{env.dbpassword}}
+          PARTICIPANTS:  ${{ env.participants }}
+          BASEURL: ${{ env.baseurl }}
+          SMTP_PASSWORD: ${{ env.smtppassword }}
+          SMTP_USERNAME: ${{ env.smtpusername }}
+          COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
+          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
+          DOCKERIMAGETAG: ${{ env.dockerImageTag }}
       - name: Updating load balancer dns
         run: |
           sleep 3m
-          aws elbv2 describe-load-balancers
           alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
           echo $alburl
-          sed -i "s#mydns#$alburl#g" ./route53/route53.json
-          cat ./route53/route53.json
-          aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./route53/route53.json
-
-                 
+          cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
+           carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
+           echo $carrierinternal
+           carrierurl="$carrierinternal.$carrierbaseurl"
+           echo $carrierurl
+           cp ./route53/route53.json ./participantroute.json
+           sed -i "s#mydns#$alburl#g" ./participantroute.json
+           sed -i "s#carrierurl#$carrierurl#g" ./participantroute.json
+           cat ./participantroute.json
+           aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./participantroute.json
+          done
+        env:
+          carrierbaseurl: ${{ env.baseurl }}
