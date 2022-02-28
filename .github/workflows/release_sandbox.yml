@@ -13,7 +13,7 @@ env:
   cognitoappclientid: ''
   cognitouserpoolid: ''
   helmversion: '0.1.87'
-  dockerImageTag: 'live-hamburg'
+  dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'
   participantsfile: 'sqlscripts/sandbox_participants.json'
   deploydb: 'true'
