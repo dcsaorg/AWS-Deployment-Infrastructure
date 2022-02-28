@@ -42,20 +42,4 @@
 	"email": "NOT_SPECIFIED",
 	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "HMM"
-},{
-	"name": "wartsila",
-	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
-	"partycode": "WAR"
-},{
-	"name": "hvcc-hamburg",
-	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
-	"partycode": "HVC"
-},{
-	"name": "psa",
-	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
-	"partycode": "PSA"
-}
-]
+}]
