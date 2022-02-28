@@ -16,7 +16,7 @@ env:
   dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'
   participantsfile: 'sqlscripts/sandbox_participants.json'
-  deploydb: 'false'
+  deploydb: 'true'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
