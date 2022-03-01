@@ -2,13 +2,13 @@ name: Publish
 
 on:
   push:
-    branches: [ hamburgtest ]
+    branches: [ assandbox ]
 
 env:
-  awsaccountid: '516930787597'
+  awsaccountid: '271352654670'
   awsregion: 'eu-west-1'
-  baseurl: 'p6-development-1@dcsa.org'
-  hostedzoneid: 'Z0977025263J9FZ1JH7BS'
+  baseurl: 'dev-tnt.dcsa.org'
+  hostedzoneid: 'Z049149431R1469E2WNY9'
   smtpusername: ''
   cognitoappclientid: ''
   cognitouserpoolid: ''
