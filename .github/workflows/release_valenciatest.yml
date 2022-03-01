@@ -132,8 +132,8 @@ jobs:
         env:
           DB_USER: postgres
           DB_PASSWORD: ${{env.dbpassword}}
-          SMTP_USER: ${{ env.smtpusername }}
-          SMTP_PASSWORD: ${{ env.smtppassword }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
 
       - name: HELM
         run: |
@@ -146,7 +146,7 @@ jobs:
           DB_PASSWORD: ${{env.dbpassword}}
           PARTICIPANTS:  ${{ env.participants }}
           BASEURL: ${{ env.baseurl }}
-          SMTP_PASSWORD: ${{ env.smtppassword }}
-          SMTP_USERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}
           HELMCHARTNAME: ${{ env.helmChartName }}
