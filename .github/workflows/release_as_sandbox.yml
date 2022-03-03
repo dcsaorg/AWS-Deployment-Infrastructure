@@ -12,7 +12,7 @@ env:
   smtpusername: ''
   cognitoappclientid: ''
   cognitouserpoolid: ''
-  helmversion: '0.1.1'
+  helmversion: '0.1.2'
   dockerImageTag: 'latest'
   helmChartName: 'dcsaadoptionsuccess'
   participantsfile: 'sqlscripts/tnt_sandbox_participants.json'

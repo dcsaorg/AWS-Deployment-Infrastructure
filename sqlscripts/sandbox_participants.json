@@ -47,4 +47,14 @@
 	"email": "NOT_SPECIFIED",
 	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "CMA"
+}, {
+	"name": "hvcc-hamburg",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
+	"partycode": "CMA"
+}, {
+	"name": "psa",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
+	"partycode": "CMA"
 }]
