@@ -3,6 +3,7 @@ import 'source-map-support/register'
 import * as cdk from '@aws-cdk/core'
 import { DCSAStack } from '../lib/dcsa-stack'
 import { CognitoStack } from '../lib/cognito-stack'
+import {DBStack} from "../lib/db-stack";
 
 const app = new cdk.App()
 
@@ -16,17 +17,11 @@ const cognitoStack = new CognitoStack(app, 'cognito', {
 })
 
 new DCSAStack(app, 'st', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "baseUrl": process.env.BASEURL ?? "localhost",
-    participants: (process.env.PARTICIPANTS ?? "{}"),
-    "helmVersion": process.env.HELMVERSION ?? "0.1.38",
-    "springMailUsername": process.env.SMTPUSERNAME ?? "",
-    "experimental": process.env.EXPERIMENTAL ?? "",
-    "dbpassword": process.env.DBPASSWORD ?? "",
+    participants: (process.env.PARTICIPANTS ?? "{}")
+})
+
+new DBStack(app, 'db', {
     dbSnapshotID:  process.env.DBSNAPSHOTID ?? "",
-    cognitoUserPoolId: cognitoStack.userPoolId,
-    cognitoDcsaClientId: cognitoStack.dcsaClientId,
-    cognitoDcsaClientSecret: cognitoStack.dcsaClientSecret,
-    cognitoTokenUrl: cognitoStack.tokenUrl,
-    cognitoUiClientId: cognitoStack.uiClientId
 })
 
 app.synth()

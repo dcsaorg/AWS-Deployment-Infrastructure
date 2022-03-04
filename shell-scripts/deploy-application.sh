@@ -2,13 +2,14 @@
 
 aws cloudformation describe-stacks --stack-name st > st-stack-out.json
 aws cloudformation describe-stacks --stack-name cognito > cognito-stack-out.json
+aws cloudformation describe-stacks --stack-name db > db-stack-out.json
 jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' st-stack-out.json > ./kube.sh
 . ./kube.sh
 
 helm repo add dcsa https://dcsaorg.github.io/Kubernetes-Packaging/
 
 certificateArn=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("hostedZoneCertificateArn")) | .OutputValue' st-stack-out.json)
-dbHostName=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dbEndpointHostname")) | .OutputValue' st-stack-out.json)
+dbHostName=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dbEndpointHostname")) | .OutputValue' db-stack-out.json)
 
 userPoolId=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("userPoolId")) | .OutputValue' cognito-stack-out.json)
 tokenUrl=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("tokenUrl")) | .OutputValue' cognito-stack-out.json)
@@ -56,7 +57,7 @@ p6config:
 EOF
 
     echo "Deploying helm for $participant $partycode $publisherroles"
-    helm install "$participant" dcsa/dcsasandboxhamburg --values values.yml
+    helm install "$participant" dcsa/$HELMCHARTNAME --values values.yml
 done
 
 helm list

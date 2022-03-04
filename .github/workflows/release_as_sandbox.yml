@@ -2,30 +2,30 @@ name: Publish
 
 on:
   push:
-    branches: [ training ]
+    branches: [ assandbox ]
 
 env:
-  awsaccountid: '487020291028'
+  awsaccountid: '271352654670'
   awsregion: 'eu-west-1'
-  baseurl: 'p6-training.dcsa.org'
-  hostedzoneid: 'Z05029612O56NG6DMSTEE'
-  smtpusername: 'AKIAXCZFL4PKJSERVQQP'
+  baseurl: 'dev-tnt.dcsa.org'
+  hostedzoneid: 'Z049149431R1469E2WNY9'
+  smtpusername: ''
   cognitoappclientid: ''
   cognitouserpoolid: ''
-  helmversion: '0.1.87'
-  dockerImageTag: 'live-hamburg'
-  helmChartName: 'dcsasandboxhamburg'
-  participantsfile: 'sqlscripts/training_participants.json'
-  deploydb: 'true'
+  helmversion: '0.1.2'
+  dockerImageTag: 'latest'
+  helmChartName: 'dcsaadoptionsuccess'
+  participantsfile: 'sqlscripts/tnt_sandbox_participants.json'
+  deploydb: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      smtppassword: ${{ secrets.TRAININGSMTPPASSWORD }}
-      participants: ${{ secrets.TRAININGPARTICIPANTS }}
-      awsaccesskeyid: ${{ secrets.TRAININGAWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.TRAININGAWSSECRETACCESSKEY }}
-      dbpassword: ${{ secrets.TRAININGDEV_DBPASSWORD }}
+      smtppassword:
+      participants: ${{ secrets.AS_SANDBOXPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.AS_SANDBOXAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.AS_SANDBOXAWSSECRETACCESSKEY }}
+      dbpassword: ${{ secrets.AS_SANDBOX_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
@@ -154,6 +154,7 @@ jobs:
           SMTPUSERNAME: ${{ env.smtpusername }}
           SMTPPASSWORD: ${{ env.smtppassword }}
       - name: SQL updates
+        if: ${{ env.deploydb == 'true' }}
         run: |
           sudo apt-get update
           sudo apt-get install --yes postgresql-client
