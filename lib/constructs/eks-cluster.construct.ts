@@ -38,6 +38,7 @@ export class DCSAEKSCluster extends Construct {
             chart: 'aws-load-balancer-controller',
             repository: 'https://aws.github.io/eks-charts',
             namespace: 'kube-system',
+            version: '1.4.0',
             release: 'aws-load-balancer-controller',
             values: {
                 region: 'eu-west-1',
