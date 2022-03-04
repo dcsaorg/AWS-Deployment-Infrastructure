@@ -16,7 +16,7 @@ env:
   #cognitodcsaclientsecret: ''
   #cognitotokenurl: ''
   dockerImageTag: 'live-hamburg'
-  helmversion: '0.1.80'
+  helmversion: '0.1.89'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
