@@ -13,7 +13,7 @@ export class DCSAEKSCluster extends Construct {
         super(scope, id)
 
         const cluster = new eks.FargateCluster(this, 'cl', {
-            version: eks.KubernetesVersion.V1_19,
+            version: eks.KubernetesVersion.V1_21,
             clusterName: 'cl'
         })
        const policyStatement = new iam.PolicyStatement({
@@ -38,6 +38,7 @@ export class DCSAEKSCluster extends Construct {
             chart: 'aws-load-balancer-controller',
             repository: 'https://aws.github.io/eks-charts',
             namespace: 'kube-system',
+            version: '1.4.0',
             release: 'aws-load-balancer-controller',
             values: {
                 region: 'eu-west-1',
