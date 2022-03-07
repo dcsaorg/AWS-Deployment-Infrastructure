@@ -16,7 +16,7 @@ env:
   dockerImageTag: 'latest'
   helmChartName: 'dcsaadoptionsuccess'
   participantsfile: 'sqlscripts/tnt_sandbox_participants.json'
-  deploydb: 'false'
+  deploydb: 'true'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
