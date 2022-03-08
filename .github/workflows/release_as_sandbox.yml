@@ -12,11 +12,11 @@ env:
   smtpusername: ''
   cognitoappclientid: ''
   cognitouserpoolid: ''
-  helmversion: '0.1.3'
+  helmversion: '0.1.5'
   dockerImageTag: 'latest'
   helmChartName: 'dcsaadoptionsuccess'
   participantsfile: 'sqlscripts/tnt_sandbox_participants.json'
-  deploydb: 'true'
+  deploydb: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
