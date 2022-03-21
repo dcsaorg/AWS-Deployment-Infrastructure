@@ -12,9 +12,10 @@ env:
   smtpusername: ''
   cognitoappclientid: ''
   cognitouserpoolid: ''
-  helmversion: '0.1.1'
+  helmversion: '0.1.6'
   dockerImageTag: 'latest'
   helmChartName: 'dcsaadoptionsuccess'
+  ingressChartName: 'as-ingresscluster'
   participantsfile: 'sqlscripts/tnt_sandbox_participants.json'
   deploydb: 'false'
 jobs:
@@ -207,6 +208,7 @@ jobs:
           COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
           COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}
+          INGRESSCHARTNAME: ${{ env.ingressChartName }}
       - name: Updating load balancer dns
         run: |
           sleep 3m

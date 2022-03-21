@@ -54,6 +54,20 @@ p6config:
     dcsaAppClientSecret: "$dcsaClientSecret"
     dcsaAppClientTokenUri: "$tokenUrl"
     dockerImageTag: "$DOCKERIMAGETAG"
+
+tntconfig:
+    company: "$participant"
+    partyCode: "$partyCode"
+    publisherRoles: "$publisherroles"
+    publisherCodeType: "SMDG_LINER_CODE"
+    partyName: "$participant"
+    cognitoUserPoolId: "$userPoolId"
+    cognitoAppClientId: "$uiClientId"
+    dcsaAppClientId: "$dcsaClientId"
+    dcsaAppClientSecret: "$dcsaClientSecret"
+    dcsaAppClientTokenUri: "$tokenUrl"
+    dockerImageTag: "$DOCKERIMAGETAG"
+
 EOF
 
     echo "Deploying helm for $participant $partycode $publisherroles"

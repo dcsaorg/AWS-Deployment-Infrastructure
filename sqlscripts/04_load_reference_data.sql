@@ -4,7 +4,7 @@
 
 -- Use a transaction so a bug will not leave tainted / incomplete data.
 BEGIN;
-
+SET CLIENT_ENCODING TO 'utf8';
 \copy dcsa_im_v3_0.facility_type from 'referencedata.d/facilitytypes.csv' with NULL AS E'\'\'' CSV HEADER
 \copy dcsa_im_v3_0.seal_source from 'referencedata.d/sealsourcecodes.csv' with NULL AS E'\'\'' CSV HEADER
 \copy dcsa_im_v3_0.seal_type from 'referencedata.d/sealtypecodes.csv' with NULL AS E'\'\'' CSV HEADER
