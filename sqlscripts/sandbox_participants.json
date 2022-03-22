@@ -57,9 +57,4 @@
 	"email": "NOT_SPECIFIED",
 	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
 	"partycode": "CMA"
-}, {
-	"name": "dcsa",
-	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA, AG, VSL, TR, ATH, PLT, TWG, BUK, LSH",
-	"partycode": "DCS"
 }]
