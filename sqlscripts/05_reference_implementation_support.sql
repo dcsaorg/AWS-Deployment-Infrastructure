@@ -4,6 +4,7 @@
 
 -- Implementation specific SQL for the reference implementation.
 BEGIN;
+SET CLIENT_ENCODING TO 'utf8';
 -- Aggregated table containing all events
 DROP VIEW IF EXISTS dcsa_im_v3_0.aggregated_events CASCADE;
 CREATE VIEW dcsa_im_v3_0.aggregated_events AS

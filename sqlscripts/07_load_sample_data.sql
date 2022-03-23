@@ -2,7 +2,7 @@
 \connect :dcsadbname
 
 BEGIN;
-
+SET CLIENT_ENCODING TO 'utf8';
 SELECT 'Start: 07_load_sample_data.sql...' as progress;
 
 \copy dcsa_im_v3_0.carrier (carrier_name, smdg_code, nmfta_code) from 'samples.d/carriers.csv' CSV HEADER
