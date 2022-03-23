@@ -12,11 +12,12 @@ env:
   smtpusername: 'AKIARP6MS7EFTHTJMPBM'
   cognitoappclientid: ''
   cognitouserpoolid: ''
-  helmversion: '0.1.87'
+  helmversion: '0.1.89'
   dockerImageTag: 'live-hamburg'
   helmChartName: 'dcsasandboxhamburg'
-  participantsfile: 'sqlscripts/tnt_sandbox_participants.json'
-  deploydb: 'false'
+  ingressChartName: 'dcsaingresscluster'
+  participantsfile: 'sqlscripts/hamburgprod_participants.json'
+  deploydb: 'true'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -206,6 +207,7 @@ jobs:
           COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
           COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}
+          INGRESSCHARTNAME: ${{ env.ingressChartName }}
       - name: Updating load balancer dns
         run: |
           sleep 3m
