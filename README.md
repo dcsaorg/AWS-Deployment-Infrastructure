@@ -103,7 +103,7 @@ In AWS cognito create userpool and use these values in step-by-step guide
 *triggers, default settings
 
 
-In the AWS-Hamburg-test-Infrastructure\.github\workflows folder make new yaml file for the release action, a github workflow action tha will run the cdk code and deploy to aws.
+In the AWS-Deployment-Infrastructure\.github\workflows folder make new yaml file for the release action, a github workflow action tha will run the cdk code and deploy to aws.
 In this file replace the variables in the env: section with values for the new cluster/aws account: 
 Here is a list of the configurable values: awsaccountid: '274839863309'
   *awsregion: aws region
