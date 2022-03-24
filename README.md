@@ -66,13 +66,13 @@ DNS Handling  d
 
 in route53 create public hosted zone , this gives us a range of dns entries that should be setup in ?
 
-In AWS IAM create access keys and add accesskey and secret to github secrets in the AWS-Hamburg-test-Infrastructure
+In AWS IAM create access keys and add accesskey and secret to github secrets in the AWS-Deployment-Infrastructure
 Naming convention here is cluster name + environment type + "ACCESSKEYID" / "AWSSECRETACCESSKEY" like >  "HAMBURGDEVAWSSECRETACCESSKEY"
 
-In AWS SES create smtp credentials and add the password to a github secrets in the AWS-Hamburg-test-Infrastructure
+In AWS SES create smtp credentials and add the password to a github secrets in the AWS-Deployment-Infrastructure
 Naming convention here is cluster name + environment type + "SMTPPASSWORD" like > "HAMBURGDEVSMTPPASSWORD"
 
-Add another secret to secrets in the AWS-Hamburg-test-Infrastructure describing the participants/organizations and there contact email in json format
+Add another secret to secrets in the AWS-Deployment-Infrastructure describing the participants/organizations and there contact email in json format
 Naming convention here is cluster name + environment type + "PARTICIPANTS" like > HAMBURGDEVPARTICIPANTS
 format for participant string is :
 [{
@@ -103,7 +103,7 @@ In AWS cognito create userpool and use these values in step-by-step guide
 *triggers, default settings
 
 
-In the AWS-Hamburg-test-Infrastructure\.github\workflows folder make new yaml file for the release action, a github workflow action tha will run the cdk code and deploy to aws.
+In the AWS-Deployment-Infrastructure\.github\workflows folder make new yaml file for the release action, a github workflow action tha will run the cdk code and deploy to aws.
 In this file replace the variables in the env: section with values for the new cluster/aws account: 
 Here is a list of the configurable values: awsaccountid: '274839863309'
   *awsregion: aws region
