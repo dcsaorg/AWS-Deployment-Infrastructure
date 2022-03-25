@@ -5,7 +5,7 @@
 -- Currently an implementation detail for the reference implementation but one
 -- we would like to remove eventually.
 BEGIN;
-
+SET CLIENT_ENCODING TO 'utf8';
 -- Most of the R2DBC tooling we are currently using requires that every entity
 -- has a direct ID.  This change is to insert these, so the code works but they
 -- are not a part of the original data model.
