@@ -88,7 +88,7 @@ export class DBConstruct extends Construct {
                 removalPolicy: RemovalPolicy.DESTROY,
                 deletionProtection: false,
                 databaseName: 'todosdb',
-                publiclyAccessible: true,
+                publiclyAccessible: false,
             });
         }
 
