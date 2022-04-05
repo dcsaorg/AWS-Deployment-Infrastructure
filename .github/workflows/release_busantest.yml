@@ -15,6 +15,7 @@ env:
   helmversion: '0.1.89'
   dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'
+  ingressChartName: 'dcsaingresscluster'
   participantsfile: 'sqlscripts/busantest_participants.json'
   deploydb: 'false'
 jobs:
