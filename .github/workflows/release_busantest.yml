@@ -21,11 +21,11 @@ jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      smtppassword: ${{ secrets.TRAININGSMTPPASSWORD }}
-      participants: ${{ secrets.TRAININGPARTICIPANTS }}
-      awsaccesskeyid: ${{ secrets.TRAININGAWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.TRAININGAWSSECRETACCESSKEY }}
-      dbpassword: ${{ secrets.TRAININGDEV_DBPASSWORD }}
+      smtppassword: ${{ secrets.BUSANTESTSMTPPASSWORD }}
+      participants: ${{ secrets.BUSANTESTPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.BUSANTESTAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.BUSANTESTAWSSECRETACCESSKEY }}
+      dbpassword: ${{ secrets.BUSANTEST_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
