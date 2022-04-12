@@ -4,7 +4,7 @@
 
 -- Cannot be done in a transaction
 DROP DATABASE IF EXISTS :dcsadbname;
-CREATE DATABASE :dcsadbname; --OWNER dcsa_db_owner;
+CREATE DATABASE :"dcsadbname"; --OWNER dcsa_db_owner;
 \connect :dcsadbname
 
 BEGIN;
