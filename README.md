@@ -87,7 +87,8 @@ format for participant string is :
 	"partycode": "MSK"
 }]
 
-The participant name should match the groups created in cognito userpool. To disable email notifications for a participant use "NOT_SPECIFIED" in the email field 
+Participant name can not contain special characters as '-' cause the name is used to create resource like databases where this is not allowed
+To disable email notifications for a participant use "NOT_SPECIFIED" in the email field 
 publisher roles can consist of any number of these roles
  "CA", "AG", "VSL", "TR", "ATH", "PLT", "TWG", "BUK", "LSH"
  or an empty string or "[]" to have no roles assigned.
