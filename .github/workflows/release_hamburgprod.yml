@@ -17,7 +17,7 @@ env:
   helmChartName: 'dcsasandboxhamburg'
   ingressChartName: 'dcsaingresscluster'
   participantsfile: 'sqlscripts/hamburgprod_participants.json'
-  deploydb: 'true'
+  deploydb: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
