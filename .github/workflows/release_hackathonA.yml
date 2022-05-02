@@ -2,7 +2,7 @@ name: Publish
 
 on:
   push:
-    branches: [ iatahackathona ]
+    branches: [ iatahackathonb ]
 
 env:
   awsaccountid: '177160420854'
@@ -16,7 +16,7 @@ env:
   dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'
   ingressChartName: 'dcsaingresscluster'
-  participantsfile: 'sqlscripts/sandbox_participants.json'
+  participantsfile: 'sqlscripts/iatahacka_participants.json'
   deploydb: 'true'
 jobs:
   aws_cdk:
