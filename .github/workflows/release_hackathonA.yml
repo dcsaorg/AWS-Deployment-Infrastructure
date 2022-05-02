@@ -16,7 +16,7 @@ env:
   dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'
   ingressChartName: 'dcsaingresscluster'
-  participantsfile: 'sqlscripts/sandbox_participants.json'
+  participantsfile: 'sqlscripts/iatahacka_participants.json'
   deploydb: 'true'
 jobs:
   aws_cdk:
