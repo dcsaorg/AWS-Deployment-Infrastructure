@@ -9,7 +9,7 @@ env:
   awsregion: 'eu-west-1'
   baseurl: 'dev-hackathon-202205.dcsa.org'
   hostedzoneid: 'Z0648425ZD3DLR5ZFP6O'
-  smtpusername: 'AKIASSP4VPX3NNBJRKWK'
+  smtpusername: 'AKIASSP4VPX3H3YRXEEN'
   cognitoappclientid: ''
   cognitouserpoolid: ''
   helmversion: '0.1.88'
