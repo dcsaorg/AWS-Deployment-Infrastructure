@@ -62,7 +62,7 @@ export class DBConstruct extends Construct {
                 deleteAutomatedBackups: true,
                 removalPolicy: RemovalPolicy.DESTROY,
                 deletionProtection: false,
-                publiclyAccessible: true,
+                publiclyAccessible: false,
             });
         } else {
             dbInstance = new rds.DatabaseInstance(this, 'db-instance', {
@@ -88,7 +88,7 @@ export class DBConstruct extends Construct {
                 removalPolicy: RemovalPolicy.DESTROY,
                 deletionProtection: false,
                 databaseName: 'todosdb',
-                publiclyAccessible: true,
+                publiclyAccessible: false,
             });
         }
 
