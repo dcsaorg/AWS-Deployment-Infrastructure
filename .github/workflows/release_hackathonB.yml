@@ -2,7 +2,7 @@ name: Publish
 
 on:
   push:
-    branches: [ iatahackathon ]
+    branches: [ iatahackathonb ]
 
 env:
   awsaccountid: '391498499712'
@@ -22,11 +22,11 @@ jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      smtppassword: ${{ secrets.IATAHACKASMTPPASSWORD }}
-      participants: ${{ secrets.IATAHACKAPARTICIPANTS }}
-      awsaccesskeyid: ${{ secrets.IATAHACKAAWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.IATAHACKAAWSSECRETACCESSKEY }}
-      dbpassword: ${{ secrets.IATAHACKA_DBPASSWORD }}
+      smtppassword: ${{ secrets.IATAHACKBSMTPPASSWORD }}
+      participants: ${{ secrets.IATAHACKBPARTICIPANTS }}
+      awsaccesskeyid: ${{ secrets.IATAHACKBAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.IATAHACKBAWSSECRETACCESSKEY }}
+      dbpassword: ${{ secrets.IATAHACKB_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
