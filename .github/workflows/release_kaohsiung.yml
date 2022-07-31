@@ -2,7 +2,7 @@ name: Publish
 
 on:
   push:
-    branches: [ kaohsiung ]
+    branches: [ kaohsiungdev ]
 
 env:
   awsaccountid: '012254934199'
