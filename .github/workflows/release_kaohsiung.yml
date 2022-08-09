@@ -16,14 +16,14 @@ env:
   dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'
   ingressChartName: 'dcsaingresscluster'
-  participantsfile: 'sqlscripts/iatahacka_participants.json'
+  participantsfile: 'sqlscripts/kaohsiung_participants.json'
   deploydb: 'true'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
       smtppassword: ${{ secrets.IATAHACKASMTPPASSWORD }}
-      participants: ${{ secrets.IATAHACKAPARTICIPANTS }}
+      participants: ${{ secrets.KAOHSIUNGPARTICIPANTS }}
       awsaccesskeyid: ${{ secrets.KAOHSIUNG_AWSACCESSKEYID }}
       awssecretaccesskey: ${{ secrets.KAOHSIUNG_AWSSECRETACCESSKEY }}
       dbpassword: ${{ secrets.SANDBOX_DBPASSWORD }}
