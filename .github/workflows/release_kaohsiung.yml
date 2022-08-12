@@ -9,7 +9,7 @@ env:
   awsregion: 'eu-west-1'
   baseurl: 'p6-kaohsiung-development.dcsa.org'
   hostedzoneid: 'Z096510526PM9TJX9FNQM'
-  smtpusername: 'AKIASSP4VPX3H3YRXEEN'
+  smtpusername: 'AKIAQFWTTOS3XD7RWTOJ'
   cognitoappclientid: ''
   cognitouserpoolid: ''
   helmversion: '0.1.88'
@@ -22,7 +22,7 @@ jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      smtppassword: ${{ secrets.IATAHACKASMTPPASSWORD }}
+      smtppassword: ${{ secrets.KAOHSIUNGSMTPPASSWORD }}
       participants: ${{ secrets.KAOHSIUNGPARTICIPANTS }}
       awsaccesskeyid: ${{ secrets.KAOHSIUNG_AWSACCESSKEYID }}
       awssecretaccesskey: ${{ secrets.KAOHSIUNG_AWSSECRETACCESSKEY }}
