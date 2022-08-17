@@ -6,15 +6,14 @@ import { CfnOutput } from '@aws-cdk/core';
 
 
 export interface DCSAStackProps extends cdk.StackProps { hostedZoneId: string,
-    baseUrl: string,
-    participants: string
+    baseUrl: string
 }
 
 export class DCSAStack extends cdk.Stack {
   constructor (scope: cdk.Construct, id: string, props: DCSAStackProps) {
     super(scope, id, props)
 
-    const { hostedZoneCertificate } = new DCSARoute53(this, 'Route53', { "hostedZoneId": props.hostedZoneId, "baseUrl": props.baseUrl, "participants": props.participants})
+    const { hostedZoneCertificate } = new DCSARoute53(this, 'Route53', { "hostedZoneId": props.hostedZoneId, "baseUrl": props.baseUrl})
 
       new DCSAEKSCluster(this, 'EKSCluster', {
       })
