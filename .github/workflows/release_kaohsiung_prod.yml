@@ -5,7 +5,7 @@ on:
     branches: [ kaohsiungprod ]
 
 env:
-  awsaccountid: '012254934199'
+  awsaccountid: '314922076449'
   awsregion: 'eu-west-1'
   baseurl: 'p6-kaohsiung-production.dcsa.org'
   hostedzoneid: 'Z05126102VQO0CFVRE143'
