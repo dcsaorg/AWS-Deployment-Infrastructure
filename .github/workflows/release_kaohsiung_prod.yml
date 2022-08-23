@@ -9,7 +9,7 @@ env:
   awsregion: 'eu-west-1'
   baseurl: 'p6-kaohsiung-production.dcsa.org'
   hostedzoneid: 'Z05126102VQO0CFVRE143'
-  smtpusername: 'AKIAUSUWRREQ6ASJWJ7D'
+  smtpusername: 'AKIAUSUWRREQSD5OBWCD'
   cognitoappclientid: ''
   cognitouserpoolid: ''
   helmversion: '0.1.88'
