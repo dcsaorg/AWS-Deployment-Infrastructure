@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       smtppassword: ${{ secrets.KAOHSIUNG_PROD_SMTPPASSWORD }}
-      participants: ${{ secrets.KAOHSIUNGPARTICIPANTS }}
+      participants: ${{ secrets.KAOHSIUNG_PROD_PARTICIPANTS }}
       awsaccesskeyid: ${{ secrets.KAOHSIUNG_PROD_AWSACCESSKEYID }}
       awssecretaccesskey: ${{ secrets.KAOHSIUNG_PROD_AWSSECRETACCESSKEY }}
       dbpassword: ${{ secrets.SANDBOX_DBPASSWORD }}
