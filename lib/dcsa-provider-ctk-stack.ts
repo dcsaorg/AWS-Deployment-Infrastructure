@@ -13,7 +13,7 @@ export class DCSAProviderCtkStack extends cdk.Stack {
   constructor (scope: cdk.Construct, id: string, props: DCSAProviderCtkProps) {
     super(scope, id, props)
 
-    const { hostedZoneCertificate } = new DCSARoute53(this, 'Route53', { "hostedZoneId": props.hostedZoneId, "baseUrl": props.baseUrl})
+    const { hostedZoneCertificate } = new DCSARoute53(this, 'Route53', { "hostedZoneId": props.hostedZoneId, "baseUrl": props.baseUrl,participants:"[]"})
 
       new DCSAEKSCluster(this, 'EKSCluster', {
       })
