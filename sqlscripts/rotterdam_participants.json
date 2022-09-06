@@ -1,7 +1,7 @@
 [{"name": "hutchison",
 	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA, AG, VSL",
-	"partycode": ""
+	"publisherroles": "TR",
+	"partycode": "DCD"
 }, {
 	"name": "evergreenmarine",
 	"email": "NOT_SPECIFIED",
@@ -14,7 +14,7 @@
 	"partycode": "MSK"
 }, {"name": "rotterdam",
 	"email": "NOT_SPECIFIED",
-	"publisherroles": "CA, AG, VSL",
+	"publisherroles": "ATH",
 	"partycode": "NLRTM"
 }, {
 	"name": "dcsa",
@@ -22,7 +22,3 @@
 	"publisherroles": "",
 	"partycode": ""
 }]
-
-
-
-
