@@ -3,12 +3,12 @@ import * as eks from '@aws-cdk/aws-eks'
 import * as iam from '@aws-cdk/aws-iam'
 import policyStatementActions from '../constants/policyStatementActions.constant'
 
-export interface DCSAProviderCtkClusterProps {
+export interface DCSAConsumerCtkClusterProps {
 }
 
 
-export class DCSAProviderCtkCluster extends Construct {
-    constructor(scope: Construct, id: string, props: DCSAProviderCtkClusterProps) {
+export class DCSAConsumerCtkCluster extends Construct {
+    constructor(scope: Construct, id: string, props: DCSAConsumerCtkClusterProps) {
         super(scope, id)
 
         const cluster = new eks.FargateCluster(this, 'cl', {
