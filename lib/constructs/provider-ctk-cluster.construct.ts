@@ -8,7 +8,7 @@ export interface DCSAProviderCtkClusterProps {
 }
 
 
-export class DCSAProviderCtk extends Construct {
+export class DCSAProviderCtkCluster extends Construct {
     constructor(scope: Construct, id: string, props: DCSAProviderCtkClusterProps) {
         super(scope, id)
 
