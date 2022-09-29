@@ -5,7 +5,7 @@ on:
     branches: [ consumer-tck ]
 
 env:
-  awsaccountid: '012254934199'
+  awsaccountid: '362219672140'
   awsregion: 'eu-west-1'
   baseurl: 'p6-kaohsiung-development.dcsa.org'
   hostedzoneid: 'Z096510526PM9TJX9FNQM'
