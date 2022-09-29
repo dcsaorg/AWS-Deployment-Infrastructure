@@ -26,10 +26,4 @@ new DBStack(app, 'db', {
     dbSnapshotID:  process.env.DBSNAPSHOTID ?? "",
 })
 
-new DCSAProviderCtkStack(app, 'ctkst', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "baseUrl": process.env.BASEURL ?? "localhost"
-})
-
-new DCSAConsumerCtkStack(app, 'consumerCtk', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "baseUrl": process.env.BASEURL ?? "localhost"
-})
-
 app.synth()
