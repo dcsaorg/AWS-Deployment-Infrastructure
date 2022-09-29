@@ -3,12 +3,15 @@
 aws cloudformation describe-stacks --stack-name st > st-stack-out.json
 aws cloudformation describe-stacks --stack-name cognito > cognito-stack-out.json
 aws cloudformation describe-stacks --stack-name db > db-stack-out.json
+aws cloudformation describe-stacks --stack-name consumerCtk > dcsa-consumer-ctk-stack-out.json
 jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' st-stack-out.json > ./kube.sh
+jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' dcsa-consumer-ctk-stack-out.json > ./kube.sh
 . ./kube.sh
 
 helm repo add dcsa https://dcsaorg.github.io/Kubernetes-Packaging/
 
 certificateArn=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("hostedZoneCertificateArn")) | .OutputValue' st-stack-out.json)
+consumerCtkcertificateArn=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("hostedZoneCertificateArn")) | .OutputValue' dcsa-consumer-ctk-stack-out.json)
 dbHostName=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dbEndpointHostname")) | .OutputValue' db-stack-out.json)
 
 userPoolId=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("userPoolId")) | .OutputValue' cognito-stack-out.json)
@@ -28,6 +31,7 @@ for participant in $participantNames; do
 
     cat <<EOF >> values.yml
 certificateArn: "$certificateArn"
+consumerCtkcertificateArn: "$consumerCtkcertificateArn"
 
 env:
     baseurl: "$BASEURL"

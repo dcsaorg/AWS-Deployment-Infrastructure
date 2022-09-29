@@ -5,6 +5,7 @@ import { DCSAStack } from '../lib/dcsa-stack'
 import { CognitoStack } from '../lib/cognito-stack'
 import {DBStack} from "../lib/db-stack";
 import { DCSAProviderCtkStack } from '../lib/dcsa-provider-ctk-stack'
+import { DCSAConsumerCtkStack } from '../lib/dcsa-consumer-ctk-stack';
 
 const app = new cdk.App()
 
@@ -23,9 +24,6 @@ new DCSAStack(app, 'st', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "base
 
 new DBStack(app, 'db', {
     dbSnapshotID:  process.env.DBSNAPSHOTID ?? "",
-})
-
-new DCSAProviderCtkStack(app, 'ctkst', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "baseUrl": process.env.BASEURL ?? "localhost"
 })
 
 app.synth()
