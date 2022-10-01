@@ -6,7 +6,10 @@ aws cloudformation describe-stacks --stack-name db > db-stack-out.json
 jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .OutputValue' st-stack-out.json > ./kube.sh
 . ./kube.sh
 
-helm repo add dcsa https://dcsaorg.github.io/Kubernetes-Packaging/
+helm repo add postgresql https://charts.bitnami.com/bitnami
+helm install postgresql postgresql/postgresql --values ctk/charts/valuesps.yml
+
+
 
 certificateArn=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("hostedZoneCertificateArn")) | .OutputValue' st-stack-out.json)
 dbHostName=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dbEndpointHostname")) | .OutputValue' db-stack-out.json)
@@ -17,14 +20,14 @@ dcsaClientId=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dcsaClientI
 dcsaClientSecret=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("dcsaClientSecret")) | .OutputValue' cognito-stack-out.json)
 uiClientId=$(jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("uiClientId")) | .OutputValue' cognito-stack-out.json)
 
-participantNames=$(echo "$PARTICIPANTS" | jq -r '.[].name')
-for participant in $participantNames; do
+participant="dcsa"
+
     echo "Creating values values.yml for $participant"
 
     participantTrimmed=$(echo $participant | tr -d '-')
-    partycode=$(echo "$PARTICIPANTS" | jq -r ".[] | select(.name|test(\"$participant\")) | .partycode")
-    publisherroles=$(echo "$PARTICIPANTS" | jq -r ".[] | select(.name|test(\"$participant\")) | .publisherroles" | tr -d '[] ')
-    email=$(echo "$PARTICIPANTS" | jq -r ".[] | select(.name|test(\"$participant\")) | .email")
+    partycode=""
+    publisherroles=""
+    email=""
 
     cat <<EOF >> values.yml
 certificateArn: "$certificateArn"
@@ -72,6 +75,6 @@ EOF
 
     echo "Deploying helm for $participant $partycode $publisherroles"
     helm install "$participant" dcsa/$HELMCHARTNAME --values values.yml
-done
+
 
 helm list
