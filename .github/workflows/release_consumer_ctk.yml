@@ -88,7 +88,7 @@ jobs:
           EXISTING_DCSACLIENTSECRET: ${{ steps.userPoolData.outputs.dcsaClientSecret }}
           EXISTING_TOKENURL: ${{ steps.userPoolData.outputs.tokenUrl }}
       - name: Kube secrets
-          run: |
+        run: |
             #!/usr/bin/env bash
             # Ensure the script is executable in case it was edited on windows
             script="./shell-scripts/set-kubernetes-secrets.sh"
@@ -96,6 +96,8 @@ jobs:
           env:
             DB_USER: postgres
             DB_PASSWORD: ${{env.dbpassword}}
+            SMTPUSERNAME: 'dummy'
+            SMTPPASSWORD: 'dummy'
       - name: SQL updates
         if: ${{ env.deploydb == 'true' }}
         run: |
@@ -117,6 +119,7 @@ jobs:
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/07_load_sample_data.sql
         env:
           PGPASSWORD: ${{env.dbpassword}}
+
       - name: HELM
         run: |
           #!/usr/bin/env bash
