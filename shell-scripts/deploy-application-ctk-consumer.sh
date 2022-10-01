@@ -7,6 +7,6 @@ jq -r '.Stacks[0].Outputs[] | select(.OutputKey|test("ConfigCommand")) | .Output
 . ./kube.sh
 
 helm repo add postgresql https://charts.bitnami.com/bitnami
-helm install postgresql postgresql/postgresql --values ctk/charts/valuesps.yml
+helm install postgresql postgresql/postgresql --values ./ctk/charts/valuesps.yml
 
 helm list
