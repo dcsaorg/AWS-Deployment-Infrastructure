@@ -20,7 +20,7 @@ jobs:
     env:
       awsaccesskeyid: ${{ secrets.CTKCONSUMER_AWSACCESSKEYID }}
       awssecretaccesskey: ${{ secrets.CTKCONSUMER_AWSSECRETACCESSKEY }}
-      participants: HELLO
+      participants: '{}'
       dbpassword: ${{ secrets.SANDBOX_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
