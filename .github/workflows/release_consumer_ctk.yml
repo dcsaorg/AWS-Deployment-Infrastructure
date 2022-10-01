@@ -2,13 +2,13 @@ name: Publish
 
 on:
   push:
-    branches: [ consumer-tck ]
+    branches: [ consumer-ctk ]
 
 env:
   awsaccountid: '362219672140'
   awsregion: 'eu-west-1'
-  baseurl: 'p6-kaohsiung-development.dcsa.org'
-  hostedzoneid: 'Z096510526PM9TJX9FNQM'
+  baseurl: 'dev-tnt-ctk4consumer.dcsa.org'
+  hostedzoneid: 'Z037888422Z11VQJ246IA'
   helmversion: '0.1.88'
   dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'
@@ -18,8 +18,10 @@ jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      awsaccesskeyid: ${{ secrets.KAOHSIUNG_AWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.KAOHSIUNG_AWSSECRETACCESSKEY }}
+      awsaccesskeyid: ${{ secrets.CTKCONSUMER_AWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.CTKCONSUMER_AWSSECRETACCESSKEY }}
+      participants: HELLO
+      dbpassword: ${{ secrets.SANDBOX_DBPASSWORD }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
@@ -30,7 +32,6 @@ jobs:
           aws-access-key-id: ${{ env.awsaccesskeyid }}
           aws-secret-access-key: ${{ env.awssecretaccesskey }}
           aws-region:  ${{ env.awsregion }}
-
       - name: Creating secret
         run: |
           aws secretsmanager create-secret --name DBPassword --secret-string ${{env.dbpassword}} || true
@@ -49,7 +50,6 @@ jobs:
           BASEURL: ''
           HOSTEDZONEID: ''
           EXPERIMENTAL: ''
-
       - name: Deploying the CDK Cluster Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -65,12 +65,11 @@ jobs:
           BASEURL: ${{ env.baseurl }}
           HOSTEDZONEID: ${{ env.hostedzoneid }}
           HELMVERSION: ${{ env.helmversion }}
-
       - name: HELM
         run: |
           #!/usr/bin/env bash
           # Ensure the script is executable in case it was edited on windows
-          script="./shell-scripts/deploy-application.sh"
+          script="./shell-scripts/deploy-application-ctk-consumer.sh"
           chmod a+x $script && $script
         env:
           DB_USER: postgres
