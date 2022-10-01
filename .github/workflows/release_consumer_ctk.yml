@@ -117,7 +117,6 @@ jobs:
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/07_load_sample_data.sql
         env:
           PGPASSWORD: ${{env.dbpassword}}
-
       - name: HELM
         run: |
           #!/usr/bin/env bash
