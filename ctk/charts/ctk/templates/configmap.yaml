@@ -18,6 +18,7 @@ data:
       datasource:
         username: {{ .Values.db.username }}
         password: {{ .Values.db.password }}
+        url: jdbc:postgresql://{{ .Values.db.host }}/{{ .Values.db.name }}
     dcsa:
       pendingEventService:
         backgroundTasks:
