@@ -26,7 +26,7 @@ db:
 EOF
 
     echo "Deploying helm for dcsa"
-    helm install "dcsa" ./ctk/charts/ctk --values values.yml
+    helm install "dcsa" ./ctk/charts/ctk --values values.yml --set-string imageCredentials.password=$GITHUBPACKAGETOKEN
 
 
 
