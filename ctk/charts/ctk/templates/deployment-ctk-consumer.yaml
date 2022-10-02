@@ -47,7 +47,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /
-              port: 8080
+              port: 9092
           volumeMounts:
             - name: {{ .Release.Name }}-dcsacfgvol
               mountPath: /config/dcsa-config.yaml
