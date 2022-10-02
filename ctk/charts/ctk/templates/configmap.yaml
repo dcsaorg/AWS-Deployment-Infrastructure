@@ -15,6 +15,9 @@ data:
           maxSize: 2
       profiles:
         active: prod
+      datasource:
+        username: {{ .Values.db.username }}
+        password: {{ .Values.db.password }}
     dcsa:
       pendingEventService:
         backgroundTasks:
