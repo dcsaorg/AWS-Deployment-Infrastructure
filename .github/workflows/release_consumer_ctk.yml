@@ -22,6 +22,7 @@ jobs:
       awssecretaccesskey: ${{ secrets.CTKCONSUMER_AWSSECRETACCESSKEY }}
       participants: '[{"name": "dcsa"}]'
       dbpassword: ${{ secrets.SANDBOX_DBPASSWORD }}
+      githubpackagetoken: ${{ secrets.GITHUBPACKAGETOKEN }}
     steps:
       - name: Checkout the infrastructure code
         uses: actions/checkout@v2
@@ -124,6 +125,7 @@ jobs:
         #  SMTPUSERNAME: ${{ env.smtpusername }}
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}
           HELMCHARTNAME: ${{ env.helmChartName }}
+          GITHUBPACKAGETOKEN: ${{ env.githubpackagetoken }}
       - name: HELM 2
         run: |
           #!/usr/bin/env bash
