@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   annotations:
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/healthcheck-port: 9092
+    alb.ingress.kubernetes.io/healthcheck-port: "9092"
   labels:
     app: {{ .Release.Name }}-ctk-consumer-app
 spec:
