@@ -9,7 +9,7 @@ imageCredentials:
   email: martin@johannesen.biz
 
 tntconfig:
-  dockerImageTag: latest
+  dockerImageTag: master-7ff3738
 
 
 
