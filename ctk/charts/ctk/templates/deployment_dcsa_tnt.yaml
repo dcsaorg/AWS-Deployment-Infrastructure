@@ -38,7 +38,7 @@ spec:
       - name: {{ .Release.Name }}-dcsatnt-container
         image: ghcr.io/dcsaorg/dcsa-tnt:{{ .Values.tntconfig.dockerImageTag }}
         env:
-        - name: db_hostname
+        - name: DB_HOSTNAME
           value: {{ .Values.db.host }}
         - name: DCSA_URL_PREFIX
           value: "/tnt"
