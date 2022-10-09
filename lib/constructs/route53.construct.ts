@@ -12,7 +12,7 @@ export class DCSARoute53 extends Construct {
   constructor (scope: Construct, id: string, props: DCSARoute53Props = { "hostedZoneId": "", baseUrl: "", "participants": ""}) {
     super(scope, id)
 
-    let subjectAlternativeNames: string[] = [];
+    /*let subjectAlternativeNames: string[] = [];
 
     let jsonStr = props.participants;
     let jsonObj = JSON.parse(jsonStr);
@@ -36,15 +36,15 @@ export class DCSARoute53 extends Construct {
         hostedZoneId: props.hostedZoneId,
         zoneName: props.baseUrl
       }
-    )
+    )*/
 
       // @ts-ignore
       this.hostedZoneCertificate = new acm.Certificate(
       this,
       'dcsaCertificate',
       {
-        domainName: firstParticipant +"." + props.baseUrl,
-          subjectAlternativeNames: subjectAlternativeNames,
+        domainName: '*.'+props.baseUrl,
+        subjectAlternativeNames: [],
         validation: acm.CertificateValidation.fromDns(this.hostedZone)
       }
     )

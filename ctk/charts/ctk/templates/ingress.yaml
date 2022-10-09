@@ -14,7 +14,7 @@ metadata:
     app: {{ .Release.Name }}-ingress
 spec:
   rules:
-    - host: dcsa.{{ .Values.env.baseurl }}
+    - host: tnt-2-2.{{ .Values.env.baseurl }}
       http:
         paths:
           - path: /tnt/
@@ -24,7 +24,7 @@ spec:
                 name: dcsa-dcsatnt-service
                 port:
                   number: 9090
-          - path: /
+          - path: /conformance/
             pathType: Prefix
             backend:
               service:
