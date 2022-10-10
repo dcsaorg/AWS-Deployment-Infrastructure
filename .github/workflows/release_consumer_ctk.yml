@@ -7,8 +7,8 @@ on:
 env:
   awsaccountid: '362219672140'
   awsregion: 'eu-west-1'
-  baseurl: 'dev-tnt-ctk4consumer.dcsa.org'
-  hostedzoneid: 'Z037888422Z11VQJ246IA'
+  baseurl: 'tnt-2-2.ctk-for-consumer.dcsa.org'
+  hostedzoneid: 'Z0350460JX8IY1F7DJYA'
   helmversion: '0.1.88'
   dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'

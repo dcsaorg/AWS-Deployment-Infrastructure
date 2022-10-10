@@ -28,7 +28,7 @@ export class DCSARoute53 extends Construct {
       }
       i++;
     });
-
+*/
     this.hostedZone = route53.HostedZone.fromHostedZoneAttributes(
       this,
       'dcsaHostedZone',
@@ -36,14 +36,14 @@ export class DCSARoute53 extends Construct {
         hostedZoneId: props.hostedZoneId,
         zoneName: props.baseUrl
       }
-    )*/
+    )
 
       // @ts-ignore
       this.hostedZoneCertificate = new acm.Certificate(
       this,
       'dcsaCertificate',
       {
-        domainName: '*.'+props.baseUrl,
+        domainName: props.baseUrl,
         subjectAlternativeNames: [],
         validation: acm.CertificateValidation.fromDns(this.hostedZone)
       }
