@@ -14,7 +14,7 @@ metadata:
     app: {{ .Release.Name }}-ingress
 spec:
   rules:
-    - host: {{ .Values.env.baseurl }}
+    - host: dcsa.{{ .Values.env.baseurl }}
       http:
         paths:
           - path: /tnt/

@@ -131,7 +131,9 @@ jobs:
           sleep 3m
           alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
           echo $alburl
-           carrierurl="$carrierbaseurl"
+           carrierinternal=dcsa
+           echo $carrierinternal
+           carrierurl="$carrierinternal.$carrierbaseurl"
            echo $carrierurl
            cp ./route53/route53.json ./participantroute.json
            sed -i "s#mydns#$alburl#g" ./participantroute.json
