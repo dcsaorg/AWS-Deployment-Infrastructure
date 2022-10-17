@@ -9,14 +9,14 @@ import {
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as route53 from '@aws-cdk/aws-route53'
 
-export interface DCSAAPIGatewayProps extends cdk.StackProps {
+export interface DCSAAPIGatewayProps  {
     baseUrl: string,
     userpoolId: string
     hostedZoneId:string
 }
 
 
-export class DCSAAPIGateway extends cdk.Stack {
+export class DCSAAPIGateway extends Construct {
     constructor(scope: Construct, id: string, props: DCSAAPIGatewayProps) {
         super(scope, id)
 
@@ -41,11 +41,11 @@ export class DCSAAPIGateway extends cdk.Stack {
             region: cdk.Aws.REGION,
         });
 
-        const existingUserPool = cognito.UserPool.fromUserPoolId(
+        /*const existingUserPool = cognito.UserPool.fromUserPoolId(
             this,
             "upool",
             props.userpoolId
-        );
+        );*/
 
 
 
@@ -79,7 +79,7 @@ export class DCSAAPIGateway extends cdk.Stack {
 
 
 
-    
+
 
 
 
