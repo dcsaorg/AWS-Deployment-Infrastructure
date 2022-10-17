@@ -8,6 +8,7 @@ import {
 } from "@aws-cdk/aws-apigateway";
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as route53 from '@aws-cdk/aws-route53'
+import * as route53Targets from "@aws-cdk/aws-route53-targets";
 
 export interface DCSAAPIGatewayProps extends cdk.StackProps {
     baseUrl: string,
@@ -39,8 +40,9 @@ export class DCSAAPIGateway extends cdk.Stack {
 
         //Certificate
 
+        var subdomain = "dev1"
 
-        var domainname = "dev1." + props.baseUrl;
+        var domainname = subdomain+"." + props.baseUrl;
 
         const hostedZone = route53.HostedZone.fromHostedZoneAttributes(
             this,
@@ -79,6 +81,14 @@ export class DCSAAPIGateway extends cdk.Stack {
                 certificate: certificate,
                 endpointType: EndpointType.REGIONAL,
             },
+        });
+
+        new route53.ARecord(this, "apiDNS", {
+            zone: hostedZone,
+            recordName: subdomain,
+            target: route53.RecordTarget.fromAlias(
+                new route53Targets.ApiGateway(api)
+            ),
         });
 
         const rootResource = api.root.addProxy({
