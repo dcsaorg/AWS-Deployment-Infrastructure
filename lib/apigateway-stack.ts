@@ -27,7 +27,7 @@ export class DCSAAPIGateway extends cdk.Stack {
                 groups: new cognito.StringAttribute({ minLen: 1, maxLen: 255 }),
             },
         });
-        pool.applyRemovalPolicy(RemovalPolicy.RETAIN);
+        pool.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
         const urlid=makeid(10);
 
@@ -62,13 +62,13 @@ export class DCSAAPIGateway extends cdk.Stack {
         });
 
 
-        /*const authorizer = new CognitoUserPoolsAuthorizer(
+        const authorizer = new CognitoUserPoolsAuthorizer(
             this,
             "user-pool-authorizer",
             {
                 cognitoUserPools: [pool],
             }
-        );*/
+        );
 
 
 
@@ -93,21 +93,12 @@ export class DCSAAPIGateway extends cdk.Stack {
 
         const rootResource = api.root.addProxy({
             anyMethod: true,
-            defaultIntegration:new apigateway.HttpIntegration('http://amazon.com')
-        })
-
-        //rootResource.defaultMethodOptions=
-
-
-/*
-        {
-            authorizer: authorizer,
+            defaultIntegration:new apigateway.HttpIntegration('http://amazon.com'),
+            defaultMethodOptions: {
+                authorizer: authorizer,
                 authorizationType: apigateway.AuthorizationType.COGNITO,
-        }*/
-
-
-
-
+            }
+        })
     }
 }
 
