@@ -101,10 +101,10 @@ export class CognitoConstruct extends Construct {
                 this.dcsaClientId=client.userPoolClientId
                 this.dcsaClientSecret=getClientSecret("dcsa",this,pool,client)
             }
-            new CfnUserPoolGroup(scope, participant["name"], {
+            /*new CfnUserPoolGroup(scope, participant["name"], {
                 groupName: participant["name"],
                 userPoolId: pool.userPoolId
-            });
+            });*/
 
         });
 
