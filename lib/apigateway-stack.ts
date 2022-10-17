@@ -9,14 +9,14 @@ import {
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as route53 from '@aws-cdk/aws-route53'
 
-export interface DCSAAPIGatewayProps {
+export interface DCSAAPIGatewayProps extends cdk.StackProps {
     baseUrl: string,
     userpoolId: string
     hostedZoneId:string
 }
 
 
-export class DCSAAPIGateway extends Construct {
+export class DCSAAPIGateway extends cdk.Stack {
     constructor(scope: Construct, id: string, props: DCSAAPIGatewayProps) {
         super(scope, id)
 

@@ -4,7 +4,7 @@ import * as cdk from '@aws-cdk/core'
 import { DCSAStack } from '../lib/dcsa-stack'
 import { CognitoStack } from '../lib/cognito-stack'
 import {DBStack} from "../lib/db-stack";
-import {DCSAAPIGateway} from "../lib/constructs/apigateway.construct";
+import {DCSAAPIGateway} from "../lib/apigateway-stack";
 
 const app = new cdk.App()
 
