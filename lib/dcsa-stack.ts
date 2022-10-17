@@ -15,7 +15,6 @@ export class DCSAStack extends cdk.Stack {
   constructor (scope: cdk.Construct, id: string, props: DCSAStackProps) {
     super(scope, id, props)
 
-    const apiGateway= new DCSAAPIGateway(this,'apig',{"baseUrl": process.env.BASEURL ?? "localhost","userpoolId": process.env.EXISTING_USERPOOLID ?? "","hostedZoneId": process.env.HOSTEDZONEID ?? "" })
 
 
     const { hostedZoneCertificate } = new DCSARoute53(this, 'Route53', { "hostedZoneId": props.hostedZoneId, "baseUrl": props.baseUrl, "participants": props.participants})
