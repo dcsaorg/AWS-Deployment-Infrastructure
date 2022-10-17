@@ -14,7 +14,6 @@ env:
   helmChartName: 'dcsasandboxhamburg'
   ingressChartName: 'dcsaingresscluster'
   deploydb: 'true'
-  cognitouserpoolid: ''
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -52,38 +51,6 @@ jobs:
           BASEURL: ''
           HOSTEDZONEID: ''
           EXPERIMENTAL: ''
-      - name: Check for CognitoStack
-        id: cognitoCheck
-        run: |
-          cognitoStackId=$(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE | jq -r '.StackSummaries[] | select(.StackName|test("cognito")) | .StackId')
-          echo "::set-output name=cognitoStackId::$cognitoStackId"
-      - name: Extract values from UserPool
-        id: userPoolData
-        if: ${{ steps.cognitoCheck.outputs.cognitoStackId == '' }}
-        run: |
-          #!/usr/bin/env bash
-          # Ensure the script is executable in case it was edited on windows
-          script="./shell-scripts/extract-userpool-info.sh"
-          chmod a+x $script && $script
-        env:
-          EXISTING_USERPOOLID: ${{ env.cognitouserpoolid }}
-      - name: Deploying the CDK Cognito Code
-        uses: youyo/aws-cdk-github-actions@v2
-        if: ${{ steps.cognitoCheck.outputs.cognitoStackId == '' }}
-        with:
-          cdk_subcommand: 'deploy'
-          cdk_stack: 'cognito'
-          cdk_args: '--require-approval never'
-          actions_comment: false
-        env:
-          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
-          PARTICIPANTS:  ${{ env.participants }}
-          AWS_DEFAULT_REGION: ${{ env.awsregion }}
-          BASEURL: ${{ env.baseurl }}
-          HOSTEDZONEID: ${{ env.hostedzoneid }}
-          HELMVERSION: ${{ env.helmversion }}
-          EXISTING_USERPOOLID: ''
       - name: Deploying the CDK Cluster Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -99,7 +66,21 @@ jobs:
           BASEURL: ${{ env.baseurl }}
           HOSTEDZONEID: ${{ env.hostedzoneid }}
           HELMVERSION: ${{ env.helmversion }}
-          EXISTING_USERPOOLID: ${{ steps.userPoolData.outputs.userPoolId }}
+      - name: Deploying the CDK Cluster Code
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_stack: 'ag'
+          cdk_args: '--require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          HELMVERSION: ${{ env.helmversion }}
       - name: Deploying the CDK DB RDS Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
