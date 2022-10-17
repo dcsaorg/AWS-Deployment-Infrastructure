@@ -4,6 +4,7 @@ import * as cdk from '@aws-cdk/core'
 import { DCSAStack } from '../lib/dcsa-stack'
 import { CognitoStack } from '../lib/cognito-stack'
 import {DBStack} from "../lib/db-stack";
+import {DCSAAPIGateway} from "../lib/constructs/apigateway.construct";
 
 const app = new cdk.App()
 
@@ -16,9 +17,13 @@ const cognitoStack = new CognitoStack(app, 'cognito', {
     participants: (process.env.PARTICIPANTS ?? "{}")
 })
 
+
+
 new DCSAStack(app, 'st', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "baseUrl": process.env.BASEURL ?? "localhost",
     participants: (process.env.PARTICIPANTS ?? "{}")
 })
+
+new DCSAAPIGateway(app,'ag',{"baseUrl": process.env.BASEURL ?? "localhost","userpoolId": cognitoStack.userPoolId,"hostedZoneId": process.env.HOSTEDZONEID ?? "" })
 
 new DBStack(app, 'db', {
     dbSnapshotID:  process.env.DBSNAPSHOTID ?? "",
