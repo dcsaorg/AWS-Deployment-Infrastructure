@@ -9,14 +9,14 @@ import {
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as route53 from '@aws-cdk/aws-route53'
 
-export interface DCSAAPIGatewayProps {
+export interface DCSAAPIGatewayProps extends cdk.StackProps {
     baseUrl: string,
     userpoolId: string
     hostedZoneId:string
 }
 
 
-export class DCSAAPIGateway extends Construct {
+export class DCSAAPIGateway extends cdk.Stack {
     constructor(scope: Construct, id: string, props: DCSAAPIGatewayProps) {
         super(scope, id)
 
@@ -49,17 +49,20 @@ export class DCSAAPIGateway extends Construct {
 
 
 
-        const authorizer = new CognitoUserPoolsAuthorizer(
+        /*const authorizer = new CognitoUserPoolsAuthorizer(
             this,
             "user-pool-authorizer",
             {
                 cognitoUserPools: [existingUserPool],
             }
-        );
+        );*/
+
+
 
         const api = new apigateway.RestApi(this, "secured-api", {
             restApiName: "Secured APIGateway",
             description: "This API is the secure apis",
+
             domainName: {
                 domainName: domainname,
                 certificate: certificate,
@@ -67,7 +70,16 @@ export class DCSAAPIGateway extends Construct {
             },
         });
 
+        const rootResource = api.root.addProxy({
+            anyMethod: true,
+            defaultIntegration:new apigateway.HttpIntegration('http://amazon.com'),
+        })
 
+
+
+
+
+    
 
 
 
