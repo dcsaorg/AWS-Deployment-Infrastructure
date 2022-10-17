@@ -66,7 +66,7 @@ export class DCSAAPIGateway extends cdk.Stack {
             this,
             "user-pool-authorizer",
             {
-                cognitoUserPools: [existingUserPool],
+                cognitoUserPools: [pool],
             }
         );*/
 
@@ -93,13 +93,17 @@ export class DCSAAPIGateway extends cdk.Stack {
 
         const rootResource = api.root.addProxy({
             anyMethod: true,
-            defaultIntegration:new apigateway.HttpIntegration('http://amazon.com'),
+            defaultIntegration:new apigateway.HttpIntegration('http://amazon.com')
         })
 
+        //rootResource.defaultMethodOptions=
 
 
-
-
+/*
+        {
+            authorizer: authorizer,
+                authorizationType: apigateway.AuthorizationType.COGNITO,
+        }*/
 
 
 
