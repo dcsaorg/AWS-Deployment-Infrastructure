@@ -23,7 +23,7 @@ new DCSAStack(app, 'st', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "base
     participants: (process.env.PARTICIPANTS ?? "{}")
 })
 
-new DCSAAPIGateway(app,'ag',{"baseUrl": process.env.BASEURL ?? "localhost","userpoolId": cognitoStack.userPoolId,"hostedZoneId": process.env.HOSTEDZONEID ?? "" })
+new DCSAAPIGateway(app,'ag',{"baseUrl": process.env.BASEURL ?? "localhost","hostedZoneId": process.env.HOSTEDZONEID ?? "" })
 
 new DBStack(app, 'db', {
     dbSnapshotID:  process.env.DBSNAPSHOTID ?? "",
