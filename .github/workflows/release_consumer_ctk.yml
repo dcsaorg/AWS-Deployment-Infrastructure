@@ -66,7 +66,7 @@ jobs:
           BASEURL: ${{ env.baseurl }}
           HOSTEDZONEID: ${{ env.hostedzoneid }}
           HELMVERSION: ${{ env.helmversion }}
-      - name: Deploying the CDK Cluster Code
+      - name: Deploying the CDK Cognito+APIGateway Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'deploy'
