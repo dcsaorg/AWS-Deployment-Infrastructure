@@ -9,6 +9,7 @@ import {
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as route53 from '@aws-cdk/aws-route53'
 import * as route53Targets from "@aws-cdk/aws-route53-targets";
+import {OAuthScope} from "@aws-cdk/aws-cognito";
 
 export interface DCSAAPIGatewayProps extends cdk.StackProps {
     baseUrl: string,
@@ -37,6 +38,26 @@ export class DCSAAPIGateway extends cdk.Stack {
             },
         });
 
+        const resourceServer=pool.addResourceServer('upre',{
+            identifier: "dcsa",
+            scopes: [{
+                scopeDescription: 'infosys',
+                scopeName: 'infosys',
+            }],
+            userPoolResourceServerName:"ourresource"
+        })
+
+
+        let client=pool.addClient('cl', {
+            generateSecret: true,
+            oAuth: {
+                flows: {
+                    clientCredentials: true,
+                },
+                scopes: [OAuthScope.custom("dcsa/infosys")],
+            }
+        })
+        client.node.addDependency(resourceServer)
 
         //Certificate
 
@@ -97,6 +118,7 @@ export class DCSAAPIGateway extends cdk.Stack {
             defaultMethodOptions: {
                 authorizer: authorizer,
                 authorizationType: apigateway.AuthorizationType.COGNITO,
+                authorizationScopes: ["dcsa/infosys"]
             }
         })
     }
