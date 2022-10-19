@@ -14,8 +14,7 @@ metadata:
     app: {{ .Release.Name }}-ingress
 spec:
   rules:
-    - host: dev.{{ .Values.env.baseurl }}
-      http:
+   - http:
         paths:
           - path: /tnt/
             pathType: Prefix
