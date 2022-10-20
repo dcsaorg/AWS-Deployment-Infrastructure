@@ -66,7 +66,22 @@ jobs:
           BASEURL: ${{ env.baseurl }}
           HOSTEDZONEID: ${{ env.hostedzoneid }}
           HELMVERSION: ${{ env.helmversion }}
-
+      - name: Deploying the CDK Cognito+APIGateway Code
+        if: ${{ env.deploydb == 'true' }}
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_stack: 'ag'
+          cdk_args: '--require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          HELMVERSION: ${{ env.helmversion }}
       - name: Deploying the CDK DB RDS Code
         uses: youyo/aws-cdk-github-actions@v2
         with:
