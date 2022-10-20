@@ -13,7 +13,8 @@ env:
   dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'
   ingressChartName: 'dcsaingresscluster'
-  deploydb: 'true'
+  deploydb: 'false'
+  deploygateway: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -67,6 +68,7 @@ jobs:
           HOSTEDZONEID: ${{ env.hostedzoneid }}
           HELMVERSION: ${{ env.helmversion }}
       - name: Deploying the CDK Cognito+APIGateway Code
+        if: ${{ env.deploygateway == 'true' }}
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'deploy'
@@ -82,6 +84,7 @@ jobs:
           HOSTEDZONEID: ${{ env.hostedzoneid }}
           HELMVERSION: ${{ env.helmversion }}
       - name: Deploying the CDK DB RDS Code
+        if: ${{ env.deploydb == 'true' }}
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'deploy'
@@ -106,9 +109,9 @@ jobs:
       - name: SQL updates
         if: ${{ env.deploydb == 'true' }}
         run: |
-          sudo apt-get update
-          sudo apt-get install --yes postgresql-client
-          sudo apt-get install jq
+           sudo apt-get update
+           sudo apt-get install --yes postgresql-client
+           sudo apt-get install jq
           dburl=$(aws cloudformation describe-stacks --stack-name db | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("EndpointHostname")) | .OutputValue' | tr -d '"')
           echo $dburl
            carrierinternal="dcsa"
@@ -129,8 +132,8 @@ jobs:
         run: |
           #!/usr/bin/env bash
           # Ensure the script is executable in case it was edited on windows
-          # script="./shell-scripts/deploy-application-ctk-consumer.sh"
-          # chmod a+x $script && $script
+          script="./shell-scripts/deploy-application-ctk-consumer.sh"
+          chmod a+x $script && $script
         env:
           DB_USER: postgres
           DB_PASSWORD: ${{env.dbpassword}}
