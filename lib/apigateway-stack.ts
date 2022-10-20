@@ -61,7 +61,7 @@ export class DCSAAPIGateway extends cdk.Stack {
 
         //Certificate
 
-        var subdomain = "dev1"
+        var subdomain = "dev2"
 
         var domainname = subdomain+"." + props.baseUrl;
 
@@ -97,11 +97,11 @@ export class DCSAAPIGateway extends cdk.Stack {
             restApiName: "Secured APIGateway",
             description: "This API is the secure apis",
 
-            /*domainName: {
+            domainName: {
                 domainName: domainname,
                 certificate: certificate,
                 endpointType: EndpointType.REGIONAL,
-            },*/
+            },
         });
 
         new route53.ARecord(this, "apiDNS", {
