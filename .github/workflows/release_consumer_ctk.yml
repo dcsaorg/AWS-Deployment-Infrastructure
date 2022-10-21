@@ -14,6 +14,7 @@ env:
   helmChartName: 'dcsasandboxhamburg'
   ingressChartName: 'dcsaingresscluster'
   deploydb: 'false'
+  deployapi: 'true'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -68,7 +69,7 @@ jobs:
           HOSTEDZONEID: ${{ env.hostedzoneid }}
           HELMVERSION: ${{ env.helmversion }}
       - name: Deploying the CDK Cognito+APIGateway Code
-        if: ${{ env.deploydb == 'true' }}
+        if: ${{ env.deployapi == 'true' }}
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'deploy'
