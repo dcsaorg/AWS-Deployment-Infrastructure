@@ -11,8 +11,8 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 8080
-      targetPort: 8080
+      port: 9092
+      targetPort: 9092
   selector:
     app: {{ .Release.Name }}-ctk-consumer-app
   type: NodePort
@@ -42,7 +42,7 @@ spec:
               value: {{ .Values.db.host }}
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: 9092
             - name: https
               containerPort: 8443
           readinessProbe:
