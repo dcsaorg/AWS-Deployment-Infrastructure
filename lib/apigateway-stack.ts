@@ -116,7 +116,7 @@ export class DCSAAPIGateway extends cdk.Stack {
 
         const rootResource = api.root.addProxy({
             anyMethod: true,
-            defaultIntegration:new apigateway.HttpIntegration('http://amazon.com'),
+            defaultIntegration:new apigateway.HttpIntegration('https://k8s-default-dcsaingr-54ea6db614-1139540635.eu-west-1.elb.amazonaws.com/{proxy}'),
             defaultMethodOptions: {
                 authorizer: authorizer,
                 authorizationType: apigateway.AuthorizationType.COGNITO,
