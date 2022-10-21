@@ -112,21 +112,25 @@ export class DCSAAPIGateway extends cdk.Stack {
             ),
         });
 
+
+
         const rootResource = api.root.addProxy({
-            /*defaultIntegration:new apigateway.HttpIntegration('http://amazon.com'),*/
+            anyMethod: true,
+            defaultIntegration:new apigateway.HttpIntegration('http://amazon.com'),
             defaultMethodOptions: {
                 authorizer: authorizer,
                 authorizationType: apigateway.AuthorizationType.COGNITO,
                 authorizationScopes: ["dcsa/infosys"]
             }
         })
+        /*rootResource.
         rootResource.addMethod("ANY",
             new apigateway.HttpIntegration('http://amazon.com/{proxy}'),
             {
                 authorizer: authorizer,
                 authorizationType: apigateway.AuthorizationType.COGNITO,
                 authorizationScopes: ["dcsa/infosys"]
-            })
+            })*/
     }
 }
 
