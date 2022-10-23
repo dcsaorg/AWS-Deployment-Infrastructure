@@ -1,0 +1,129 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-configmap
+data:
+  dcsa-config.yaml: |-
+    spring:
+      r2dbc:
+        username: {{ .Values.db.username }}
+        password: {{ .Values.db.password }}
+        name: {{ .Values.db.name }}
+        pool:
+          initialSize: 2
+          maxSize: 2
+      profiles:
+        active: prod
+      security:
+        oauth2:
+          resourceserver:
+            jwt:
+              issuer-uri: https://cognito-idp.{{ .Values.env.awsRegion }}.amazonaws.com/{{ .Values.p6config.cognitoUserPoolId }}
+      mail:
+        host: {{ .Values.p6config.springMailHost }}
+        username: {{ .Values.p6config.springMailUsername }}
+        password: {{ .Values.p6config.springMailPassword }}
+        port: 587
+        properties:
+          mail:
+            smtp:
+              auth: true
+              starttls:
+                enabled: true
+    dcsa:
+      securityConfig:
+        auth:
+          enabled: true
+        jwt:
+          audience: NONE
+          claim:
+            name: "cognito:groups"
+            shape: LIST_OF_STRINGS
+            value: "{{ .Values.p6config.partyName }}"
+      webui:
+        baseUrl: https://{{ .Values.env.participant }}.{{ .Values.env.baseurl }}
+      email:
+        from: noreply@{{ .Values.env.baseurl }}
+        timezone: "Europe/Berlin"
+        dateFormat: dd/LLL/yyyy HH:mm
+        debugEmail: false
+        templates:
+          timestampReceived:
+            to: {{ .Values.p6config.notificationEmail }}
+            onlyWhenPrimaryReceiverIs: {{- if not .Values.p6config.publisherRoles }} []
+                                           {{- else if eq .Values.p6config.publisherRoles "[]" }} []
+                                           {{- else }}
+                                           {{- splitList "," .Values.p6config.publisherRoles | toJson | indent 1 }}
+                                           {{ end }}
+      pendingEventService:
+        backgroundTasks:
+          processUnmappedEventQueue:
+            cronSchedule: '5-55/10 * * * * *'
+          processPendingEventQueue:
+            cronSchedule: '0-50/10 * * * * *'
+    logging:
+      level:
+        root: INFO
+        web: INFO
+        org:
+          springframework: INFO
+          dcsa: INFO
+    management:
+      endpoint:
+        mail:
+          enabled: true
+        health:
+          show-details: always
+          show-components: always
+          sensitive: false
+    endpoints:
+      health:
+        sensitive: false
+
+  config.json: |-
+    {
+    "company": "{{ .Values.p6config.company }}",
+    "publisherRoles": {{- if not .Values.p6config.publisherRoles }}[]
+    {{- else if eq .Values.p6config.publisherRoles "[]" }}[]
+    {{- else }}
+    {{- splitList "," .Values.p6config.publisherRoles | toJson | indent 1 }}
+    {{- end -}},
+    "publisher": {
+    "partyName": "{{ .Values.p6config.partyName }}",
+    "taxReference1": "CVR-25645774",
+    "taxReference2": "CVR-25645774",
+    "publicKey": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFzaW",
+    "address": {
+        "name": "Henrik",
+        "street": "Kronprincessegade",
+        "streetNumber": "54",
+        "floor": "5. sal",
+        "postCode": "1306",
+        "city": "København",
+        "stateRegion": "N/A",
+        "country": "Denmark"
+    },
+    "identifyingCodes": [
+        {
+            "codeListResponsibleAgencyCode": "306",
+            "partyCode": "{{ .Values.p6config.partyCode }}"
+        }
+    ]
+    },
+    "publisherCodeType": "{{ .Values.p6config.publisherCodeType }}",
+    "uiSupportBackendURL": "https://{{ .Values.env.participant }}.{{ .Values.env.baseurl }}/ui-support/v1",
+    "jitBackendURL": "https://{{ .Values.env.participant }}.{{ .Values.env.baseurl }}/jit/v1",
+    "dateTimeFormat": "dd MMM yyyy HH:mm",
+    "enableVesselPositions": true,
+    "enableJIT11Timestamps": false,
+    "authRegion": "{{ .Values.env.awsRegion }}",
+    "authUserPoolId": "{{ .Values.p6config.cognitoUserPoolId }}",
+    "authUserPoolWebClientId": "{{ .Values.p6config.cognitoAppClientId }}",
+    "authRedirectUriSignIn": "/dashboard"
+    }
+
+
+
+
+   
