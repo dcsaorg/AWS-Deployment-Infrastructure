@@ -66,13 +66,40 @@ DNS Handling  d
 
 in route53 create public hosted zone , this gives us a range of dns entries that should be setup in ?
 
-In AWS IAM create access keys and add accesskey and secret to github secrets in the AWS-Hamburg-test-Infrastructure
-Naming convention here is cluster name + environment type + "ACCESSKEYID" / "AWSSECRETACCESSKEY" like >  "HAMBURGDEVAWSSECRETACCESSKEY"
+In AWS IAM make a user to be used when deploying from github action(suggested name > github_actions_user)  
+For AWS access type choose "Access key - Programmatic access" and apply the policy "AdministratorAccess" to user.
+User credentials will be saved in a github secret in later step.
 
-In AWS SES create smtp credentials and add the password to a github secrets in the AWS-Hamburg-test-Infrastructure
-Naming convention here is cluster name + environment type + "SMTPPASSWORD" like > "HAMBURGDEVSMTPPASSWORD"
+Make a new yaml file in .github\workflows that describes the cluster.
+(Edit a copy of the already existing release yaml files)
+We setup each deployment to run when a merge is made to a branch for this cluster.
+So in github make a new branch for the cluster and in the release file set
+    on:
+        push:
+            branches: [ branchname ]
 
-Add another secret to secrets in the AWS-Hamburg-test-Infrastructure describing the participants/organizations and there contact email in json format
+Fill out the first section with AccountId from aws account
+baseurl and hostedzoneid from route53 hosted zone
+
+If notifications is needed go to aws ses dashboard and create smtp credentials (note the password) and fill in smtpusername
+leave cognitoappclientid and cognitoappclientid blank
+Fill in helmversion with version needed from the Kubernetes-Packaging repo, e.g. for P6 it can be found in charts\hamburg-cluster\chart.yaml
+Set dockerImageTag to the tag from the docker image you want to deploy, will default to latest
+helmChartName and ingressChartName from Kubernetes-Packaging repo
+participantsfile should point to a json file in same repo that holds information of all the participants
+deploydb should be set to true first time deploying to setup databases in RDS
+
+the next section contains some secrets, this is names of github Actions secrets from AWS-Deployment-Infrastructure repo
+Naming convention is the cluster name with variable name appended
+So you should make 5 secrets in the repos setting > secrets > action secrets (you must have admin access to repo to edit settings) :
+
+{CLUSTERNAME}SMTPPASSWORD = AWS ses smtp password from above step
+Set {CLUSTERNAME}AWSSECRETACCESSKEY and {CLUSTERNAME}AWSACCESSKEYID to credentials for github_actions_user accordingly
+{CLUSTERNAME}PARTICIPANTS should hold the same value as the participantsfile from above step
+{CLUSTERNAME}_DBPASSWORD Password used to access AWS RDS database from the services running in the cluster, so just add a strong password.
+Must be longer tham 8 chars
+
+Add another secret to secrets in the AWS-Deployment-Infrastructure describing the participants/organizations and there contact email in json format
 Naming convention here is cluster name + environment type + "PARTICIPANTS" like > HAMBURGDEVPARTICIPANTS
 format for participant string is :
 [{
@@ -87,29 +114,13 @@ format for participant string is :
 	"partycode": "MSK"
 }]
 
-The participant name should match the groups created in cognito userpool. To disable email notifications for a participant use "NOT_SPECIFIED" in the email field 
+Participant name can not contain special characters as '-' cause the name is used to create resource like databases where this is not allowed
+To disable email notifications for a participant use "NOT_SPECIFIED" in the email field 
 publisher roles can consist of any number of these roles
  "CA", "AG", "VSL", "TR", "ATH", "PLT", "TWG", "BUK", "LSH"
  or an empty string or "[]" to have no roles assigned.
 
-In AWS cognito create userpool and use these values in step-by-step guide
-*attributes, use default selected and one custom attribute string:custom 
-*policies, default settings
-*mfa and verifications, default settings
-*Messages customizations, default settings
-*tags, default settings
-*devices, default settings
-*app client, add a new app client only thing to change is to disable App client secret generation
-*triggers, default settings
+Make a participants json file in \sqlscripts\ folder with same contents as the PARTICIPANTS github secret  
 
-
-In the AWS-Hamburg-test-Infrastructure\.github\workflows folder make new yaml file for the release action, a github workflow action tha will run the cdk code and deploy to aws.
-In this file replace the variables in the env: section with values for the new cluster/aws account: 
-Here is a list of the configurable values: awsaccountid: '274839863309'
-  *awsregion: aws region
-  *baseurl: The baseurl for the cluster
-  *hostedzoneid: The id of the hosted zone in Route53
-  *smtpusername: the username for smtp service, password is stored in github secret from above step.
-  *cognitoappclientid: Id of the App client used
-  *cognitouserpoolid: Id of the cognito userpool used
-  *helmversion: Which version of the helm chart should we deploy
+Push the files to the branch name to trigger deployment.
+On github > actions you can follow the progress of deployment

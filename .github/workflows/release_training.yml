@@ -14,6 +14,7 @@ env:
   cognitouserpoolid: ''
   helmversion: '0.1.87'
   dockerImageTag: 'live-hamburg'
+  helmChartName: 'dcsasandboxhamburg'
   participantsfile: 'sqlscripts/training_participants.json'
   deploydb: 'true'
 jobs:
@@ -150,9 +151,10 @@ jobs:
         env:
           DB_USER: postgres
           DB_PASSWORD: ${{env.dbpassword}}
-          SMTP_USER: ${{ env.smtpusername }}
-          SMTP_PASSWORD: ${{ env.smtppassword }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
       - name: SQL updates
+        if: ${{ env.deploydb == 'true' }}
         run: |
           sudo apt-get update
           sudo apt-get install --yes postgresql-client
@@ -185,9 +187,10 @@ jobs:
           DB_PASSWORD: ${{env.dbpassword}}
           PARTICIPANTS:  ${{ env.participants }}
           BASEURL: ${{ env.baseurl }}
-          SMTP_PASSWORD: ${{ env.smtppassword }}
-          SMTP_USERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}
+          HELMCHARTNAME: ${{ env.helmChartName }}
       - name: HELM 2
         run: |
           #!/usr/bin/env bash
@@ -199,8 +202,8 @@ jobs:
           DB_PASSWORD: ${{env.dbpassword}}
           PARTICIPANTS:  ${{ env.participants }}
           BASEURL: ${{ env.baseurl }}
-          SMTP_PASSWORD: ${{ env.smtppassword }}
-          SMTP_USERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
           COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
           COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}

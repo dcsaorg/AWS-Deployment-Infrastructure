@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-ctk-consumer-service
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-port: '9092'
+  labels:
+    app: {{ .Release.Name }}-ctk-consumer-app
+spec:
+  ports:
+    - name: http
+      port: 9092
+      targetPort: 9092
+  selector:
+    app: {{ .Release.Name }}-ctk-consumer-app
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-ctk-consumer-deployment
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-ctk-consumer-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-ctk-consumer-app
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-ctk-consumer-app
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-ctk-consumer-container
+          image: ghcr.io/dcsaorg/dcsa-ctk-consumer:latest
+          env:
+            - name: DB_HOSTNAME
+              value: {{ .Values.db.host }}
+          ports:
+            - name: http
+              containerPort: 9092
+            - name: https
+              containerPort: 8443
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9092
+          volumeMounts:
+            - name: {{ .Release.Name }}-dcsacfgvol
+              mountPath: /config/dcsa-config.yaml
+              subPath: dcsa-config.yaml
+      imagePullSecrets:
+        - name: {{ .Release.Name }}-githubregistry
+      volumes:
+          - name: {{ .Release.Name }}-dcsacfgvol
+            configMap:
+              name: {{ .Release.Name }}-configmap
+              defaultMode: 0777
+              items:
+                - key: dcsa-config.yaml
+                  path: dcsa-config.yaml

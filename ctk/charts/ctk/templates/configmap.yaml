@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-configmap
+data:
+  dcsa-config.yaml: |-
+    spring:
+      r2dbc:
+        username: {{ .Values.db.username }}
+        password: {{ .Values.db.password }}
+        name: {{ .Values.db.name }}
+        pool:
+          initialSize: 2
+          maxSize: 2
+      profiles:
+        active: prod
+      datasource:
+        username: {{ .Values.db.username }}
+        password: {{ .Values.db.password }}
+        url: jdbc:postgresql://{{ .Values.db.host }}/{{ .Values.db.name }}
+    dcsa:
+      pendingEventService:
+        backgroundTasks:
+          processUnmappedEventQueue:
+            cronSchedule: '5-55/10 * * * * *'
+          processPendingEventQueue:
+            cronSchedule: '0-50/10 * * * * *'
+    logging:
+      level:
+        root: INFO
+        web: INFO
+        org:
+          springframework: INFO
+          dcsa: INFO
+    management:
+      endpoint:
+        mail:
+          enabled: true
+        health:
+          show-details: always
+          show-components: always
+          sensitive: false
+    endpoints:
+      health:
+        sensitive: false
+
+
+
+
+   

@@ -10,7 +10,7 @@
 }, {
 	"name": "portauth",
 	"email": "NOT_SPECIFIED",
-	"publisherroles": "TR,ATH",
+	"publisherroles": "ATH",
 	"partycode": "HLC"
 }, {
 	"name": "terminal",
