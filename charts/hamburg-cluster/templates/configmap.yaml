@@ -6,6 +6,9 @@ metadata:
 data:
   dcsa-config.yaml: |-
     spring:
+      datasource:
+        username: {{ .Values.db.username }}
+        password: {{ .Values.db.password }}
       r2dbc:
         username: {{ .Values.db.username }}
         password: {{ .Values.db.password }}
