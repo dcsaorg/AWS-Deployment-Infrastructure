@@ -57,27 +57,6 @@ jobs:
           SMTPUSERNAME: ''
           SMTPPASSWORD: ''
           EXPERIMENTAL: ''
-
-      - name: Check for CognitoStack
-        id: cognitoCheck
-        run: |
-          cognitoStackId=$(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE | jq -r '.StackSummaries[] | select(.StackName|test("cognito")) | .StackId')
-          echo "::set-output name=cognitoStackId::$cognitoStackId"
-      - name: Extract values from UserPool
-        id: userPoolData
-        if: ${{ steps.cognitoCheck.outputs.cognitoStackId == '' }}
-        run: |
-          #!/usr/bin/env bash
-          # Ensure the script is executable in case it was edited on windows
-          script="./shell-scripts/extract-userpool-info.sh"
-          chmod a+x $script && $script
-        env:
-          EXISTING_USERPOOLID: ${{ env.cognitouserpoolid }}
-          EXISTING_UICLIENTID: ${{ env.cognitoappclientid }}
-          EXISTING_DCSACLIENTID: ${{ env.cognitodcsaclientid }}
-          EXISTING_DCSACLIENTSECRET: ${{ env.cognitodcsaclientsecret }}
-          EXISTING_TOKENURL:  ${{ env.cognitotokenurl }}
-
       - name: Deploying the CDK Cognito Code
         uses: youyo/aws-cdk-github-actions@v2
         if: ${{ steps.cognitoCheck.outputs.cognitoStackId == '' }}

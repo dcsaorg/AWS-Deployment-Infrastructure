@@ -1,0 +1,54 @@
+# Default values for mychart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+certificateArn: default
+
+imageCredentials:
+  registry: ghcr.io/dcsaorg
+  username: 
+  password:
+  email: martin@asseco.dk
+
+runScript: 
+  enabled: false
+  
+envType:
+  aws: true
+  local: false
+
+env:
+  baseurl: 'hamburg.dev.dcsa.org'
+  participant: 'dcsateam'
+  awsRegion: 'eu-west-1'
+
+db:
+  host: ""
+  username: ""
+  password: ""
+  name: ""
+
+p6config:
+  company: "dcsa"
+  partyCode: "MSK"
+  publisherRoles: "CA,VSL,AG"
+  cognitoUserPoolId: "eu-west-1_q9s1DipXz"
+  cognitoAppClientId: "5bfutou7tg621i6h1fbgs4vlki"
+  springMailHost: "email-smtp.eu-west-1.amazonaws.com"
+  springMailUsername: "AKIA3I7HULHFFSNUVVB4"
+  springMailPassword: "dummy"
+  springMailTlsEnable: "true"
+  springMailAuthEnabled: "true"
+  publisherCodeType: "SMDG_LINER_CODE"
+  partyName: "dcsa"
+  notificationEmail: ""
+  jitImageTag: "latest"
+  jitNotificationImageTag: "latest"
+  p6ImageTag: "latest"
+  uiSupportImageTag: "latest"
+  dcsaAppClientTokenUri: ""
+  dcsaAppClientId: ""
+  dcsaAppClientSecret: ""
+  dockerImageTag: "live-hamburg"
+
+
