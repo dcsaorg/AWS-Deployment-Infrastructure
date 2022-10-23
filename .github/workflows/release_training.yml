@@ -16,7 +16,7 @@ env:
   dockerImageTag: 'live-hamburg'
   helmChartName: 'dcsasandboxhamburg'
   participantsfile: 'sqlscripts/training_participants.json'
-  deploydb: 'true'
+  deploydb: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -59,7 +59,7 @@ jobs:
           EXPERIMENTAL: ''
       - name: Deploying the CDK Cognito Code
         uses: youyo/aws-cdk-github-actions@v2
-        if: ${{ steps.cognitoCheck.outputs.cognitoStackId == '' }}
+        if: ${{ env.deploydb == 'true' }}
         with:
           cdk_subcommand: 'deploy'
           cdk_stack: 'cognito'
@@ -105,6 +105,7 @@ jobs:
           EXISTING_TOKENURL: ${{ steps.userPoolData.outputs.tokenUrl }}
       - name: Deploying the CDK Cluster Code
         uses: youyo/aws-cdk-github-actions@v2
+        if: ${{ env.deploydb == 'true' }}
         with:
           cdk_subcommand: 'deploy'
           cdk_stack: 'st'
@@ -159,7 +160,7 @@ jobs:
         run: |
           #!/usr/bin/env bash
           # Ensure the script is executable in case it was edited on windows
-          script="./shell-scripts/deploy-application.sh"
+          script="./shell-scripts/deploy-application-training.sh"
           chmod a+x $script && $script
         env:
           DB_USER: postgres
