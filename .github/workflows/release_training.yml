@@ -16,7 +16,7 @@ env:
   dockerImageTag: 'latest'
   helmChartName: 'dcsasandboxhamburg'
   participantsfile: 'sqlscripts/training_participants.json'
-  deploydb: 'true'
+  deploydb: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -151,8 +151,7 @@ jobs:
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts/datamodel/initdb.d/03_dcsa_im_v3_0.sql
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts/datamodel/initdb.d/04_load_reference_data.sql
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts/datamodel/initdb.d/05_reference_implementation_support.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts/datamodel/initdb.d/06_phoney_ids.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts/datamodel/initdb.d/07_load_sample_data.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts/datamodel/initdb.d/06_metadata.sql
           done
         env:
           PGPASSWORD: ${{env.dbpassword}}
