@@ -49,6 +49,6 @@ p6config:
   dcsaAppClientTokenUri: ""
   dcsaAppClientId: ""
   dcsaAppClientSecret: ""
-  dockerImageTag: "live-hamburg"
+  dockerImageTag: "latest"
 
 
