@@ -48,6 +48,10 @@ spec:
           httpGet:
             path: /ui-support/v1/actuator/health
             port: 9091
+          timeoutSeconds: 10
+            initialDelaySeconds: 60
+            failureThreshold: 3
+            periodSeconds: 5
         volumeMounts:
           - name: {{ .Release.Name }}-dcsacfgvol
             mountPath: /config/dcsa-config.yaml
