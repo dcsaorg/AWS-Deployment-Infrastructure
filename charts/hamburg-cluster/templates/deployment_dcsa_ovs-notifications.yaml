@@ -50,7 +50,7 @@ spec:
             path: /jit-notifications/v1/actuator/health
             port: 9092
           timeoutSeconds: 10
-          initialDelaySeconds: 3
+          initialDelaySeconds: 60
           failureThreshold: 3
           periodSeconds: 5
         volumeMounts:
