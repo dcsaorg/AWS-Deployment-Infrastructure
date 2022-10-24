@@ -11,7 +11,7 @@ metadata:
 spec:
   ports:
   - name: dcsajitnote
-    port: 9090
+    port: 9092
     targetPort: dcsajitnote
   selector:
     app: {{ .Release.Name }}-dcsajitnotifications-app
@@ -44,11 +44,11 @@ spec:
           value: "/jit-notifications"
         ports:
         - name: dcsajitnote
-          containerPort: 9090
+          containerPort: 9092
         readinessProbe:
           httpGet:
-            path: /v1/actuator/health
-            port: 9090
+            path: /jit-notifications/v1/actuator/health
+            port: 9092
           timeoutSeconds: 10
           initialDelaySeconds: 60
           failureThreshold: 3
