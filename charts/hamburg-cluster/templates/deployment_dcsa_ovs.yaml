@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-dcsajit-container
-        image: ghcr.io/dcsaorg/dcsa-jit:{{ .Values.p6config.dockerImageTag }}
+        image: ghcr.io/dcsaorg/dcsa-jit:v1.2.0-beta1-rc2
         env:
         - name: db_hostname
           value: {{ .Values.db.host }}
