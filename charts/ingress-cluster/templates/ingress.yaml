@@ -19,20 +19,13 @@ spec:
     - host: {{ $participant }}.{{ $root.Values.env.baseurl }}
       http:
         paths:
-          - path: /v1/
+          - path: /jit/
             pathType: Prefix
             backend:
               service:
                 name: {{ $participant }}-dcsajit-service
                 port:
                   number: 9090
-          - path: /jit-notifications/
-            pathType: Prefix
-            backend:
-              service:
-                name: {{  $participant }}-dcsajitnotifications-service
-                port:
-                  number: 9092              
           - path: /ui-support/    
             pathType: Prefix
             backend:

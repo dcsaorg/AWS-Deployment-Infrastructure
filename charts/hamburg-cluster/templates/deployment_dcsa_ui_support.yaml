@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-dcsauisupport-container
-        image: ghcr.io/dcsaorg/dcsa-ui-support:{{ .Values.p6config.dockerImageTag }}
+        image: ghcr.io/dcsaorg/dcsa-ui-support:v1.2.0-beta1-rc2
         env:
         - name: db_hostname
           value: {{ .Values.db.host }}

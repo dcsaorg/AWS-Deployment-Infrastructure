@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-dcsap6-container
-        image: ghcr.io/dcsaorg/dcsa-p6-ui:{{ .Values.p6config.dockerImageTag }}
+        image: ghcr.io/dcsaorg/dcsa-p6-ui:v1.2.0-beta1-rc2
         env:
         ports:
         - name: dcsap6
