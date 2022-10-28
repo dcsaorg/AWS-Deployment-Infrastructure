@@ -679,7 +679,7 @@ CREATE TABLE dcsa_im_v3_0.ebl_solution_provider_type (
     ebl_solution_provider_description varchar(250) NULL
 );
 
-\copy dcsa_im_v3_0.ebl_solution_provider_type from '../referencedata.d/eblsolutionproviders.csv' with NULL AS E'\'\'' CSV HEADER
+\copy dcsa_im_v3_0.ebl_solution_provider_type from 'sqlscripts/newscripts2/datamodel/referencedata.d/eblsolutionproviders.csv' with NULL AS E'\'\'' CSV HEADER
 
 --- DDT-948
 ALTER TABLE dcsa_im_v3_0.equipment_event ADD utilized_transport_equipment_id uuid NULL REFERENCES dcsa_im_v3_0.utilized_transport_equipment(id);
