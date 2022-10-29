@@ -16,7 +16,7 @@ env:
   dockerImageTag: 'latest'
   helmChartName: 'dcsasandboxhamburg'
   participantsfile: 'sqlscripts/training_participants.json'
-  deploydb: 'false'
+  deploydb: 'true'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
