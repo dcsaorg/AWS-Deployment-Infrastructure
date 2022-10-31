@@ -16,7 +16,7 @@ env:
   dockerImageTag: 'latest'
   helmChartName: 'dcsasandboxhamburg'
   participantsfile: 'sqlscripts/training_participants.json'
-  deploydb: 'true'
+  deploydb: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -152,6 +152,24 @@ jobs:
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts2/datamodel/initdb.d/04_load_reference_data.sql
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts2/datamodel/initdb.d/05_reference_implementation_support.sql
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts2/datamodel/initdb.d/06_metadata.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts2/datamodel/testdata.d/07_load_sample_data.sql
+          done
+        env:
+          PGPASSWORD: ${{env.dbpassword}}
+      - name: SQL updates 2
+        if: ${{ env.deploydb == 'false' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
+          sudo apt-get install jq
+          dburl=$(aws cloudformation describe-stacks --stack-name db | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("EndpointHostname")) | .OutputValue' | tr -d '"')
+          echo $dburl
+          cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
+           carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
+           echo $carrierinternal
+           suffix=""
+           carrier="$carrierinternal$suffix"
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts2/datamodel/testdata.d/07_load_sample_data.sql
           done
         env:
           PGPASSWORD: ${{env.dbpassword}}
