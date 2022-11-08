@@ -39,6 +39,8 @@ data:
       securityConfig:
         auth:
           enabled: true
+        sync:
+          pollFrequency: 10000
         jwt:
           audience: NONE
           claim:
@@ -60,12 +62,6 @@ data:
                                            {{- else }}
                                            {{- splitList "," .Values.p6config.publisherRoles | toJson | indent 1 }}
                                            {{ end }}
-      pendingEventService:
-        backgroundTasks:
-          processUnmappedEventQueue:
-            cronSchedule: '5-55/10 * * * * *'
-          processPendingEventQueue:
-            cronSchedule: '0-50/10 * * * * *'
     logging:
       level:
         root: INFO
@@ -95,19 +91,6 @@ data:
     {{- end -}},
     "publisher": {
     "partyName": "{{ .Values.p6config.partyName }}",
-    "taxReference1": "CVR-25645774",
-    "taxReference2": "CVR-25645774",
-    "publicKey": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFzaW",
-    "address": {
-        "name": "Henrik",
-        "street": "Kronprincessegade",
-        "streetNumber": "54",
-        "floor": "5. sal",
-        "postCode": "1306",
-        "city": "København",
-        "stateRegion": "N/A",
-        "country": "Denmark"
-    },
     "identifyingCodes": [
         {
             "codeListResponsibleAgencyCode": "306",
