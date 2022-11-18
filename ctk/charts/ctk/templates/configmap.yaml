@@ -13,7 +13,7 @@ data:
         pool:
           initialSize: 2
           maxSize: 2
-      url: r2dbc:postgresql://{{ .Values.db.host }}/{{ .Values.db.name }}
+        url: r2dbc:postgresql://{{ .Values.db.host }}/{{ .Values.db.name }}
 
       profiles:
         active: prod
