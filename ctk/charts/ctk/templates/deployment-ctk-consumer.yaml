@@ -53,8 +53,6 @@ spec:
             - name: {{ .Release.Name }}-dcsacfgvol
               mountPath: /config/dcsa-config.yaml
               subPath: dcsa-config.yaml
-      imagePullSecrets:
-        - name: {{ .Release.Name }}-githubregistry
       volumes:
           - name: {{ .Release.Name }}-dcsacfgvol
             configMap:
