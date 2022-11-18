@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-dcsajit-service
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    alb.ingress.kubernetes.io/target-type: ip      
+    alb.ingress.kubernetes.io/healthcheck-path: /jit/v1/actuator/health
+  labels:
+    app: {{ .Release.Name }}-dcsajit-app
+spec:
+  ports:
+  - name: dcsajit
+    port: 9090
+    targetPort: dcsajit
+  selector:
+    app: {{ .Release.Name }}-dcsajit-app
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-dcsajit-deployment
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-dcsajit-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-dcsajit-app
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-dcsajit-app
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-dcsajit-container
+        image: ghcr.io/dcsaorg/dcsa-jit:v1.2.0-beta1-rc2
+        env:
+        - name: db_hostname
+          value: {{ .Values.db.host }}
+        - name: DCSA_URL_PREFIX
+          value: "/jit"
+        ports:
+        - name: dcsajit
+          containerPort: 9090
+        readinessProbe:
+          httpGet:
+            path: /jit/v1/actuator/health
+            port: 9090
+        volumeMounts:
+          - name: {{ .Release.Name }}-dcsacfgvol
+            mountPath: /config/dcsa-config.yaml
+            subPath: dcsa-config.yaml
+      volumes:
+        - name: {{ .Release.Name }}-dcsacfgvol
+          configMap:
+            name: {{ .Release.Name }}-configmap
+            defaultMode: 0777
+            items:
+              - key: dcsa-config.yaml
+                path: dcsa-config.yaml
+---

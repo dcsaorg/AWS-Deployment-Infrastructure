@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-dcsauisupport-service
+  namespace: {{ .Release.Namespace }}
+  annotations: 
+    alb.ingress.kubernetes.io/healthcheck-path: /ui-support/v1/actuator/health
+  labels:
+    app: {{ .Release.Name }}-dcsauisupport-app
+spec:
+  ports:
+  - name: dcsauisupport
+    port: 9091
+    targetPort: dcsauisupport
+  selector:
+    app: {{ .Release.Name }}-dcsauisupport-app
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-dcsauisupport-deployment
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-dcsauisupport-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-dcsauisupport-app
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-dcsauisupport-app
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-dcsauisupport-container
+        image: ghcr.io/dcsaorg/dcsa-ui-support:v1.2.0-beta1-rc2
+        env:
+        - name: db_hostname
+          value: {{ .Values.db.host }}
+        - name: DCSA_URL_PREFIX
+          value: "/ui-support"
+        ports:
+        - name: dcsauisupport
+          containerPort: 9091
+        readinessProbe:
+          httpGet:
+            path: /ui-support/v1/actuator/health
+            port: 9091
+          timeoutSeconds: 10
+          initialDelaySeconds: 180
+          failureThreshold: 3
+          periodSeconds: 5
+        volumeMounts:
+          - name: {{ .Release.Name }}-dcsacfgvol
+            mountPath: /config/dcsa-config.yaml
+            subPath: dcsa-config.yaml
+      volumes:
+        - name: {{ .Release.Name }}-dcsacfgvol
+          configMap:
+            name: {{ .Release.Name }}-configmap
+            defaultMode: 0777
+            items:
+              - key: dcsa-config.yaml
+                path: dcsa-config.yaml
+
+
