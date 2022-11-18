@@ -14,7 +14,7 @@ env:
   helmChartName: 'dcsasandboxhamburg'
   ingressChartName: 'dcsaingresscluster'
   deploydb: 'true'
-  deployapi: 'true'
+  deployapi: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -123,7 +123,7 @@ jobs:
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts/datamodel/initdb.d/03_dcsa_im_v3_0.sql
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts/datamodel/initdb.d/04_load_reference_data.sql
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts/datamodel/initdb.d/05_reference_implementation_support.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts/datamodel/initdb.d/06_phoney_ids.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts/datamodel/initdb.d/06_metadata.sql
            psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts/datamodel/testdata.d/07_load_sample_data.sql
         env:
           PGPASSWORD: ${{env.dbpassword}}
