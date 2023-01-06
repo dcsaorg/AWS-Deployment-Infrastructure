@@ -80,7 +80,7 @@ export class DBConstruct extends Construct {
                 credentials: rds.Credentials.fromPassword("postgres",dbSecret.secretValue),
                 multiAz: false,
                 allocatedStorage: 100,
-                maxAllocatedStorage: 105,
+                maxAllocatedStorage: 120,
                 allowMajorVersionUpgrade: false,
                 autoMinorVersionUpgrade: true,
                 backupRetention: Duration.days(0),
