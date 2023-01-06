@@ -22,8 +22,8 @@ jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     env:
-      awsaccesskeyid: ${{ secrets.CTKCONSUMER_AWSACCESSKEYID }}
-      awssecretaccesskey: ${{ secrets.CTKCONSUMER_AWSSECRETACCESSKEY }}
+      awsaccesskeyid: ${{ secrets.AS_SANDBOXAWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.AS_SANDBOXAWSSECRETACCESSKEY }}
       participants: '[{"name": "dcsa"}]'
       dbpassword: ${{ secrets.SANDBOX_DBPASSWORD }}
       githubpackagetoken: ${{ secrets.GITHUBPACKAGETOKEN }}
