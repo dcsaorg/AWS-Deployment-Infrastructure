@@ -15,6 +15,7 @@ env:
   helmversion: '0.1.88'
   dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'
+  ingressChartName: 'dcsaingresscluster'
   participantsfile: 'sqlscripts/sandbox_participants.json'
   deploydb: 'false'
 jobs:
@@ -207,6 +208,7 @@ jobs:
           COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
           COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}
+          INGRESSCHARTNAME: ${{ env.ingressChartName }}
       - name: Updating load balancer dns
         run: |
           sleep 3m

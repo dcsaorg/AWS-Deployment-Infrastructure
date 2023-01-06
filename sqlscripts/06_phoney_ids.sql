@@ -1,6 +1,6 @@
 -- Assumes the PSQL client
 \set ON_ERROR_STOP true
-\connect :dcsadbname
+\connect :"dcsadbname"
 
 -- Currently an implementation detail for the reference implementation but one
 -- we would like to remove eventually.

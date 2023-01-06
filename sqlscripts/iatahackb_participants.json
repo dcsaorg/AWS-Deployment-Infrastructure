@@ -1,0 +1,50 @@
+[{"name": "t6carrier",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,VSL,AG",
+	"partycode": "EMC"
+}, {
+	"name": "t6terminal",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "TR",
+	"partycode": "EMC"
+}, {
+	"name": "t7carrier",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,VSL,AG",
+	"partycode": "HLC"
+}, {
+	"name": "t7terminal",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "TR",
+	"partycode": "HLC"
+}, {
+	"name": "t8carrier",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,VSL,AG",
+	"partycode": "MSK"
+}, {
+	"name": "t8terminal",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "TR",
+	"partycode": "MSK"
+}, {
+	"name": "t9carrier",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,VSL,AG",
+	"partycode": "ONE"
+}, {
+	"name": "t9terminal",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "TR",
+	"partycode": "ONE"
+}, {
+	"name": "t10carrier",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA,VSL,AG",
+	"partycode": "YML"
+}, {
+	"name": "t10terminal",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "TR",
+	"partycode": "YML"
+}]

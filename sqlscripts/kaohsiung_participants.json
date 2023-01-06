@@ -1,0 +1,25 @@
+[{"name": "yangming",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA, AG, VSL",
+	"partycode": "YML"
+}, {
+	"name": "evergreenmarine",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA, AG, VSL",
+	"partycode": "EMC"
+}, {
+	"name": "twport",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "ATH",
+	"partycode": "TWKHH"
+}, {
+	"name": "kmct",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "TR",
+	"partycode": "KMCT"
+}, {
+	"name": "dcsa",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "",
+	"partycode": ""
+}]

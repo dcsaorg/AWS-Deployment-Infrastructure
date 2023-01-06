@@ -13,10 +13,10 @@ env:
   cognitoappclientid: ''
   cognitouserpoolid: ''
   helmversion: '0.1.87'
-  dockerImageTag: 'live-hamburg'
+  dockerImageTag: 'latest'
   helmChartName: 'dcsasandboxhamburg'
   participantsfile: 'sqlscripts/training_participants.json'
-  deploydb: 'true'
+  deploydb: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -57,30 +57,9 @@ jobs:
           SMTPUSERNAME: ''
           SMTPPASSWORD: ''
           EXPERIMENTAL: ''
-
-      - name: Check for CognitoStack
-        id: cognitoCheck
-        run: |
-          cognitoStackId=$(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE | jq -r '.StackSummaries[] | select(.StackName|test("cognito")) | .StackId')
-          echo "::set-output name=cognitoStackId::$cognitoStackId"
-      - name: Extract values from UserPool
-        id: userPoolData
-        if: ${{ steps.cognitoCheck.outputs.cognitoStackId == '' }}
-        run: |
-          #!/usr/bin/env bash
-          # Ensure the script is executable in case it was edited on windows
-          script="./shell-scripts/extract-userpool-info.sh"
-          chmod a+x $script && $script
-        env:
-          EXISTING_USERPOOLID: ${{ env.cognitouserpoolid }}
-          EXISTING_UICLIENTID: ${{ env.cognitoappclientid }}
-          EXISTING_DCSACLIENTID: ${{ env.cognitodcsaclientid }}
-          EXISTING_DCSACLIENTSECRET: ${{ env.cognitodcsaclientsecret }}
-          EXISTING_TOKENURL:  ${{ env.cognitotokenurl }}
-
       - name: Deploying the CDK Cognito Code
         uses: youyo/aws-cdk-github-actions@v2
-        if: ${{ steps.cognitoCheck.outputs.cognitoStackId == '' }}
+        if: ${{ env.deploydb == 'true' }}
         with:
           cdk_subcommand: 'deploy'
           cdk_stack: 'cognito'
@@ -126,6 +105,7 @@ jobs:
           EXISTING_TOKENURL: ${{ steps.userPoolData.outputs.tokenUrl }}
       - name: Deploying the CDK Cluster Code
         uses: youyo/aws-cdk-github-actions@v2
+        if: ${{ env.deploydb == 'true' }}
         with:
           cdk_subcommand: 'deploy'
           cdk_stack: 'st'
@@ -166,13 +146,30 @@ jobs:
            echo $carrierinternal
            suffix=""
            carrier="$carrierinternal$suffix"
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/01_create_dcsa_owner.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/02_create_database.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/03_dcsa_im_v3_0.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/04_load_reference_data.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/05_reference_implementation_support.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/06_phoney_ids.sql
-           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/07_load_sample_data.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts2/datamodel/initdb.d/01_create_dcsa_owner.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts2/datamodel/initdb.d/02_create_database.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts2/datamodel/initdb.d/03_dcsa_im_v3_0.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts2/datamodel/initdb.d/04_load_reference_data.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts2/datamodel/initdb.d/05_reference_implementation_support.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts2/datamodel/initdb.d/06_metadata.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts2/datamodel/testdata.d/07_load_sample_data.sql
+          done
+        env:
+          PGPASSWORD: ${{env.dbpassword}}
+      - name: SQL updates 2
+        if: ${{ env.deploydb == 'false' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
+          sudo apt-get install jq
+          dburl=$(aws cloudformation describe-stacks --stack-name db | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("EndpointHostname")) | .OutputValue' | tr -d '"')
+          echo $dburl
+          cat ${{ env.participantsfile }} | jq -c '.[]' | while read i; do
+           carrierinternal=$(echo $i | jq -c '.name' | tr -d '"')
+           echo $carrierinternal
+           suffix=""
+           carrier="$carrierinternal$suffix"
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/newscripts2/datamodel/testdata.d/07_load_sample_data.sql
           done
         env:
           PGPASSWORD: ${{env.dbpassword}}
@@ -180,7 +177,7 @@ jobs:
         run: |
           #!/usr/bin/env bash
           # Ensure the script is executable in case it was edited on windows
-          script="./shell-scripts/deploy-application.sh"
+          script="./shell-scripts/deploy-application-training.sh"
           chmod a+x $script && $script
         env:
           DB_USER: postgres
@@ -195,7 +192,7 @@ jobs:
         run: |
           #!/usr/bin/env bash
           # Ensure the script is executable in case it was edited on windows
-          script="./shell-scripts/deploy-ingressalb.sh"
+          script="./shell-scripts/deploy-ingressalb-training.sh"
           chmod a+x $script && $script
         env:
           DB_USER: postgres

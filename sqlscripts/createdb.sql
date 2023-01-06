@@ -1,1 +1,0 @@
-create database insert_participant

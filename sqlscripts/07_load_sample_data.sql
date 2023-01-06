@@ -1,5 +1,5 @@
 \set ON_ERROR_STOP true
-\connect :dcsadbname
+\connect :"dcsadbname"
 
 BEGIN;
 SET CLIENT_ENCODING TO 'utf8';

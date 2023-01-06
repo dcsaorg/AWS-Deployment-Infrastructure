@@ -1,0 +1,24 @@
+[{"name": "hutchison",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "TR",
+	"partycode": "DCD"
+}, {
+	"name": "evergreenmarine",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA, AG, VSL",
+	"partycode": "EMC"
+}, {
+	"name": "maersk",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "CA, AG, VSL",
+	"partycode": "MSK"
+}, {"name": "rotterdam",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "ATH",
+	"partycode": "NLRTM"
+}, {
+	"name": "dcsa",
+	"email": "NOT_SPECIFIED",
+	"publisherroles": "",
+	"partycode": ""
+}]
