@@ -40,6 +40,12 @@ spec:
           env:
             - name: DB_HOSTNAME
               value: {{ .Values.db.host }}
+            - name: DB_URL
+              value: jdbc:postgresql://{{ .Values.db.host }}/{{ .Values.db.name }}?currentSchema=dcsa_im_v3_0
+            - name: DB_PASSWORD
+              value: {{ .Values.db.password }}
+            - name: DB_USERNAME
+              value: {{ .Values.db.username }}
           ports:
             - name: http
               containerPort: 9092

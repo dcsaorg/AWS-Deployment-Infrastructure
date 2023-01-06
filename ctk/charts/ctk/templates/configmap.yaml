@@ -9,7 +9,7 @@ data:
       r2dbc:
         username: {{ .Values.db.username }}
         password: {{ .Values.db.password }}
-        name: {{ .Values.db.name }}
+        dbname: {{ .Values.db.name }}
         pool:
           initialSize: 2
           maxSize: 2
