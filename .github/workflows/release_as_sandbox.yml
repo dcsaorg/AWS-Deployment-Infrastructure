@@ -8,7 +8,7 @@ env:
   awsaccountid: '271352654670'
   awsregion: 'eu-west-1'
   baseurl: 'dev-tnt.dcsa.org'
-  hostedzoneid: 'Z0350460JX8IY1F7DJYA'
+  hostedzoneid: 'Z049149431R1469E2WNY9'
   smtpusername: ''
   cognitoappclientid: ''
   cognitouserpoolid: ''
