@@ -1,0 +1,162 @@
+name: Publish consumer ctk
+
+on:
+  push:
+    branches: [ cvpvh ]
+
+env:
+  awsaccountid: '542450095295'
+  awsregion: 'eu-west-1'
+  baseurl: 'cv-pvh-production.dcsa.org'
+  hostedzoneid: 'Z00877052FISMG2XN40F8'
+  helmversion: '0.1.88'
+  dockerImageTag: 'live-dev'
+  helmChartName: 'dcsasandboxhamburg'
+  ingressChartName: 'dcsaingresscluster'
+  deploydb: 'true'
+  deployapi: 'true'
+jobs:
+  aws_cdk:
+    runs-on: ubuntu-latest
+    env:
+      awsaccesskeyid: ${{ secrets.CVPVH_AWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.CVPVH_AWSSECRETACCESSKEY }}
+      participants: '[{"name": "dcsa"}]'
+      dbpassword: ${{ secrets.SANDBOX_DBPASSWORD }}
+      githubpackagetoken: ${{ secrets.GITHUBPACKAGETOKEN }}
+    steps:
+      - name: Checkout the infrastructure code
+        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-skip-session-tagging: true
+          aws-access-key-id: ${{ env.awsaccesskeyid }}
+          aws-secret-access-key: ${{ env.awssecretaccesskey }}
+          aws-region:  ${{ env.awsregion }}
+      - name: Creating secret
+        run: |
+          aws secretsmanager create-secret --name DBPassword --secret-string ${{env.dbpassword}} || true
+          aws secretsmanager update-secret --secret-id DBPassword --secret-string ${{env.dbpassword}} || true
+      - name: CDK Bootstrapping AWS Account
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'bootstrap'
+          cdk_args: '--cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess'
+          cdk_stack: 'aws://${{ env.awsaccountid }}/${{ env.awsregion }}'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ''
+          HOSTEDZONEID: ''
+          EXPERIMENTAL: ''
+      - name: Deploying the CDK Cluster Code
+        if: ${{ env.deploydb == 'true' }}
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_stack: 'st'
+          cdk_args: '--require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          HELMVERSION: ${{ env.helmversion }}
+      - name: Deploying the CDK Cognito+APIGateway Code
+        if: ${{ env.deployapi == 'true' }}
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_stack: 'ag'
+          cdk_args: '--require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          HELMVERSION: ${{ env.helmversion }}
+      - name: Deploying the CDK DB RDS Code
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_stack: 'db'
+          cdk_args: '--require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          HELMVERSION: ${{ env.helmversion }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          EXISTING_USERPOOLID: ${{ steps.userPoolData.outputs.userPoolId }}
+          EXISTING_UICLIENTID: ${{ steps.userPoolData.outputs.uiClientId }}
+          EXISTING_DCSACLIENTID: ${{ steps.userPoolData.outputs.dcsaClientId }}
+          EXISTING_DCSACLIENTSECRET: ${{ steps.userPoolData.outputs.dcsaClientSecret }}
+          EXISTING_TOKENURL: ${{ steps.userPoolData.outputs.tokenUrl }}
+      - name: SQL updates
+        if: ${{ env.deploydb == 'true' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
+          sudo apt-get install jq
+          dburl=$(aws cloudformation describe-stacks --stack-name db | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("EndpointHostname")) | .OutputValue' | tr -d '"')
+          echo $dburl
+           carrierinternal="dcsa"
+           echo $carrierinternal
+           suffix=""
+           carrier="$carrierinternal$suffix"
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/320improvement/datamodel/initdb.d/01_create_dcsa_owner.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/320improvement/datamodel/initdb.d/02_create_database.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/320improvement/datamodel/initdb.d/03_dcsa_im_v3_0.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/320improvement/datamodel/initdb.d/04_load_reference_data.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/320improvement/datamodel/initdb.d/05_reference_implementation_support.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/320improvement/datamodel/initdb.d/06_phoney_ids.sql
+           psql -h $dburl -U postgres -v dcsadbname="$carrier" -f sqlscripts/320improvement/datamodel/testdata.d/07_load_sample_data.sql
+        env:
+          PGPASSWORD: ${{env.dbpassword}}
+
+      - name: HELM
+        run: |
+          #!/usr/bin/env bash
+          # Ensure the script is executable in case it was edited on windows
+           script="./shell-scripts/deploy-application-ctk-consumer.sh"
+           chmod a+x $script && $script
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: ${{env.dbpassword}}
+          PARTICIPANTS:  ${{ env.participants }}
+          BASEURL: ${{ env.baseurl }}
+        #  SMTPPASSWORD: ${{ env.smtppassword }}
+        #  SMTPUSERNAME: ${{ env.smtpusername }}
+          DOCKERIMAGETAG: ${{ env.dockerImageTag }}
+          HELMCHARTNAME: ${{ env.helmChartName }}
+          GITHUBPACKAGETOKEN: ${{ env.githubpackagetoken }}
+      - name: Updating load balancer dns
+        run: |
+          sleep 3m
+          alburl=$(aws elbv2 describe-load-balancers | grep "DNSName" | xargs | cut -d' ' -f2 | cut -d',' -f1)
+          echo $alburl
+           carrierinternal=dev.
+           echo $carrierinternal
+           carrierurl="$carrierinternal$carrierbaseurl"
+           echo $carrierurl
+           cp ./route53/route53.json ./participantroute.json
+           sed -i "s#mydns#$alburl#g" ./participantroute.json
+           sed -i "s#carrierurl#$carrierurl#g" ./participantroute.json
+           cat ./participantroute.json
+           aws route53 change-resource-record-sets --hosted-zone-id ${{ env.hostedzoneid }} --change-batch file://./participantroute.json
+        env:
+          carrierbaseurl: ${{ env.baseurl }}
