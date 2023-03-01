@@ -6,7 +6,12 @@ import policyStatementActions from '../constants/policyStatementActions.constant
 import * as alb from "@aws-cdk/aws-elasticloadbalancingv2";
 import * as targets from "@aws-cdk/aws-elasticloadbalancingv2-targets";
 import * as apigateway from "@aws-cdk/aws-apigateway";
-import {ApplicationLoadBalancer, NetworkLoadBalancer} from "@aws-cdk/aws-elasticloadbalancingv2";
+import {
+    ApplicationLoadBalancer,
+    ContentType,
+    ListenerAction,
+    NetworkLoadBalancer
+} from "@aws-cdk/aws-elasticloadbalancingv2";
 
 export interface DCSAEKSClusterProps {
 }
@@ -46,6 +51,15 @@ export class DCSAEKSNLBCluster extends Construct {
         const listenerALB = alb.addListener('Listener', {
             port: 80,
             open: true,
+        });
+
+
+
+        listenerALB.addAction('DefaultAction', {
+            action: ListenerAction.fixedResponse(404, {
+                contentType: ContentType.TEXT_PLAIN,
+                messageBody: 'Cannot route your request; no matching project found.',
+            }),
         });
 
         cluster.addHelmChart('ALBController', {
