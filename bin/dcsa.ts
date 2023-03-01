@@ -5,6 +5,7 @@ import { DCSAStack } from '../lib/dcsa-stack'
 import { CognitoStack } from '../lib/cognito-stack'
 import {DBStack} from "../lib/db-stack";
 import {DCSAAPIGateway} from "../lib/apigateway-stack";
+import {DCSANLBStack} from "../lib/dcsa-nlb-stack";
 
 const app = new cdk.App()
 
@@ -20,6 +21,10 @@ const cognitoStack = new CognitoStack(app, 'cognito', {
 
 
 new DCSAStack(app, 'st', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "baseUrl": process.env.BASEURL ?? "localhost",
+    participants: (process.env.PARTICIPANTS ?? "{}")
+})
+
+new DCSANLBStack(app, 'stnlb', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "baseUrl": process.env.BASEURL ?? "localhost",
     participants: (process.env.PARTICIPANTS ?? "{}")
 })
 

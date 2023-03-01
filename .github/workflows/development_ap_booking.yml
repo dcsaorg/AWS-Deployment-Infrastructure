@@ -1,0 +1,70 @@
+name: Publish ap-booking
+
+on:
+  push:
+    branches: [ ap-booking ]
+
+env:
+  awsaccountid: '708553145434'
+  awsregion: 'eu-west-1'
+  baseurl: 'ap-booking-development.dcsa.org'
+  hostedzoneid: 'Z09916351QRP9S0LCD581'
+  helmversion: '0.1.88'
+  dockerImageTag: 'live-dev'
+  helmChartName: 'dcsasandboxhamburg'
+  ingressChartName: 'dcsaingresscluster'
+  deploydb: 'true'
+  deployapi: 'true'
+jobs:
+  aws_cdk:
+    runs-on: ubuntu-latest
+    env:
+      awsaccesskeyid: ${{ secrets.DEVAPBOOKING_AWSACCESSKEYID }}
+      awssecretaccesskey: ${{ secrets.DEVAPBOOKING_AWSSECRETACCESSKEY }}
+      participants: '[{"name": "dcsa"}]'
+      dbpassword: ${{ secrets.SANDBOX_DBPASSWORD }}
+      githubpackagetoken: ${{ secrets.GITHUBPACKAGETOKEN }}
+    steps:
+      - name: Checkout the infrastructure code
+        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-skip-session-tagging: true
+          aws-access-key-id: ${{ env.awsaccesskeyid }}
+          aws-secret-access-key: ${{ env.awssecretaccesskey }}
+          aws-region:  ${{ env.awsregion }}
+      - name: Creating secret
+        run: |
+          aws secretsmanager create-secret --name DBPassword --secret-string ${{env.dbpassword}} || true
+          aws secretsmanager update-secret --secret-id DBPassword --secret-string ${{env.dbpassword}} || true
+      - name: CDK Bootstrapping AWS Account
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'bootstrap'
+          cdk_args: '--cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess'
+          cdk_stack: 'aws://${{ env.awsaccountid }}/${{ env.awsregion }}'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ''
+          HOSTEDZONEID: ''
+          EXPERIMENTAL: ''
+      - name: Deploying the CDK Cluster Code
+        if: ${{ env.deploydb == 'true' }}
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_stack: 'stnlb'
+          cdk_args: '--require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.awsaccesskeyid }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.awssecretaccesskey }}
+          PARTICIPANTS:  ${{ env.participants }}
+          AWS_DEFAULT_REGION: ${{ env.awsregion }}
+          BASEURL: ${{ env.baseurl }}
+          HOSTEDZONEID: ${{ env.hostedzoneid }}
+          HELMVERSION: ${{ env.helmversion }}
