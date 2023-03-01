@@ -6,6 +6,7 @@ import policyStatementActions from '../constants/policyStatementActions.constant
 import * as alb from "@aws-cdk/aws-elasticloadbalancingv2";
 import * as targets from "@aws-cdk/aws-elasticloadbalancingv2-targets";
 import * as apigateway from "@aws-cdk/aws-apigateway";
+import {ApplicationLoadBalancer} from "@aws-cdk/aws-elasticloadbalancingv2";
 
 export interface DCSAEKSClusterProps {
 }
@@ -37,6 +38,11 @@ export class DCSAEKSNLBCluster extends Construct {
         account.addToPrincipalPolicy(policyStatement)
         account.addToPrincipalPolicy(adminStatement)
 
+        const alb = new ApplicationLoadBalancer(this, 'alb', {
+            vpc: cluster.vpc,
+            internetFacing: true,
+        });
+
         cluster.addHelmChart('ALBController', {
             chart: 'aws-load-balancer-controller',
             repository: 'https://aws.github.io/eks-charts',
@@ -63,7 +69,7 @@ export class DCSAEKSNLBCluster extends Construct {
         const listener = nlb.addListener('listener', { port: 80 });
 
         listener.addTargets('Targets', {
-            targets: [new targets.AlbArnTarget('arn:aws:elasticloadbalancing:REGION:ACC_ID:loadbalancer/app/THE_NAME_OF_THE_ALB/blablabla', 80)],
+            targets: [new targets.AlbArnTarget(alb.loadBalancerArn, 80)],
             port: 80,
         });
 
