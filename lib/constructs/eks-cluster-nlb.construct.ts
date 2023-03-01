@@ -6,7 +6,7 @@ import policyStatementActions from '../constants/policyStatementActions.constant
 import * as alb from "@aws-cdk/aws-elasticloadbalancingv2";
 import * as targets from "@aws-cdk/aws-elasticloadbalancingv2-targets";
 import * as apigateway from "@aws-cdk/aws-apigateway";
-import {ApplicationLoadBalancer} from "@aws-cdk/aws-elasticloadbalancingv2";
+import {ApplicationLoadBalancer, NetworkLoadBalancer} from "@aws-cdk/aws-elasticloadbalancingv2";
 
 export interface DCSAEKSClusterProps {
 }
@@ -60,7 +60,7 @@ export class DCSAEKSNLBCluster extends Construct {
             }
         })
 
-        const nlb = new alb.NetworkLoadBalancer(this, 'Nlb', {
+        const nlb = new NetworkLoadBalancer(this, 'Nlb', {
             vpc: cluster.vpc,
             crossZoneEnabled: true,
             internetFacing: false,
