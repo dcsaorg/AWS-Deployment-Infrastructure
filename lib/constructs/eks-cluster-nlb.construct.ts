@@ -43,6 +43,11 @@ export class DCSAEKSNLBCluster extends Construct {
             internetFacing: true,
         });
 
+        const listenerALB = alb.addListener('Listener', {
+            port: 80,
+            open: true,
+        });
+
         cluster.addHelmChart('ALBController', {
             chart: 'aws-load-balancer-controller',
             repository: 'https://aws.github.io/eks-charts',
