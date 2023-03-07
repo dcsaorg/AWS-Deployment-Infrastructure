@@ -22,7 +22,7 @@ export class DCSAEKSNLBCluster extends Construct {
         super(scope, id)
 
         const cluster = new eks.FargateCluster(this, 'cl', {
-            version: eks.KubernetesVersion.V1_19,
+            version: eks.KubernetesVersion.V1_21,
             clusterName: 'cl'
         })
        const policyStatement = new iam.PolicyStatement({
