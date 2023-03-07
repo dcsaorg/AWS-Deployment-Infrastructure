@@ -103,5 +103,6 @@ export class DCSAEKSNLBCluster extends Construct {
                 vpcLink: link,
             },
         });
+        
     }
 }
