@@ -22,7 +22,7 @@ export class DCSAEKSNLBCluster extends Construct {
         super(scope, id)
 
         const cluster = new eks.FargateCluster(this, 'cl', {
-            version: eks.KubernetesVersion.V1_20,
+            version: eks.KubernetesVersion.V1_19,
             clusterName: 'cl'
         })
        const policyStatement = new iam.PolicyStatement({
@@ -46,7 +46,7 @@ export class DCSAEKSNLBCluster extends Construct {
         //The real alb is not accessible until the helm charts are installed..
         const alb = new ApplicationLoadBalancer(this, 'alb', {
             vpc: cluster.vpc,
-            internetFacing: true,
+            internetFacing: false,
         });
 
         const listenerALB = alb.addListener('Listener', {
