@@ -93,7 +93,7 @@ export class DCSAEKSNLBCluster extends Construct {
             port: 80,
         });
 
-        const link = new apigateway.VpcLink(this, 'link', {
+        /*const link = new apigateway.VpcLink(this, 'link', {
             targets: [nlb],
         });
 
@@ -103,7 +103,7 @@ export class DCSAEKSNLBCluster extends Construct {
                 connectionType: apigateway.ConnectionType.VPC_LINK,
                 vpcLink: link,
             },
-        });
+        });*/
         
     }
 }
