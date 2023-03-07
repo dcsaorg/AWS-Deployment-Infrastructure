@@ -44,7 +44,7 @@ export class DCSAEKSNLBCluster extends Construct {
         account.addToPrincipalPolicy(adminStatement)
 
         //The real alb is not accessible until the helm charts are installed..
-        const alb = new ApplicationLoadBalancer(this, 'alb', {
+        /*const alb = new ApplicationLoadBalancer(this, 'alb', {
             vpc: cluster.vpc,
             internetFacing: false,
         });
@@ -52,16 +52,16 @@ export class DCSAEKSNLBCluster extends Construct {
         const listenerALB = alb.addListener('Listener', {
             port: 80,
             open: true,
-        });
+        });*/
 
 
 
-        listenerALB.addAction('DefaultAction', {
+       /* listenerALB.addAction('DefaultAction', {
             action: ListenerAction.fixedResponse(404, {
                 contentType: ContentType.TEXT_PLAIN,
                 messageBody: 'Cannot route your request; no matching project found.',
             }),
-        });
+        });*/
 
         cluster.addHelmChart('ALBController', {
             chart: 'aws-load-balancer-controller',
@@ -80,7 +80,7 @@ export class DCSAEKSNLBCluster extends Construct {
             }
         })
 
-        const nlb = new NetworkLoadBalancer(this, 'Nlb', {
+       /* const nlb = new NetworkLoadBalancer(this, 'Nlb', {
             vpc: cluster.vpc,
             crossZoneEnabled: true,
             internetFacing: false,
@@ -91,7 +91,7 @@ export class DCSAEKSNLBCluster extends Construct {
         listener.addTargets('Targets', {
             targets: [new targets.AlbArnTarget(alb.loadBalancerArn, 80)],
             port: 80,
-        });
+        });*/
 
         /*const link = new apigateway.VpcLink(this, 'link', {
             targets: [nlb],
