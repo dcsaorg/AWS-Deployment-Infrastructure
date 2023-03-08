@@ -33,5 +33,5 @@ new DCSANLBStack(app, 'stnlb', { "hostedZoneId": process.env.HOSTEDZONEID ?? "",
 new DBStack(app, 'db', {
     dbSnapshotID:  process.env.DBSNAPSHOTID ?? "",
 })*/
- 
+
 app.synth()

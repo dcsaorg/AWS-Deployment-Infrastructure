@@ -25,7 +25,7 @@ export class DCSAEKSNLBCluster extends Construct {
             version: eks.KubernetesVersion.V1_21,
             clusterName: 'cl'
         })
-       const policyStatement = new iam.PolicyStatement({
+       /*const policyStatement = new iam.PolicyStatement({
             resources: ['*'],
             actions: policyStatementActions
         })
@@ -41,7 +41,7 @@ export class DCSAEKSNLBCluster extends Construct {
         })
 
         account.addToPrincipalPolicy(policyStatement)
-        account.addToPrincipalPolicy(adminStatement)
+        account.addToPrincipalPolicy(adminStatement)*/
 
         //The real alb is not accessible until the helm charts are installed..
         /*const alb = new ApplicationLoadBalancer(this, 'alb', {
@@ -63,11 +63,11 @@ export class DCSAEKSNLBCluster extends Construct {
             }),
         });*/
 
-        cluster.addHelmChart('ALBController', {
+        /*cluster.addHelmChart('ALBController', {
             chart: 'aws-load-balancer-controller',
             repository: 'https://aws.github.io/eks-charts',
             namespace: 'kube-system',
-            version: '1.4.0',
+            version: '1.4.8',
             release: 'aws-load-balancer-controller',
             values: {
                 region: 'eu-west-1',
@@ -78,7 +78,7 @@ export class DCSAEKSNLBCluster extends Construct {
                     name: account.serviceAccountName
                 }
             }
-        })
+        })*/
 
        /* const nlb = new NetworkLoadBalancer(this, 'Nlb', {
             vpc: cluster.vpc,
