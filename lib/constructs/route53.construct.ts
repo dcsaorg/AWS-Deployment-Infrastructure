@@ -1,6 +1,6 @@
-import { Construct } from '@aws-cdk/core'
-import * as route53 from '@aws-cdk/aws-route53'
-import * as acm from '@aws-cdk/aws-certificatemanager'
+import { Construct } from 'constructs'
+import * as route53 from 'aws-cdk-lib/aws-route53'
+import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 
 export interface DCSARoute53Props { hostedZoneId: string, baseUrl: string, participants: string}
 

@@ -1,15 +1,16 @@
-import {Construct, RemovalPolicy, Stack} from '@aws-cdk/core'
-import * as cdk from "@aws-cdk/core";
-import * as cognito from "@aws-cdk/aws-cognito";
-import * as apigateway from "@aws-cdk/aws-apigateway";
+import {RemovalPolicy, Stack} from 'aws-cdk-lib/core'
+import {Construct} from 'constructs'
+import * as cdk from "aws-cdk-lib/core";
+import * as cognito from "aws-cdk-lib/aws-cognito";
+import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import {
     CognitoUserPoolsAuthorizer,
     EndpointType,
-} from "@aws-cdk/aws-apigateway";
-import * as acm from '@aws-cdk/aws-certificatemanager'
-import * as route53 from '@aws-cdk/aws-route53'
-import * as route53Targets from "@aws-cdk/aws-route53-targets";
-import {OAuthScope} from "@aws-cdk/aws-cognito";
+} from "aws-cdk-lib/aws-apigateway";
+import * as acm from 'aws-cdk-lib/aws-certificatemanager'
+import * as route53 from 'aws-cdk-lib/aws-route53'
+import * as route53Targets from "aws-cdk-lib/aws-route53-targets";
+import {OAuthScope} from "aws-cdk-lib/aws-cognito";
 
 export interface DCSAAPIGatewayProps extends cdk.StackProps {
     baseUrl: string,

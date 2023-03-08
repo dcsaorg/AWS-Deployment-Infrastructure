@@ -1,5 +1,6 @@
-import * as cdk from '@aws-cdk/core'
-import { CfnOutput } from '@aws-cdk/core';
+import * as cdk from 'aws-cdk-lib/core'
+import {Construct } from 'constructs'
+import { CfnOutput } from 'aws-cdk-lib/core';
 import { CognitoConstruct } from './constructs/cognito.construct';
 
 export interface CognitoStackProps extends cdk.StackProps {
@@ -21,7 +22,7 @@ export class CognitoStack extends cdk.Stack {
     public readonly dcsaClientSecret: string // only for participant dcsa
     public readonly uiClientId: string
 
-    constructor (scope: cdk.Construct, id: string, props: CognitoStackProps) {
+    constructor (scope: Construct, id: string, props: CognitoStackProps) {
         super(scope, id, props)
 
         const cognitoConstruct = new CognitoConstruct(this, "cg", {

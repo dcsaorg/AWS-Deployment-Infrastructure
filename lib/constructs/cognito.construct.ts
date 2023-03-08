@@ -1,7 +1,8 @@
-import {Construct,Duration,RemovalPolicy,CfnOutput} from '@aws-cdk/core'
-import * as cognito from '@aws-cdk/aws-cognito'
-import {CfnUserPoolGroup, OAuthScope, UserPool, UserPoolClient} from "@aws-cdk/aws-cognito";
-import * as cr from "@aws-cdk/custom-resources";
+import {Duration, RemovalPolicy, CfnOutput} from 'aws-cdk-lib/core'
+import {Construct} from 'constructs'
+import * as cognito from 'aws-cdk-lib/aws-cognito'
+import {CfnUserPoolGroup, OAuthScope, UserPool, UserPoolClient} from 'aws-cdk-lib/aws-cognito';
+import * as cr from "aws-cdk-lib/custom-resources";
 
 export interface CognitoConstructProps {
     participants: string,

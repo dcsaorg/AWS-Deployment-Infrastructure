@@ -1,7 +1,7 @@
-import {Construct} from '@aws-cdk/core'
-import * as eks from '@aws-cdk/aws-eks'
-import * as iam from '@aws-cdk/aws-iam'
-import * as acm from '@aws-cdk/aws-certificatemanager'
+import {Construct} from 'constructs'
+import * as eks from 'aws-cdk-lib/aws-eks'
+import * as iam from 'aws-cdk-lib/aws-iam'
+import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import policyStatementActions from '../constants/policyStatementActions.constant'
 
 export interface DCSAEKSClusterProps {
