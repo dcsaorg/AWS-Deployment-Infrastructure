@@ -18,13 +18,13 @@ export class DCSANLBStack extends cdk.Stack {
 
 
 
-    const { hostedZoneCertificate } = new DCSARoute53(this, 'Route53', { "hostedZoneId": props.hostedZoneId, "baseUrl": props.baseUrl, "participants": props.participants})
+    //const { hostedZoneCertificate } = new DCSARoute53(this, 'Route53', { "hostedZoneId": props.hostedZoneId, "baseUrl": props.baseUrl, "participants": props.participants})
 
       new DCSAEKSNLBCluster(this, 'EKSCluster', {
       })
 
-      new CfnOutput(this, 'hostedZoneCertificateArn', {
+      /*new CfnOutput(this, 'hostedZoneCertificateArn', {
         value: hostedZoneCertificate.certificateArn
-      });
+      });*/
   }
 }
