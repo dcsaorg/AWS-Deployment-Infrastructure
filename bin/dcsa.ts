@@ -20,18 +20,18 @@ const cognitoStack = new CognitoStack(app, 'cognito', {
 
 
 
-new DCSAStack(app, 'st', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "baseUrl": process.env.BASEURL ?? "localhost",
+/*new DCSAStack(app, 'st', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "baseUrl": process.env.BASEURL ?? "localhost",
     participants: (process.env.PARTICIPANTS ?? "{}")
-})
+})*/
 
 new DCSANLBStack(app, 'stnlb', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "baseUrl": process.env.BASEURL ?? "localhost",
     participants: (process.env.PARTICIPANTS ?? "{}")
 })
 
-new DCSAAPIGateway(app,'ag',{"baseUrl": process.env.BASEURL ?? "localhost","hostedZoneId": process.env.HOSTEDZONEID ?? "" })
+/*new DCSAAPIGateway(app,'ag',{"baseUrl": process.env.BASEURL ?? "localhost","hostedZoneId": process.env.HOSTEDZONEID ?? "" })
 
 new DBStack(app, 'db', {
     dbSnapshotID:  process.env.DBSNAPSHOTID ?? "",
-})
+})*/
 
 app.synth()
