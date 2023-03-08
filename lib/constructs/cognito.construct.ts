@@ -1,4 +1,4 @@
-import {Duration, RemovalPolicy, CfnOutput} from 'aws-cdk-lib/core'
+import {Duration, RemovalPolicy, CfnOutput} from 'aws-cdk-lib'
 import {Construct} from 'constructs'
 import * as cognito from 'aws-cdk-lib/aws-cognito'
 import {CfnUserPoolGroup, OAuthScope, UserPool, UserPoolClient} from 'aws-cdk-lib/aws-cognito';
