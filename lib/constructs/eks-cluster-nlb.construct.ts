@@ -134,7 +134,7 @@ export class DCSAEKSNLBCluster extends Construct {
                 connectionType: apigateway.ConnectionType.VPC_LINK,
                 vpcLink: link,
             },
-            integrationHttpMethod: 'post'
+            integrationHttpMethod: 'ANY'
         });
 
         const api = new apigateway.RestApi(this, "secured-api", {
