@@ -16,6 +16,10 @@ import * as route53 from "aws-cdk-lib/aws-route53";
 import * as route53Targets from "aws-cdk-lib/aws-route53-targets";
 
 export interface DCSAEKSClusterProps {
+
+    baseurl: string,
+    hostedZoneId:string,
+
 }
 
 
@@ -82,6 +86,31 @@ export class DCSAEKSNLBCluster extends Construct {
             }
         })
 
+
+        const hostedZone = route53.HostedZone.fromHostedZoneAttributes(
+            this,
+            'dcsaHostedZone',
+            {
+                hostedZoneId: props.hostedZoneId,
+                zoneName: props.baseurl
+            }
+        )
+
+        // @ts-ignore
+        const hostedZoneCertificate = new acm.Certificate(
+            this,
+            'dcsaCertificate',
+            {
+                domainName: '*.'+props.baseurl,
+                subjectAlternativeNames: [],
+                validation: acm.CertificateValidation.fromDns(hostedZone)
+            }
+        )
+
+
+        const domainname='api.'+props.baseurl
+
+
        const nlb = new NetworkLoadBalancer(this, 'Nlb', {
             vpc: cluster.vpc,
             crossZoneEnabled: true,
@@ -111,20 +140,20 @@ export class DCSAEKSNLBCluster extends Construct {
             restApiName: "Secured APIGateway",
             description: "This API is the secure apis",
 
-            /*domainName: {
+            domainName: {
                 domainName: domainname,
-                certificate: certificate,
+                certificate: hostedZoneCertificate,
                 endpointType: EndpointType.REGIONAL,
-            },*/
+            },
         });
 
-       /* new route53.ARecord(this, "apiDNS", {
+        new route53.ARecord(this, "apiDNS", {
             zone: hostedZone,
-            recordName: subdomain,
+            recordName: domainname,
             target: route53.RecordTarget.fromAlias(
                 new route53Targets.ApiGateway(api)
             ),
-        });*/
+        });
 
 
 
