@@ -11,6 +11,9 @@ import {
     ListenerAction,
     NetworkLoadBalancer
 } from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import {EndpointType} from "aws-cdk-lib/aws-apigateway";
+import * as route53 from "aws-cdk-lib/aws-route53";
+import * as route53Targets from "aws-cdk-lib/aws-route53-targets";
 
 export interface DCSAEKSClusterProps {
 }
@@ -103,6 +106,37 @@ export class DCSAEKSNLBCluster extends Construct {
                 vpcLink: link,
             },
         });
+
+        const api = new apigateway.RestApi(this, "secured-api", {
+            restApiName: "Secured APIGateway",
+            description: "This API is the secure apis",
+
+            /*domainName: {
+                domainName: domainname,
+                certificate: certificate,
+                endpointType: EndpointType.REGIONAL,
+            },*/
+        });
+
+       /* new route53.ARecord(this, "apiDNS", {
+            zone: hostedZone,
+            recordName: subdomain,
+            target: route53.RecordTarget.fromAlias(
+                new route53Targets.ApiGateway(api)
+            ),
+        });*/
+
+
+
+        const rootResource = api.root.addProxy({
+            anyMethod: true,
+            defaultIntegration:integration,
+            /*defaultMethodOptions: {
+                authorizer: authorizer,
+                authorizationType: apigateway.AuthorizationType.COGNITO,
+                authorizationScopes: ["dcsa/infosys"]
+            }*/
+        })
         
     }
 }
