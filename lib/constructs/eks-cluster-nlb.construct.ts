@@ -60,12 +60,11 @@ export class DCSAEKSNLBCluster extends Construct {
             open: true,
         });
 
-
-
+        
         listenerALB.addAction('DefaultAction', {
-            action: ListenerAction.fixedResponse(404, {
+            action: ListenerAction.fixedResponse(200, {
                 contentType: 'text/plain',
-                messageBody: 'Cannot route your request; no matching project found.',
+                messageBody: 'Dummy response, until k18s alb is up and running ',
             }),
         });
 
