@@ -134,6 +134,7 @@ export class DCSAEKSNLBCluster extends Construct {
                 connectionType: apigateway.ConnectionType.VPC_LINK,
                 vpcLink: link,
             },
+            integrationHttpMethod: 'post'
         });
 
         const api = new apigateway.RestApi(this, "secured-api", {
@@ -160,12 +161,16 @@ export class DCSAEKSNLBCluster extends Construct {
         const rootResource = api.root.addProxy({
             anyMethod: true,
             defaultIntegration:integration,
+
+
             /*defaultMethodOptions: {
                 authorizer: authorizer,
                 authorizationType: apigateway.AuthorizationType.COGNITO,
                 authorizationScopes: ["dcsa/infosys"]
             }*/
         })
-        
+
+
+
     }
 }
