@@ -60,7 +60,7 @@ export class DCSAEKSNLBCluster extends Construct {
             open: true,
         });
 
-        
+
         listenerALB.addAction('DefaultAction', {
             action: ListenerAction.fixedResponse(200, {
                 contentType: 'text/plain',
