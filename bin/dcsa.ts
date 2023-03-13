@@ -19,8 +19,6 @@ const cognitoStack = new CognitoStack(app, 'cognito', {
 })
 
 
-
-
 /*new DCSAStack(app, 'st', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "baseUrl": process.env.BASEURL ?? "localhost",
     participants: (process.env.PARTICIPANTS ?? "{}")
 })*/
