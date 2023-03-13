@@ -24,8 +24,6 @@ export class DCSANLBStack extends cdk.Stack {
       new DCSAEKSNLBCluster(this, 'EKSCluster', { baseurl:props.baseUrl,hostedZoneId:props.hostedZoneId
       })
 
-      /*new CfnOutput(this, 'hostedZoneCertificateArn', {
-        value: hostedZoneCertificate.certificateArn
-      });*/
+
   }
 }

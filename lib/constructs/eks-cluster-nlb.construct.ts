@@ -14,6 +14,7 @@ import {
 import {EndpointType} from "aws-cdk-lib/aws-apigateway";
 import * as route53 from "aws-cdk-lib/aws-route53";
 import * as route53Targets from "aws-cdk-lib/aws-route53-targets";
+import {CfnOutput} from "aws-cdk-lib";
 
 export interface DCSAEKSClusterProps {
 
@@ -169,6 +170,9 @@ export class DCSAEKSNLBCluster extends Construct {
             }*/
         })
 
+        new CfnOutput(this, 'hostedZoneCertificateArn', {
+            value: hostedZoneCertificate.certificateArn
+        });
 
 
     }
