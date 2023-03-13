@@ -70,3 +70,17 @@ jobs:
           BASEURL: ${{ env.baseurl }}
           HOSTEDZONEID: ${{ env.hostedzoneid }}
           HELMVERSION: ${{ env.helmversion }}
+      - name: HELM
+        run: |
+          #!/usr/bin/env bash
+          # Ensure the script is executable in case it was edited on windows
+           script="./shell-scripts/deploy-application-ap-booking.sh"
+           chmod a+x $script && $script
+        env:
+          PARTICIPANTS:  ${{ env.participants }}
+          BASEURL: ${{ env.baseurl }}
+          #  SMTPPASSWORD: ${{ env.smtppassword }}
+          #  SMTPUSERNAME: ${{ env.smtpusername }}
+          DOCKERIMAGETAG: ${{ env.dockerImageTag }}
+          HELMCHARTNAME: ${{ env.helmChartName }}
+          GITHUBPACKAGETOKEN: ${{ env.githubpackagetoken }}

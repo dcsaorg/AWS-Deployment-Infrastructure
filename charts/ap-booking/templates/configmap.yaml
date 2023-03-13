@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-configmap
+data:
+  config.json: |-
+    {
+      "dateTimeFormat": "dd MMM yyyy HH:mm",
+      "dateFormat": "dd MMM yyyy",
+      "supportBackendURL": null,
+      "eblBackendURL": "/ebl/v3",
+      "bkgBackendURL": "/bkg/v2",
+      "authentication": false,
+      "useBackend": false,
+      "features": {
+        "supportNonISO6346References": false
+      }
+    }
+
+
+
+
+   

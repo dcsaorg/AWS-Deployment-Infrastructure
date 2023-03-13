@@ -1,0 +1,12 @@
+# Default values for mychart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+certificateArn: default
+
+imageCredentials:
+  registry: ghcr.io/dcsaorg
+  username: 
+  password:
+  email: martin@asseco.dk
+
