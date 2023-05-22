@@ -26,6 +26,6 @@ db:
 EOF
 
     echo "Deploying helm for dcsa"
-    helm install "dcsa" dcsa/$HELMCHARTNAME --values values.yml
+    helm upgrade --install "dcsa" ./charts/hamburg-cluster --values values.yml --set-string imageCredentials.password=$GITHUBPACKAGETOKEN
 
 helm list
