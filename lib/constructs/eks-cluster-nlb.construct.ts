@@ -14,6 +14,8 @@ import {
 } from "aws-cdk-lib/aws-elasticloadbalancingv2";
 
 export interface DCSAEKSClusterProps {
+    baseurl: string,
+    hostedZoneId:string,    
 }
 
 
@@ -22,7 +24,7 @@ export class DCSAEKSNLBCluster extends Construct {
         super(scope, id)
 
         const cluster = new eks.FargateCluster(this, 'cl', {
-            version: eks.KubernetesVersion.V1_21,
+            version: eks.KubernetesVersion.V1_24,
             clusterName: 'cl'
         })
        const policyStatement = new iam.PolicyStatement({
@@ -56,9 +58,9 @@ export class DCSAEKSNLBCluster extends Construct {
 
 
         listenerALB.addAction('DefaultAction', {
-            action: ListenerAction.fixedResponse(404, {
-                contentType: ContentType.TEXT_PLAIN,
-                messageBody: 'Cannot route your request; no matching project found.',
+            action: ListenerAction.fixedResponse(200, {
+                contentType: 'text/plain',
+                messageBody: 'Dummy response, until k18s alb is up and running ',
             }),
         });
 
@@ -66,7 +68,7 @@ export class DCSAEKSNLBCluster extends Construct {
             chart: 'aws-load-balancer-controller',
             repository: 'https://aws.github.io/eks-charts',
             namespace: 'kube-system',
-            version: '1.4.0',
+            version: '1.4.8',
             release: 'aws-load-balancer-controller',
             values: {
                 region: 'eu-west-1',

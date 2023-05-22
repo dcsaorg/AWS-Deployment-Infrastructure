@@ -21,7 +21,7 @@ export class DCSANLBStack extends cdk.Stack {
 
     const { hostedZoneCertificate } = new DCSARoute53(this, 'Route53', { "hostedZoneId": props.hostedZoneId, "baseUrl": props.baseUrl, "participants": props.participants})
 
-      new DCSAEKSNLBCluster(this, 'EKSCluster', {
+      new DCSAEKSNLBCluster(this, 'EKSCluster', {baseurl:props.baseUrl,hostedZoneId:props.hostedZoneId
       })
 
       new CfnOutput(this, 'hostedZoneCertificateArn', {
