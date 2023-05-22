@@ -12,7 +12,7 @@ import {
     ContentType,
     ListenerAction,
     NetworkLoadBalancer
-} from "@aws-cdk/aws-elasticloadbalancingv2";
+} from "aws-cdk-lib/aws-elasticloadbalancingv2";
 
 export interface DCSAEKSClusterProps {
 }
