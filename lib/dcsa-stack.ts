@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib'
+import {Construct } from 'constructs'
 import { DCSARoute53 } from './constructs/route53.construct'
 import { DCSAEKSCluster } from './constructs/eks-cluster.construct'
 import { DBConstruct } from "./constructs/db.construct";

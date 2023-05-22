@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib'
+import {Construct } from 'constructs'
 import { DCSARoute53 } from './constructs/route53.construct'
 import { DCSAEKSCluster } from './constructs/eks-cluster.construct'
 import { DBConstruct } from "./constructs/db.construct";
@@ -13,7 +14,7 @@ export interface DCSAStackProps extends cdk.StackProps { hostedZoneId: string,
 }
 
 export class DCSANLBStack extends cdk.Stack {
-  constructor (scope: cdk.Construct, id: string, props: DCSAStackProps) {
+  constructor (scope: Construct, id: string, props: DCSAStackProps) {
     super(scope, id, props)
 
 
