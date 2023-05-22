@@ -3,7 +3,7 @@ import {Construct } from 'constructs'
 import { DCSARoute53 } from './constructs/route53.construct'
 import { DCSAEKSCluster } from './constructs/eks-cluster.construct'
 import { DBConstruct } from "./constructs/db.construct";
-import { CfnOutput } from 'aws-cdk-lib/core';
+import { CfnOutput } from 'aws-cdk-lib';
 
 
 export interface DBStackProps extends cdk.StackProps {

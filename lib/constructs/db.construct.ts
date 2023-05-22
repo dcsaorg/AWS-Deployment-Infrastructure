@@ -1,6 +1,6 @@
 import {Duration,RemovalPolicy,CfnOutput} from 'aws-cdk-lib'
 import {Construct} from 'constructs'
-import * as cdk from 'aws-cdk-lib/core'
+import * as cdk from 'aws-cdk-lib'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as rds from 'aws-cdk-lib/aws-rds'
 import * as secret from 'aws-cdk-lib/aws-secretsmanager';
