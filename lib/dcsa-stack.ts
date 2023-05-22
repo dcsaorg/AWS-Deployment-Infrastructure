@@ -12,7 +12,7 @@ export interface DCSAStackProps extends cdk.StackProps { hostedZoneId: string,
 }
 
 export class DCSAStack extends cdk.Stack {
-  constructor (scope: cdk.Construct, id: string, props: DCSAStackProps) {
+  constructor (scope: Construct, id: string, props: DCSAStackProps) {
     super(scope, id, props)
 
 
