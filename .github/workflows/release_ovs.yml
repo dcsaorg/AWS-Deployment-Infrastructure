@@ -16,8 +16,8 @@ env:
   dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'
   ingressChartName: 'dcsaingresscluster'
-  deploydb: 'true'
-  deployapi: 'true'
+  deploydb: 'false'
+  deployapi: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
@@ -56,7 +56,7 @@ jobs:
           BASEURL: ''
           HOSTEDZONEID: ''
           EXPERIMENTAL: ''
-      - name: Deploying the CDK Cluster Code
+      - name: Deploying the CDK Cluster Code  
         if: ${{ env.deploydb == 'true' }}
         uses: youyo/aws-cdk-github-actions@v2
         with:

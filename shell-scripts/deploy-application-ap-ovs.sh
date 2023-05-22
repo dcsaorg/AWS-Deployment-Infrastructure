@@ -26,6 +26,6 @@ db:
 EOF
 
     echo "Deploying helm for dcsa"
-    helm install "$participant" dcsa/$HELMCHARTNAME --values values.yml
+    helm install "dcsa" dcsa/$HELMCHARTNAME --values values.yml
 
 helm list
