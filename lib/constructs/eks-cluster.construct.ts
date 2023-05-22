@@ -1,7 +1,8 @@
-import {Construct} from '@aws-cdk/core'
-import * as eks from '@aws-cdk/aws-eks'
-import * as iam from '@aws-cdk/aws-iam'
-import * as acm from '@aws-cdk/aws-certificatemanager'
+import {Duration,RemovalPolicy,CfnOutput} from 'aws-cdk-lib'
+import {Construct} from 'constructs'
+import * as eks from 'aws-cdk-lib/aws-eks'
+import * as iam from 'aws-cdk-lib/aws-iam'
+import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import policyStatementActions from '../constants/policyStatementActions.constant'
 
 export interface DCSAEKSClusterProps {
@@ -13,7 +14,7 @@ export class DCSAEKSCluster extends Construct {
         super(scope, id)
 
         const cluster = new eks.FargateCluster(this, 'cl', {
-            version: eks.KubernetesVersion.V1_20,
+            version: eks.KubernetesVersion.V1_24,
             clusterName: 'cl'
         })
        const policyStatement = new iam.PolicyStatement({

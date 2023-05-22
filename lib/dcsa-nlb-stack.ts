@@ -1,8 +1,8 @@
-import * as cdk from '@aws-cdk/core'
+import * as cdk from 'aws-cdk-lib'
 import { DCSARoute53 } from './constructs/route53.construct'
 import { DCSAEKSCluster } from './constructs/eks-cluster.construct'
 import { DBConstruct } from "./constructs/db.construct";
-import { CfnOutput } from '@aws-cdk/core';
+import { CfnOutput } from 'aws-cdk-lib';
 import {DCSAAPIGateway} from "./apigateway-stack";
 import {DCSAEKSNLBCluster} from "./constructs/eks-cluster-nlb.construct";
 

@@ -1,5 +1,5 @@
-import * as cdk from '@aws-cdk/core'
-import { CfnOutput } from '@aws-cdk/core';
+import * as cdk from 'aws-cdk-lib'
+import { CfnOutput } from 'aws-cdk-lib';
 import { CognitoConstruct } from './constructs/cognito.construct';
 
 export interface CognitoStackProps extends cdk.StackProps {
