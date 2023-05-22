@@ -9,7 +9,6 @@ import * as targets from "aws-cdk-lib/aws-elasticloadbalancingv2-targets";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import {
     ApplicationLoadBalancer,
-    ContentType,
     ListenerAction,
     NetworkLoadBalancer
 } from "aws-cdk-lib/aws-elasticloadbalancingv2";
