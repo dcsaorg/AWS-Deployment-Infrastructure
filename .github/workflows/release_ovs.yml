@@ -16,7 +16,7 @@ env:
   dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'
   ingressChartName: 'dcsaingresscluster'
-  deploydb: 'false'
+  deploydb: 'true'
   deployapi: 'true'
 jobs:
   aws_cdk:
