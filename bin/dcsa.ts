@@ -24,9 +24,9 @@ new DCSAStack(app, 'st', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "base
     participants: (process.env.PARTICIPANTS ?? "{}")
 })
 
-new DCSANLBStack(app, 'stnlb', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "baseUrl": process.env.BASEURL ?? "localhost",
+/*new DCSANLBStack(app, 'stnlb', { "hostedZoneId": process.env.HOSTEDZONEID ?? "", "baseUrl": process.env.BASEURL ?? "localhost",
     participants: (process.env.PARTICIPANTS ?? "{}")
-})
+})*/
 
 new DCSAAPIGateway(app,'ag',{"baseUrl": process.env.BASEURL ?? "localhost","hostedZoneId": process.env.HOSTEDZONEID ?? "" })
 
