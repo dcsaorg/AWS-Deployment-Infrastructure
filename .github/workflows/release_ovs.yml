@@ -120,7 +120,7 @@ jobs:
           sudo apt-get install jq
           dburl=$(aws cloudformation describe-stacks --stack-name db | jq -c '.Stacks[0].Outputs[] | select(.OutputKey|test("EndpointHostname")) | .OutputValue' | tr -d '"')
           echo $dburl
-           carrierinternal="dcsa"
+           carrierinternal="dcsaovs"
            echo $carrierinternal
            suffix=""
            carrier="$carrierinternal$suffix"
