@@ -47,7 +47,7 @@ spec:
           containerPort: 9090
         readinessProbe:
           httpGet:
-            path: /jit/v1/actuator/health
+            path: /jit/v3/actuator/health
             port: 9090
         volumeMounts:
           - name: {{ .Release.Name }}-dcsacfgvol

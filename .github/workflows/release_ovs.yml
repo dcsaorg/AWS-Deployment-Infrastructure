@@ -17,7 +17,7 @@ env:
   helmChartName: 'dcsasandboxhamburg'
   ingressChartName: 'dcsaingresscluster'
   deploydb: 'false'
-  deployapi: 'true'
+  deployapi: 'false'
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
