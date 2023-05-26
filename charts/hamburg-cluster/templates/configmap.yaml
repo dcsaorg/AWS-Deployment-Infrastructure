@@ -21,9 +21,9 @@ data:
         active: prod
       security:
         oauth2:
-          resourceserver:
+          resou rceserver:
             jwt:
-              issuer-uri: https://cognito-idp.{{ .Values.env.awsRegion }}.amazonaws.com/{{ .Values.p6config.cognitoUserPoolId }}
+              issuer-uri: https://dcsa.eu.auth0.com/
       mail:
         host: {{ .Values.p6config.springMailHost }}
         username: {{ .Values.p6config.springMailUsername }}

@@ -16,7 +16,7 @@ env:
   dockerImageTag: 'live-dev'
   helmChartName: 'dcsasandboxhamburg'
   ingressChartName: 'dcsaingresscluster'
-  deploydb: 'true'
+  deploydb: 'false'
   deployapi: 'false'
 jobs:
   aws_cdk:
@@ -150,6 +150,23 @@ jobs:
           DOCKERIMAGETAG: ${{ env.dockerImageTag }}
           HELMCHARTNAME: ${{ env.helmChartName }}
           GITHUBPACKAGETOKEN: ${{ env.githubpackagetoken }}
+      - name: HELM 2
+        run: |
+          #!/usr/bin/env bash
+          # Ensure the script is executable in case it was edited on windows
+          script="./shell-scripts/deploy-ingressalb.sh"
+          chmod a+x $script && $script
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: ${{env.dbpassword}}
+          PARTICIPANTS:  ${{ env.participants }}
+          BASEURL: ${{ env.baseurl }}
+          SMTPPASSWORD: ${{ env.smtppassword }}
+          SMTPUSERNAME: ${{ env.smtpusername }}
+          COGNITOAPPCLIENTID: ${{ env.cognitoappclientid }}
+          COGNITOUSERPOOLID: ${{ env.cognitouserpoolid }}
+          DOCKERIMAGETAG: ${{ env.dockerImageTag }}
+          INGRESSCHARTNAME: ${{ env.ingressChartName }}          
       - name: Updating load balancer dns
         run: |
           sleep 3m
