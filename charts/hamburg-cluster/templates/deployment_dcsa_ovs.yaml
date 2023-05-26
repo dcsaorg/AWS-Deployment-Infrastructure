@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   annotations:
     alb.ingress.kubernetes.io/target-type: ip      
-    alb.ingress.kubernetes.io/healthcheck-path: /jit/v1/actuator/health
+    alb.ingress.kubernetes.io/healthcheck-path: /jit/v3/actuator/health
   labels:
     app: {{ .Release.Name }}-dcsajit-app
 spec:
