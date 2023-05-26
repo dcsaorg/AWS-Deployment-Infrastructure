@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   annotations:
     alb.ingress.kubernetes.io/target-type: ip      
-    alb.ingress.kubernetes.io/healthcheck-path: /jit/v3/actuator/health
+    alb.ingress.kubernetes.io/healthcheck-path: /ovs/v3/actuator/health
   labels:
     app: {{ .Release.Name }}-dcsajit-app
 spec:
@@ -36,18 +36,18 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-dcsajit-container
-        image: ghcr.io/dcsaorg/dcsa-ovs:v3.0.0-beta1-rc1
+        image: ghcr.io/dcsaorg/dcsa-ovs:apvcv-583-set-url-prefix-ac0b3d2
         env:
         - name: db_hostname
           value: {{ .Values.db.host }}
         - name: DCSA_URL_PREFIX
-          value: "/jit"
+          value: "/ovs"
         ports:
         - name: dcsajit
           containerPort: 9090
         readinessProbe:
           httpGet:
-            path: /jit/v3/actuator/health
+            path: /ovs/v3/actuator/health
             port: 9090
           initialDelaySeconds: 200
           periodSeconds: 50           
