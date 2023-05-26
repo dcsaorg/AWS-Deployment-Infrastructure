@@ -49,6 +49,8 @@ spec:
           httpGet:
             path: /jit/v3/actuator/health
             port: 9090
+          initialDelaySeconds: 5
+          periodSeconds: 5            
         volumeMounts:
           - name: {{ .Release.Name }}-dcsacfgvol
             mountPath: /config/dcsa-config.yaml
