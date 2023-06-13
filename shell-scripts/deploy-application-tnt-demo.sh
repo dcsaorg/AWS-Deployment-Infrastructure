@@ -21,7 +21,7 @@ db:
     host: "$dbHostName"
     username: "$DB_USER"
     password: "$DB_PASSWORD"
-    name: "dcsaovs"
+    name: "dcsa_tnt"
 
 EOF
 
