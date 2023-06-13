@@ -23,10 +23,10 @@ env:
   awsRegion: 'eu-west-1'
 
 db:
-  host: ""
-  username: ""
-  password: ""
-  name: ""
+  host: "db-dbdbinstance9a2be2bc-bhmdk5u8pu7c.cdunffnsll1r.eu-west-1.rds.amazonaws.com"
+  username: "postgres"
+  password: "ldcyXPP8DUtKcr2AzMjA"
+  name: "dcsa_tnt"
 
 p6config:
   company: "dcsa"

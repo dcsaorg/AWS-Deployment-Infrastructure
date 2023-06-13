@@ -19,11 +19,11 @@ spec:
     - host: {{ $participant }}.{{ $root.Values.env.baseurl }}
       http:
         paths:
-          - path: /ovs/
+          - path: /tnt/
             pathType: Prefix
             backend:
               service:
-                name: {{ $participant }}-dcsajit-service
+                name: {{ $participant }}-dcsatnt-service
                 port:
                   number: 9090
   {{- end }}
