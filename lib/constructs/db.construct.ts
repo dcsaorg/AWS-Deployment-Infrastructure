@@ -72,7 +72,7 @@ export class DBConstruct extends Construct {
                     subnetType: ec2.SubnetType.PUBLIC,
                 },
                 engine: rds.DatabaseInstanceEngine.postgres({
-                    version: rds.PostgresEngineVersion.VER_13_3,
+                    version: rds.PostgresEngineVersion.VER_11_16,
                 }),
                 instanceType: ec2.InstanceType.of(
                     ec2.InstanceClass.BURSTABLE3,
